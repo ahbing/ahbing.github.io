@@ -1,0 +1,928 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.2"/>
+
+
+    <meta name="description" content="诗意的栖居在这个星球上" />
+
+
+
+  <meta name="keywords" content="mobile," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.2" />
+
+
+
+
+  <title> 移动端适配记 // 九月烟树 </title>
+</head>
+
+<body>
+<!--[if lte IE 8]> <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'> <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode"><img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari." style='margin-left:auto;margin-right:auto;display: block;'/></a></div> <![endif]-->
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <div id="header" class="header">
+      <div class="header-inner">
+        <h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand">
+      <span class="logo">
+        <i class="icon-logo"></i>
+      </span>
+      <span class="site-title">九月烟树</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+
+  <ul id="menu" class="menu">
+     
+    
+      
+      <li class="menu-item menu-item-home">
+        <a href="/">
+          <i class="menu-item-icon icon-home"></i> <br />
+          首页
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-archives">
+        <a href="/archives">
+          <i class="menu-item-icon icon-archives"></i> <br />
+          归档
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-about">
+        <a href="/about">
+          <i class="menu-item-icon icon-about"></i> <br />
+          关于
+        </a>
+      </li>
+    
+  </ul>
+
+
+      </div>
+    </div>
+
+    <div id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
+              移动端适配记
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于 2015-11-07
+        </span>
+
+        
+          <span class="post-category">
+            &nbsp; | &nbsp; 分类于
+            
+              <a href="/categories/mobile/">mobile</a>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/11/07/移动端适配记/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/07/移动端适配记/"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </div>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <p>做工作室的新官网，芦荟学姐用sketch画了设计稿，分别是pc和mobile的版本。有两种方案来实现网站的pc和移动适配。一种是直接做成响应式，类似bootstrap实现的那样。还有一种就是专门定制不同的版本，也就是两套。考虑到响应式版本会给移动端的带来不少不必要，冗余的代码。且一套分工不能十分明确。所以我和芦荟选择后面一套。</p>
+<p>我负责移动端的开发，就记录一下移动适配的方案。</p>
+<a id="more"></a>
+<h3 id="检测设备">检测设备</h3><p>当pc设备访问<code>m.betahouse.us</code> 的时候 跳转到<code>www.betahouse.us</code><br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> pathname = <span class="built_in">window</span>.location.pathname;</span><br><span class="line">    <span class="keyword">var</span> url = location.href;</span><br><span class="line">    <span class="keyword">var</span> mDomain = <span class="string">'m.betahouse.us'</span>;</span><br><span class="line">    <span class="keyword">if</span> ( (url.indexOf(mDomain) != -<span class="number">1</span>) &amp;&amp; ! navigator.userAgent.match(<span class="regexp">/(iPhone|iPod|Android|ios|iPad)/i</span>) ) &#123;</span><br><span class="line">        <span class="keyword">var</span> newUrl = url.replace(<span class="string">'http://m'</span>, <span class="string">'http://www'</span>);</span><br><span class="line">        location.href = newUrl;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="移动端适配">移动端适配</h3><p>之所以要适配移动端，就是因为移动端分繁多杂的屏幕规格。有屏幕大小之分，有屏幕清晰之分等等。适配移动端主要依据dpr来实现。</p>
+<h4 id="什么是dpr?">什么是dpr?</h4><p>首先可以打开chrome调试工具</p>
+<p>iphone5的<code>dpr</code><br><img src="/images/dpr.jpg" alt="iphone5 的 dpr"><br>iphone6 plus的<code>dpr</code><br><img src="/images/iphone5-dpr.jpg" alt="iphone6 plus 的 dpr"><br>可以看到 iphone5的dpr是2，而iphone6plus的dpr是3,但dpr到底是个什么鬼？</p>
+<p>dpr全称<code>device pixel ratio</code>，即设备像素比。是物理像素与css像素(确切讲是设备独立像素(density-independent pixel))x方向或y方向的数量之比。在js中dpr可以使用 <code>window.devicePixelRatio</code>来得到。</p>
+<p>如图<br><img src="/images/iphone6plus-dpr.jpg" alt="dpr"></p>
+<p>在普通屏幕下，1个css像素 对应 1个物理像素(1:1) dpr为<code>1</code>。<br>在retina 屏幕下，1个css像素对应 4个物理像素(1:4) dpr为<code>2</code>。</p>
+<p>这就有一个很严重的问题，比如当我们想在retina上实现border 1px的时候，实际对应的css像素应该是0.5px;如果在dpr为3的屏幕上，css像素就应该是0.333333…px。且不说要写多个适配media，css的border设置成0.5px或者0.3333px，本身就存在无法被识别的问题。那要怎么办呢? 请往下看。</p>
+<h4 id="屏幕缩放">屏幕缩放</h4><p>在移动端开发中，在<code>head</code>中都得添加一串<code>meta</code>标签，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;meta content=&#34;width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0&#34; name=&#34;viewport&#34; /&#62;</span><br></pre></td></tr></table></figure></p>
+<p>先来认识一下各个属性代表什么意思</p>
+<ul>
+<li>width - viewport的宽度</li>
+<li>height - viewport的高度</li>
+<li>initial-scale - 初始的缩放比例</li>
+<li>minimum-scale - 允许用户缩放到的最小比例</li>
+<li>maximum-scale - 允许用户缩放到的最大比例</li>
+<li>user-scalable - 用户是否可以手动缩放</li>
+</ul>
+<p>所以上面的meta标签表示:强制让文档的宽度与设备的宽度保持1:1，并且文档最大的宽度比例是1.0，且不允许用户点击屏幕放大浏览；</p>
+<p>文档的宽度与设备的宽度保持1:1，是在普通屏幕下的做法，那我们可不可以根据相应的dpr在动态设置这个比呢？</p>
+<p>比如，在dpr为2的屏幕中，将整个页面缩放到原来的0.5倍。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;meta name=&#34;viewport&#34; content=&#34;width=640,initial-scale=0.5,maximum-scale=0.5, minimum-scale=0.5,user-scalable=no&#34;&#62;</span><br></pre></td></tr></table></figure>
+<p>这样页面中所有的border: 1px都将缩小0.5，从而达到border: 0.5px;</p>
+<p>当然，页面的缩放，会影响整个页面的px设置。字体会变小，布局的宽高都会变。那怎么办？  请继续往下看。</p>
+<h4 id="多屏适配">多屏适配</h4><p>在移动端适配中，<code>rem</code> 是不能不提的，他根据root的{font-size}来计算尺寸，所以根据他的实现原理，我们可以根据不同的dpr来设置不同的html{font-size}, 从而使得设置相同的rem值，但在不同的dpr屏幕下有不同的表现。</p>
+<p>综上，我们创建一个脚本，根据dpr动态设置<code>meta</code>的缩放，root 的 font-size。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var dpr, rem, scale;&#10;var docEl = document.documentElement;&#10;var fontEl = document.createElement(&#39;style&#39;);&#10;var metaEl = document.querySelector(&#39;meta[name=&#34;viewport&#34;]&#39;);&#10;&#10;// &#33719;&#21462;dpr&#10;dpr = window.devicePixelRatio || 1;&#10;// &#35774;&#32622;&#22522;&#20934;&#20540;  &#38500;&#20197;10&#26159;&#20026;&#20102;&#26041;&#20415;&#35745;&#31639;&#10;rem = docEl.clientWidth * dpr / 10;&#10;scale = 1 / dpr;&#10;&#10;&#10;// &#35774;&#32622;viewport&#65292;&#36827;&#34892;&#32553;&#25918;&#65292;&#36798;&#21040;&#39640;&#28165;&#25928;&#26524;&#10;metaEl.setAttribute(&#39;content&#39;, &#39;width=&#39; + scale * docEl.clientWidth + &#39;,initial-scale=&#39; + scale + &#39;,maximum-scale=&#39; + scale + &#39;, minimum-scale=&#39; + scale + &#39;,user-scalable=no&#39;);&#10;&#10;// &#35774;&#32622;data-dpr&#23646;&#24615;&#65292;&#30041;&#20316;&#30340;css hack&#20043;&#29992;&#10;docEl.setAttribute(&#39;data-dpr&#39;, dpr);&#10;&#10;// &#21160;&#24577;&#20889;&#20837;&#26679;&#24335;&#10;docEl.firstElementChild.appendChild(fontEl);&#10;fontEl.innerHTML = &#39;html&#123;font-size:&#39; + rem + &#39;px!important;&#125;&#39;;&#10;&#10;// &#32473;js&#35843;&#29992;&#30340;&#65292;&#26576;&#19968;dpr&#19979;rem&#21644;px&#20043;&#38388;&#30340;&#36716;&#25442;&#20989;&#25968;&#10;window.rem2px = function(v) &#123;&#10;v = parseFloat(v);&#10;return v * rem;&#10;&#125;;&#10;&#10;window.px2rem = function(v) &#123;&#10;    v = parseFloat(v);&#10;    return v / rem;&#10;&#125;;&#10;&#10;window.dpr = dpr;&#10;window.rem = rem;</span><br></pre></td></tr></table></figure>
+<h4 id="css布局">css布局</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//  &#19978;&#38754;js&#33050;&#26412;&#35774;&#32622;&#30340;rem&#22522;&#20934;&#20540;&#65292; &#20063;&#23601;&#26159;root font-size&#30340;&#20540;&#10;rem = docEl.clientWidth * dpr / 10;</span><br></pre></td></tr></table></figure>
+<p>以iphone6的高清视觉稿 750×1334 为例</p>
+<p>使用以上脚本计算出的rem基准值是75。</p>
+<p>那么我们可以用写一个mixin</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;//sass&#10;@mixin px2rem($name, $px)&#123;&#10;    #&#123;$name&#125;: $px / 75 * 1rem;&#10;&#125;&#10;&#10;//less&#10;.px2rem(@name, @px)&#123;&#10;    @&#123;name&#125;: @px / 75 * 1rem;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>所以设计稿是750*300px的div<br>css可以这么写<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// sass&#10;@include px2rem(&#39;width&#39;,750);&#10;@include px2rem(&#39;height&#39;,300);&#10;&#10;// less&#10;.px2rem(width, 750);&#10;.px2rem(height, 300);</span><br></pre></td></tr></table></figure></p>
+<p>转化成的css<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">width: 10rem; // -&#62; 750px&#10;height: 4rem; // -&#62; 300px</span><br></pre></td></tr></table></figure></p>
+<p>因为iphone6的dpr为2，页面scale了0.5，所以在手机屏幕上显示的真实宽高应该是375×150px。</p>
+<h4 id="字体大小">字体大小</h4><p>字体在不同的dpr上大小一致，比如在dpr为1的手机上显示16px；那么在dpr2的手机上显示32px；</p>
+<p>所以我们可以封装一个px2px的mixin，使得在不同的dpr上显示字体大小一致。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;//sass&#10;@mixin px2px($name, $px)&#123;&#10;    #&#123;$name&#125;: round($px / 2) * 1px;&#10;    [data-dpr=&#34;2&#34;] &#38; &#123;&#10;        #&#123;$name&#125;: $px * 1px;&#10;    &#125;&#10;    // for mx3&#10;    [data-dpr=&#34;2.5&#34;] &#38; &#123;&#10;        #&#123;$name&#125;: round($px * 2.5 / 2) * 1px;&#10;    &#125;&#10;    // for &#23567;&#31859;note&#10;    [data-dpr=&#34;2.75&#34;] &#38; &#123;&#10;        #&#123;$name&#125;: round($px * 2.75 / 2) * 1px;&#10;    &#125;&#10;    [data-dpr=&#34;3&#34;] &#38; &#123;&#10;        #&#123;$name&#125;: round($px / 2 * 3) * 1px&#10;    &#125;&#10;    // for &#19977;&#26143;note4&#10;    [data-dpr=&#34;4&#34;] &#38; &#123;&#10;        #&#123;$name&#125;: $px * 2px;&#10;    &#125;&#10;&#125;&#10;&#10;// less&#10;.px2px(@name, @px)&#123;&#10;    @&#123;name&#125;: round(@px / 2) * 1px;&#10;    [data-dpr=&#34;2&#34;] &#38; &#123;&#10;        @&#123;name&#125;: @px * 1px;&#10;    &#125;&#10;    // for mx3&#10;    [data-dpr=&#34;2.5&#34;] &#38; &#123;&#10;        @&#123;name&#125;: round(@px * 2.5 / 2) * 1px;&#10;    &#125;&#10;    // for &#23567;&#31859;note&#10;    [data-dpr=&#34;2.75&#34;] &#38; &#123;&#10;        @&#123;name&#125;: round(@px * 2.75 / 2) * 1px;&#10;    &#125;&#10;    [data-dpr=&#34;3&#34;] &#38; &#123;&#10;        @&#123;name&#125;: round(@px / 2 * 3) * 1px&#10;    &#125;&#10;    // for &#19977;&#26143;note4&#10;    [data-dpr=&#34;4&#34;] &#38; &#123;&#10;        @&#123;name&#125;: @px * 2px;&#10;    &#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>当然其他想要在不同dpr下保持一致的css属性也可以是用<code>px2px</code></p>
+<p>比如：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;//sass&#10;@include px2px(&#39;padding&#39;,20);&#10;@include px2px(&#39;right&#39;,20);&#10;&#10;//less&#10;.px2px(padding, 20);&#10;.px2px(right, 8);</span><br></pre></td></tr></table></figure>
+<p>以上。</p>
+<p>参考链接<a href="http://div.io/topic/1092#devtoutiao.com/16" target="_blank" rel="external">移动端高清、多屏适配方案</a></p>
+
+      
+    </div>
+
+    <div class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mobile/"> #mobile </a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/11/18/为什么要用sass来写css-一个demo小实例/">为什么要用sass来写css--一个demo小实例</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/09/22/Flux傻瓜文檔/">Flux傻瓜文檔</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </div>
+  </div>
+
+
+
+    
+      <div class="comments" id="comments">
+        
+          <div class="ds-thread" data-thread-key="2015/11/07/移动端适配记/"
+               data-title="移动端适配记" data-url="http://huangbingbing.com/2015/11/07/移动端适配记/">
+          </div>
+        
+      </div>
+    
+  </div>
+
+
+        </div>
+
+        
+      </div>
+
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview">
+        <div class="site-author motion-element">
+          <img class="site-author-image" src="http://tp2.sinaimg.cn/5622195893/180/40087750383/1" alt="阿炳" />
+          <p class="site-author-name">阿炳</p>
+        </div>
+        <p class="site-description motion-element">诗意的栖居在这个星球上</p>
+        <div class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">26</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-name">分类</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            
+              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-name">标签</span>
+              
+          </div>
+
+        </div>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+              <a href="https://github.com/ahbing/" target="_blank">GitHub</a>
+            </span>
+            
+              <span class="links-of-author-item">
+              <a href="https://twitter.com/aahbing" target="_blank">Twitter</a>
+            </span>
+            
+              <span class="links-of-author-item">
+              <a href="http://weibo.com/u/5622195893" target="_blank">Weibo</a>
+            </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+      </div>
+
+      
+        <div class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#检测设备"><span class="nav-number">1.</span> <span class="nav-text">检测设备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#移动端适配"><span class="nav-number">2.</span> <span class="nav-text">移动端适配</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#什么是dpr?"><span class="nav-number">2.1.</span> <span class="nav-text">什么是dpr?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#屏幕缩放"><span class="nav-number">2.2.</span> <span class="nav-text">屏幕缩放</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多屏适配"><span class="nav-number">2.3.</span> <span class="nav-text">多屏适配</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#css布局"><span class="nav-number">2.4.</span> <span class="nav-text">css布局</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#字体大小"><span class="nav-number">2.5.</span> <span class="nav-text">字体大小</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </div>
+      
+
+    </div>
+  </div>
+
+
+    </div>
+
+    <div id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; &nbsp; 
+  2015
+  <span class="with-love">
+    <i class="icon-heart"></i>
+  </span>
+  <span class="author">阿炳</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </div>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('.content img').each(function () {
+        var $image = $(this);
+        var $imageWrapLink = $image.parent('a');
+
+        if ($imageWrapLink.size() < 1) {
+          $imageWrapLink = $image.wrap('<a href="' + this.getAttribute('src') + '"></a>').parent('a');
+        }
+        $imageWrapLink.addClass('fancybox');
+      });
+    });
+    $('.fancybox').fancybox({
+      helpers: {
+        overlay: {
+          locked: false
+        }
+      }
+    });
+  </script>
+
+
+  <script type="text/javascript">
+  function hasMobileUA () {
+    var nav = window.navigator;
+    var ua = nav.userAgent;
+    var pa = /iPad|iPhone|Android|Opera Mini|BlackBerry|webOS|UCWEB|Blazer|PSP|IEMobile|Symbian/g;
+
+    return pa.test(ua);
+  }
+
+  function isDesktop () {
+    return screen.width > 991 && !hasMobileUA();
+  }
+
+  function isTablet () {
+    return screen.width < 992 && screen.width > 767 && hasMobileUA();
+  }
+
+  function isMobile () {
+    return screen.width < 767 && hasMobileUA();
+  }
+
+  function escapeSelector (selector) {
+    return selector.replace(/[!"$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\$&")
+  }
+</script>
+
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" id="motion.global">
+  $(document).ready(function () {
+    var body = $('body');
+    var isSidebarVisible = false;
+    var sidebarToggle = $('.sidebar-toggle');
+    var sidebarToggleLine1st = $('.sidebar-toggle-line-first')
+    var sidebarToggleLine2nd = $('.sidebar-toggle-line-middle');
+    var sidebarToggleLine3rd = $('.sidebar-toggle-line-last');
+    var sidebar = $('.sidebar');
+
+    var SIDEBAR_WIDTH = '320px';
+    var SIDEBAR_DISPLAY_DURATION = 300;
+
+    var sidebarToogleLineStatusInit = {width: '100%', opacity: 1, left: 0, rotateZ: 0, top: 0};
+
+    var sidebarToggleLine1stStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine1stStatusArrow = {width: '50%', rotateZ: '-45deg', top: '2px'};
+    var sidebarToogleLine1stStatusClose = {width: '100%', rotateZ: '-45deg', top: '5px'};
+
+    var sidebarToggleLine2ndStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine2ndStatusArrow = {width: '90%'};
+    var sidebarToogleLine2ndStatusClose = {opacity: 0};
+
+    var sidebarToggleLine3rdStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine3rdStatusArrow = {width: '50%', rotateZ: '45deg', top: '-2px'};
+    var sidebarToogleLine3rdStatusClose = {width: '100%', rotateZ: '45deg', top: '-5px'};
+
+    LogoAndMenuMotion();
+    sidebatToggleMotion();
+    postsListMotion();
+    backToTopMotion();
+
+
+    $(document)
+      .on('sidebar.isShowing', function () {
+        isDesktop() && body.velocity(
+          {paddingRight: SIDEBAR_WIDTH},
+          SIDEBAR_DISPLAY_DURATION
+        );
+        sidebarContentMotion();
+      })
+      .on('sidebar.isHiding', function () {});
+
+    function LogoAndMenuMotion() {
+      $.Velocity.RunSequence([
+        { e: $('.brand'), p: { opacity: 1 }, o: { duration: 100 } },
+        { e: $('.logo'), p: { opacity: 1, top: 0 }, o: { duration: 50} },
+        
+        { e: $('.logo-line-before i'), p: { translateX: "100%" }, o: { duration: 500, sequenceQueue: false } },
+        { e: $('.logo-line-after i'), p: { translateX: "-100%" }, o: { duration: 500, sequenceQueue: false } },
+        
+        { e: $('.site-title'), p: { opacity: 1, top: 0 }, o: { duration: 200 } }
+      ]);
+      $('.menu-item').velocity('transition.slideDownIn', {display: null});
+    }
+
+
+    function backToTopMotion () {
+      var b2top = $('.back-to-top');
+      b2top.on('click', function () {
+        body.velocity('scroll');
+      });
+    }
+
+    function sidebarShowMotion () {
+
+      sidebarToggleLine1st.velocity(sidebarToogleLine1stStatusClose);
+      sidebarToggleLine2nd.velocity(sidebarToogleLine2ndStatusClose);
+      sidebarToggleLine3rd.velocity(sidebarToogleLine3rdStatusClose);
+
+      sidebar.velocity({width: SIDEBAR_WIDTH}, {
+        display: 'block',
+        duration: SIDEBAR_DISPLAY_DURATION,
+        complete: function () {
+          sidebar.addClass('sidebar-active');
+          sidebar.trigger('sidebar.didShow');
+        }
+      });
+      sidebar.trigger('sidebar.isShowing');
+    }
+
+    function sidebarHideMotion () {
+      isDesktop() && body.velocity({paddingRight: 0});
+      sidebar.velocity('reverse');
+
+      sidebarToggleLine1st.velocity(sidebarToggleLine1stStatusInit);
+      sidebarToggleLine2nd.velocity(sidebarToggleLine2ndStatusInit);
+      sidebarToggleLine3rd.velocity(sidebarToggleLine3rdStatusInit);
+
+      sidebar.removeClass('sidebar-active');
+      sidebar.trigger('sidebar.isHiding');
+    };
+
+    function sidebarContentMotion () {
+      $('.sidebar .motion-element').velocity(
+        'transition.slideRightIn',
+        {stagger: 50, drag: true}
+      );
+    }
+
+    function postsListMotion () {
+      var postMotionOptions = window.postMotionOptions || {stagger: 300, drag: true};
+      $('.post').velocity('transition.slideDownIn', postMotionOptions);
+    }
+
+    function sidebatToggleMotion () {
+      sidebarToggle.on('click', function () {
+        isSidebarVisible ? sidebarHideMotion() : sidebarShowMotion();
+        isSidebarVisible = !isSidebarVisible;
+      });
+
+      sidebarToggle.hover(function () {
+        if (isSidebarVisible) {return}
+        sidebarToggleLine1st.velocity('stop').velocity(sidebarToggleLine1stStatusArrow);
+        sidebarToggleLine2nd.velocity('stop').velocity(sidebarToggleLine2ndStatusArrow);
+        sidebarToggleLine3rd.velocity('stop').velocity(sidebarToggleLine3rdStatusArrow);
+      }, function () {
+        if (isSidebarVisible) {return}
+        sidebarToggleLine1st.velocity('stop').velocity(sidebarToggleLine1stStatusInit);
+        sidebarToggleLine2nd.velocity('stop').velocity(sidebarToggleLine2ndStatusInit);
+        sidebarToggleLine3rd.velocity('stop').velocity(sidebarToggleLine3rdStatusInit);
+      });
+    }
+  });
+
+</script>
+
+
+
+
+
+  
+  
+<script type="text/javascript" id="bootstrap.scrollspy.custom">
+  /* ========================================================================
+  * Bootstrap: scrollspy.js v3.3.2
+  * http://getbootstrap.com/javascript/#scrollspy
+  * ========================================================================
+  * Copyright 2011-2015 Twitter, Inc.
+  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+  * ======================================================================== */
+
+  /**
+   * Custom by iissnan
+   *
+   * - Add a `clear.bs.scrollspy` event.
+   * - Esacpe targets selector.
+   */
+
+
+  +function ($) {
+    'use strict';
+
+    // SCROLLSPY CLASS DEFINITION
+    // ==========================
+
+    function ScrollSpy(element, options) {
+      this.$body          = $(document.body)
+      this.$scrollElement = $(element).is(document.body) ? $(window) : $(element)
+      this.options        = $.extend({}, ScrollSpy.DEFAULTS, options)
+      this.selector       = (this.options.target || '') + ' .nav li > a'
+      this.offsets        = []
+      this.targets        = []
+      this.activeTarget   = null
+      this.scrollHeight   = 0
+
+      this.$scrollElement.on('scroll.bs.scrollspy', $.proxy(this.process, this))
+      this.refresh()
+      this.process()
+    }
+
+    ScrollSpy.VERSION  = '3.3.2'
+
+    ScrollSpy.DEFAULTS = {
+      offset: 10
+    }
+
+    ScrollSpy.prototype.getScrollHeight = function () {
+      return this.$scrollElement[0].scrollHeight || Math.max(this.$body[0].scrollHeight, document.documentElement.scrollHeight)
+    }
+
+    ScrollSpy.prototype.refresh = function () {
+      var that          = this
+      var offsetMethod  = 'offset'
+      var offsetBase    = 0
+
+      this.offsets      = []
+      this.targets      = []
+      this.scrollHeight = this.getScrollHeight()
+
+      if (!$.isWindow(this.$scrollElement[0])) {
+        offsetMethod = 'position'
+        offsetBase   = this.$scrollElement.scrollTop()
+      }
+
+      this.$body
+        .find(this.selector)
+        .map(function () {
+          var $el   = $(this)
+          var href  = $el.data('target') || $el.attr('href')
+          var $href = /^#./.test(href) && $(escapeSelector(href)) // Need to escape selector.
+
+          return ($href
+            && $href.length
+            && $href.is(':visible')
+            && [[$href[offsetMethod]().top + offsetBase, href]]) || null
+        })
+        .sort(function (a, b) { return a[0] - b[0] })
+        .each(function () {
+          that.offsets.push(this[0])
+          that.targets.push(this[1])
+        })
+
+
+    }
+
+    ScrollSpy.prototype.process = function () {
+      var scrollTop    = this.$scrollElement.scrollTop() + this.options.offset
+      var scrollHeight = this.getScrollHeight()
+      var maxScroll    = this.options.offset + scrollHeight - this.$scrollElement.height()
+      var offsets      = this.offsets
+      var targets      = this.targets
+      var activeTarget = this.activeTarget
+      var i
+
+      if (this.scrollHeight != scrollHeight) {
+        this.refresh()
+      }
+
+      if (scrollTop >= maxScroll) {
+        return activeTarget != (i = targets[targets.length - 1]) && this.activate(i)
+      }
+
+      if (activeTarget && scrollTop < offsets[0]) {
+        $(this.selector).trigger('clear.bs.scrollspy')  // Add a custom event.
+        this.activeTarget = null
+        return this.clear()
+      }
+
+      for (i = offsets.length; i--;) {
+        activeTarget != targets[i]
+          && scrollTop >= offsets[i]
+          && (!offsets[i + 1] || scrollTop <= offsets[i + 1])
+          && this.activate(targets[i])
+      }
+    }
+
+    ScrollSpy.prototype.activate = function (target) {
+      this.activeTarget = target
+
+      this.clear()
+
+      var selector = this.selector +
+        '[data-target="' + target + '"],' +
+        this.selector + '[href="' + target + '"]'
+
+      var active = $(selector)
+        .parents('li')
+        .addClass('active')
+
+      if (active.parent('.dropdown-menu').length) {
+        active = active
+          .closest('li.dropdown')
+          .addClass('active')
+      }
+
+      active.trigger('activate.bs.scrollspy')
+    }
+
+    ScrollSpy.prototype.clear = function () {
+      $(this.selector)
+        .parentsUntil(this.options.target, '.active')
+        .removeClass('active')
+    }
+
+
+    // SCROLLSPY PLUGIN DEFINITION
+    // ===========================
+
+    function Plugin(option) {
+      return this.each(function () {
+        var $this   = $(this)
+        var data    = $this.data('bs.scrollspy')
+        var options = typeof option == 'object' && option
+
+        if (!data) $this.data('bs.scrollspy', (data = new ScrollSpy(this, options)))
+        if (typeof option == 'string') data[option]()
+      })
+    }
+
+    var old = $.fn.scrollspy
+
+    $.fn.scrollspy             = Plugin
+    $.fn.scrollspy.Constructor = ScrollSpy
+
+
+    // SCROLLSPY NO CONFLICT
+    // =====================
+
+    $.fn.scrollspy.noConflict = function () {
+      $.fn.scrollspy = old
+      return this
+    }
+
+
+    // SCROLLSPY DATA-API
+    // ==================
+
+    $(window).on('load.bs.scrollspy.data-api', function () {
+      $('[data-spy="scroll"]').each(function () {
+        var $spy = $(this)
+        Plugin.call($spy, $spy.data())
+      })
+    })
+
+  }(jQuery);
+</script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var $sidebarInner = $('.sidebar-inner');
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.didShow', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+          var self = this;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      $(indicator).velocity('stop').velocity({
+        opacity: action === 'show' ? 0.4 : 0
+      }, { duration: 100 });
+    }
+
+  });
+</script>
+
+
+  <script type="text/javascript" id="sidebar.nav">
+    $(document).ready(function () {
+      var html = $('html');
+
+      $('.sidebar-nav li').on('click', function () {
+        var item = $(this);
+        var activeTabClassName = 'sidebar-nav-active';
+        var activePanelClassName = 'sidebar-panel-active';
+        if (item.hasClass(activeTabClassName)) {
+          return;
+        }
+
+        var currentTarget = $('.' + activePanelClassName);
+        var target = $('.' + item.data('target'));
+
+        currentTarget.velocity('transition.slideUpOut', 200, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', 200)
+            .addClass(activePanelClassName);
+        });
+
+        item.siblings().removeClass(activeTabClassName);
+        item.addClass(activeTabClassName);
+      });
+
+      $('.post-toc a').on('click', function (e) {
+        e.preventDefault();
+        var offset = $(escapeSelector(this.getAttribute('href'))).offset().top;
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        });
+      });
+
+      // Expand sidebar on post detail page by default, when post has a toc.
+      var $tocContent = $('.post-toc-content');
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0 && isDesktop()) {
+        setTimeout(function () {
+          $('.sidebar-toggle').trigger('click');
+        }, 800);
+      }
+    });
+  </script>
+
+
+
+
+  
+
+  
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ahbing"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+
+
+  
+  
+</body>
+</html>

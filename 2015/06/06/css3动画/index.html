@@ -1,0 +1,929 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.2"/>
+
+
+    <meta name="description" content="诗意的栖居在这个星球上" />
+
+
+
+  <meta name="keywords" content="css3," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.2" />
+
+
+
+
+  <title> css3动画 // 九月烟树 </title>
+</head>
+
+<body>
+<!--[if lte IE 8]> <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'> <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode"><img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari." style='margin-left:auto;margin-right:auto;display: block;'/></a></div> <![endif]-->
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <div id="header" class="header">
+      <div class="header-inner">
+        <h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand">
+      <span class="logo">
+        <i class="icon-logo"></i>
+      </span>
+      <span class="site-title">九月烟树</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+
+  <ul id="menu" class="menu">
+     
+    
+      
+      <li class="menu-item menu-item-home">
+        <a href="/">
+          <i class="menu-item-icon icon-home"></i> <br />
+          首页
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-archives">
+        <a href="/archives">
+          <i class="menu-item-icon icon-archives"></i> <br />
+          归档
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-about">
+        <a href="/about">
+          <i class="menu-item-icon icon-about"></i> <br />
+          关于
+        </a>
+      </li>
+    
+  </ul>
+
+
+      </div>
+    </div>
+
+    <div id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
+              css3动画
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于 2015-06-06
+        </span>
+
+        
+          <span class="post-category">
+            &nbsp; | &nbsp; 分类于
+            
+              <a href="/categories/css3/">css3</a>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/06/06/css3动画/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2015/06/06/css3动画/"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </div>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <p>相比js做动画，css3的动画代码量更少，性能更好，但也有兼容性差等缺点，不过完全可以在放弃低版本浏览器的用户应用中，或者移动应用中使用css3。<br><a id="more"></a></p>
+<p>css3动画学习包含三块，大漠大大早在2011(想起了我那年在夕阳下的奔跑…)年的时候，就已经写了css3的一系列教程，至今仍可受用，所以贴三篇他的博文上来，分别是<a href="http://www.w3cplus.com/content/css3-transform" target="_blank" rel="external">transform</a>,<a href="http://www.w3cplus.com/content/css3-transition" target="_blank" rel="external">transition</a>,<a href="http://www.w3cplus.com/content/css3-animation" target="_blank" rel="external">animation</a>。大漠大大已经写的十分详细，十分受益。以下是我的学习记录(不全面，不系统，方便自己查阅)。</p>
+<h2 id="transform_变换">transform 变换</h2><h3 id="transform-origin_参照点">transform-origin 参照点</h3><p>在元素变换（如旋转，平移）的时候，有一个参照点，也就是transorm-origin,他默认是50% 50%，也就是元素的中心点。 transorm-origin接受两个参数，分别是横座标，和纵座标。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transform-origin:0 0;  //&#35774;&#32622;&#20026;&#24038;&#19978;&#35282;&#30340;&#37027;&#20010;&#28857;&#10;transform:rotate(45deg);  //&#39034;&#26102;&#38024;&#26059;&#36716;45deg</span><br></pre></td></tr></table></figure>
+<p><img src="/images/transform-origin1.jpg" alt="大漠博客transform-origin"></p>
+<h3 id="transform_变换方法">transform 变换方法</h3><p>transform的变换参考点默认都是<strong>元素中心点！！元素中心点！！元素中心点！！</strong>，不过可以通过transform-origin来设置</p>
+<h4 id="旋转rotate">旋转rotate</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transform:rotate(30deg);  //&#39034;&#26102;&#38024;&#26059;&#36716;30deg</span><br></pre></td></tr></table></figure>
+<h4 id="扭曲skew">扭曲skew</h4><p>skew用来对元素进行扭曲变形，第一个参数是(元素)水平方向扭曲角度，第二个参数是(元素)垂直方向扭曲角度</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transform:skew(30deg,10deg)</span><br></pre></td></tr></table></figure>
+<p><img src="/images/skew2.jpg" alt="skew"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transform:skewX(30deg);&#10;transform:skewY(30deg);</span><br></pre></td></tr></table></figure>
+<p>上述代码结果分别</p>
+<p><img src="/images/skew1.jpg" alt="skew"></p>
+<h4 id="缩放scale">缩放scale</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transform:scale(2&#65292;2); //x y&#36724;&#26041;&#21521;&#37117;&#25193;&#22823;&#20004;&#20493;&#10;&#10;transform:scaleX(2); //&#20165;X&#36724;&#26041;&#21521;&#25193;&#22823;&#20004;&#20493;</span><br></pre></td></tr></table></figure>
+<h4 id="移动translate">移动translate</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transform:translate(20px,20px);  // &#21521;&#21491;  &#21521;&#19979; &#24179;&#31227;20&#20010;&#20687;&#32032;&#10;&#10;transform:translateX(-20px);  // &#21521;&#24038; &#24179;&#31227; 20&#20010;&#20687;&#32032;</span><br></pre></td></tr></table></figure>
+<h4 id="矩阵变形matrix。">矩阵变形matrix。</h4><p>还有待深入的研究。。。</p>
+<p><a href="http://www.zhangxinxu.com/wordpress/2012/06/css3-transform-matrix-%E7%9F%A9%E9%98%B5/" target="_blank" rel="external">理解CSS3 transform中的Matrix(矩阵)</a></p>
+<h2 id="transition_过渡">transition 过渡</h2><h3 id="transition-property_动画属性">transition-property  动画属性</h3><p>ansition效果的CSS属性值以及值的类型，<a href="http://www.w3.org/TR/css3-transitions/#properties-from-css-" target="_blank" rel="external">请移步</a>.</p>
+<h3 id="transition-duration_持续时间">transition-duration 持续时间</h3><p>单位可以是秒，也可是毫秒</p>
+<h3 id="transition-timing-function_动画类型">transition-timing-function  动画类型</h3><p>列一下常用到的几个</p>
+<ul>
+<li>linear：线性过渡。等同于贝塞尔曲线(0.0, 0.0, 1.0, 1.0)</li>
+<li>ease：平滑过渡。等同于贝塞尔曲线(0.25, 0.1, 0.25, 1.0)</li>
+<li>ease-in：由慢到快。等同于贝塞尔曲线(0.42, 0, 1.0, 1.0)</li>
+<li>ease-in-out：由慢到快再到慢。等同于贝塞尔曲线(0.42, 0, 0.58, 1.0)</li>
+<li>ease-out：由快到慢。等同于贝塞尔曲线(0, 0, 0.58, 1.0)</li>
+<li>cubic-bezier 特定的贝塞尔曲线类型，参数是4个在[0, 1]区间内数值</li>
+</ul>
+<h3 id="transition-delay_延迟的时间">transition-delay 延迟的时间</h3><p>延迟动画执行的时间，单位可以是秒或毫秒</p>
+<h3 id="transition的简写">transition的简写</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transition&#65306;[ transition-property ] || [ transition-duration ] || [ transition-timing-function ] || [ transition-delay ]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">trasition:background-color 2s ease-in .5s;</span><br></pre></td></tr></table></figure>
+<h2 id="animation_动画">animation 动画</h2><p>使用animation相比transition的优点是我们能更精确的控制中间的过程。但会比transition复杂，但相比js还是简单很多。</p>
+<h3 id="@keyframes">@keyframes</h3><p>keyframes定义关键帧，后面跟的是动画的名称，方便在其他地方重复的调用。</p>
+<p>当然为了兼容是要前缀的.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@-webkit-keyframes animation1&#123;&#10;&#9;from &#123;background-color:blue;&#125;&#10;&#9;25%  &#123;background-color: green;&#125;&#10;&#9;50%  &#123;background-color: yellow;&#125;&#10;&#9;75%  &#123;background-color: red;&#125;&#10;&#9;to   &#123;background-color: blue;&#125;&#10;&#125;&#10;&#10;@keyframes animation1&#123;&#10;&#9;from &#123;background-color:blue;&#125;&#10;&#9;25%  &#123;background-color: green;&#125;&#10;&#9;50%  &#123;background-color: yellow;&#125;&#10;&#9;75%  &#123;background-color: red;&#125;&#10;&#9;to   &#123;background-color: blue;&#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>其中from可以用0%代替，to可以用100%代替。</p>
+<h3 id="animation语法">animation语法</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">animation&#65306;[ animation-name ] || [ animation-duration ] || [ animation-timing-function ] || [ animation-delay ] || [ animation-iteration-count ] || [ animation-direction ]] [ , [ animation-name ] || [ animation-duration ] || [ animation-timing-function ] || [ animation-delay ] || [ animation-iteration-count ] || [ animation-direction ]</span><br></pre></td></tr></table></figure>
+<p>其中animation-name解释keyframes的动画名</p>
+<p>animation中的duration和timing-function和delay和transition中的用法类似。</p>
+<h3 id="animation-iteration-count动画的具体循环次数">animation-iteration-count动画的具体循环次数</h3><p>iteration-count默认是1</p>
+<p>可以设置一个number，设置无线循环可以使用infinite</p>
+<h3 id="animation-direction">animation-direction</h3><ul>
+<li>normal：默认，从0%执行到100%</li>
+<li>reverse：动画从100%执行到0%</li>
+<li>alternate：动画在0%到100%之间往复执行</li>
+<li>alternate-reverse与alternate一致，不过是从100%开始</li>
+</ul>
+<h2 id="参考链接们">参考链接们</h2><h3 id="css参考手册"><a href="http://css.doyoe.com/" target="_blank" rel="external">css参考手册</a></h3><h3 id="css动画详解"><a href="http://beiyuu.com/css3-animation/" target="_blank" rel="external">css动画详解</a></h3><h3 id="css3制作工具"><a href="http://css3generator.com/" target="_blank" rel="external">css3制作工具</a></h3>
+      
+    </div>
+
+    <div class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/css3/"> #css3 </a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/06/07/译-js变量声明提升的说明/">[译]js变量声明提升的说明</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/06/03/js字符串处理（便查阅）/">js字符串处理（便查阅）</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </div>
+  </div>
+
+
+
+    
+      <div class="comments" id="comments">
+        
+          <div class="ds-thread" data-thread-key="2015/06/06/css3动画/"
+               data-title="css3动画" data-url="http://huangbingbing.com/2015/06/06/css3动画/">
+          </div>
+        
+      </div>
+    
+  </div>
+
+
+        </div>
+
+        
+      </div>
+
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview">
+        <div class="site-author motion-element">
+          <img class="site-author-image" src="http://tp2.sinaimg.cn/5622195893/180/40087750383/1" alt="阿炳" />
+          <p class="site-author-name">阿炳</p>
+        </div>
+        <p class="site-description motion-element">诗意的栖居在这个星球上</p>
+        <div class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">26</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-name">分类</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            
+              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-name">标签</span>
+              
+          </div>
+
+        </div>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+              <a href="https://github.com/ahbing/" target="_blank">GitHub</a>
+            </span>
+            
+              <span class="links-of-author-item">
+              <a href="https://twitter.com/aahbing" target="_blank">Twitter</a>
+            </span>
+            
+              <span class="links-of-author-item">
+              <a href="http://weibo.com/u/5622195893" target="_blank">Weibo</a>
+            </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+      </div>
+
+      
+        <div class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#transform_变换"><span class="nav-number">1.</span> <span class="nav-text">transform 变换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#transform-origin_参照点"><span class="nav-number">1.1.</span> <span class="nav-text">transform-origin 参照点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#transform_变换方法"><span class="nav-number">1.2.</span> <span class="nav-text">transform 变换方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#旋转rotate"><span class="nav-number">1.2.1.</span> <span class="nav-text">旋转rotate</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#扭曲skew"><span class="nav-number">1.2.2.</span> <span class="nav-text">扭曲skew</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#缩放scale"><span class="nav-number">1.2.3.</span> <span class="nav-text">缩放scale</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#移动translate"><span class="nav-number">1.2.4.</span> <span class="nav-text">移动translate</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#矩阵变形matrix。"><span class="nav-number">1.2.5.</span> <span class="nav-text">矩阵变形matrix。</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#transition_过渡"><span class="nav-number">2.</span> <span class="nav-text">transition 过渡</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#transition-property_动画属性"><span class="nav-number">2.1.</span> <span class="nav-text">transition-property  动画属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#transition-duration_持续时间"><span class="nav-number">2.2.</span> <span class="nav-text">transition-duration 持续时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#transition-timing-function_动画类型"><span class="nav-number">2.3.</span> <span class="nav-text">transition-timing-function  动画类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#transition-delay_延迟的时间"><span class="nav-number">2.4.</span> <span class="nav-text">transition-delay 延迟的时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#transition的简写"><span class="nav-number">2.5.</span> <span class="nav-text">transition的简写</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#animation_动画"><span class="nav-number">3.</span> <span class="nav-text">animation 动画</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#@keyframes"><span class="nav-number">3.1.</span> <span class="nav-text">@keyframes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#animation语法"><span class="nav-number">3.2.</span> <span class="nav-text">animation语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#animation-iteration-count动画的具体循环次数"><span class="nav-number">3.3.</span> <span class="nav-text">animation-iteration-count动画的具体循环次数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#animation-direction"><span class="nav-number">3.4.</span> <span class="nav-text">animation-direction</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考链接们"><span class="nav-number">4.</span> <span class="nav-text">参考链接们</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#css参考手册"><span class="nav-number">4.1.</span> <span class="nav-text">css参考手册</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#css动画详解"><span class="nav-number">4.2.</span> <span class="nav-text">css动画详解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#css3制作工具"><span class="nav-number">4.3.</span> <span class="nav-text">css3制作工具</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </div>
+      
+
+    </div>
+  </div>
+
+
+    </div>
+
+    <div id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; &nbsp; 
+  2015
+  <span class="with-love">
+    <i class="icon-heart"></i>
+  </span>
+  <span class="author">阿炳</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </div>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('.content img').each(function () {
+        var $image = $(this);
+        var $imageWrapLink = $image.parent('a');
+
+        if ($imageWrapLink.size() < 1) {
+          $imageWrapLink = $image.wrap('<a href="' + this.getAttribute('src') + '"></a>').parent('a');
+        }
+        $imageWrapLink.addClass('fancybox');
+      });
+    });
+    $('.fancybox').fancybox({
+      helpers: {
+        overlay: {
+          locked: false
+        }
+      }
+    });
+  </script>
+
+
+  <script type="text/javascript">
+  function hasMobileUA () {
+    var nav = window.navigator;
+    var ua = nav.userAgent;
+    var pa = /iPad|iPhone|Android|Opera Mini|BlackBerry|webOS|UCWEB|Blazer|PSP|IEMobile|Symbian/g;
+
+    return pa.test(ua);
+  }
+
+  function isDesktop () {
+    return screen.width > 991 && !hasMobileUA();
+  }
+
+  function isTablet () {
+    return screen.width < 992 && screen.width > 767 && hasMobileUA();
+  }
+
+  function isMobile () {
+    return screen.width < 767 && hasMobileUA();
+  }
+
+  function escapeSelector (selector) {
+    return selector.replace(/[!"$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\$&")
+  }
+</script>
+
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" id="motion.global">
+  $(document).ready(function () {
+    var body = $('body');
+    var isSidebarVisible = false;
+    var sidebarToggle = $('.sidebar-toggle');
+    var sidebarToggleLine1st = $('.sidebar-toggle-line-first')
+    var sidebarToggleLine2nd = $('.sidebar-toggle-line-middle');
+    var sidebarToggleLine3rd = $('.sidebar-toggle-line-last');
+    var sidebar = $('.sidebar');
+
+    var SIDEBAR_WIDTH = '320px';
+    var SIDEBAR_DISPLAY_DURATION = 300;
+
+    var sidebarToogleLineStatusInit = {width: '100%', opacity: 1, left: 0, rotateZ: 0, top: 0};
+
+    var sidebarToggleLine1stStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine1stStatusArrow = {width: '50%', rotateZ: '-45deg', top: '2px'};
+    var sidebarToogleLine1stStatusClose = {width: '100%', rotateZ: '-45deg', top: '5px'};
+
+    var sidebarToggleLine2ndStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine2ndStatusArrow = {width: '90%'};
+    var sidebarToogleLine2ndStatusClose = {opacity: 0};
+
+    var sidebarToggleLine3rdStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine3rdStatusArrow = {width: '50%', rotateZ: '45deg', top: '-2px'};
+    var sidebarToogleLine3rdStatusClose = {width: '100%', rotateZ: '45deg', top: '-5px'};
+
+    LogoAndMenuMotion();
+    sidebatToggleMotion();
+    postsListMotion();
+    backToTopMotion();
+
+
+    $(document)
+      .on('sidebar.isShowing', function () {
+        isDesktop() && body.velocity(
+          {paddingRight: SIDEBAR_WIDTH},
+          SIDEBAR_DISPLAY_DURATION
+        );
+        sidebarContentMotion();
+      })
+      .on('sidebar.isHiding', function () {});
+
+    function LogoAndMenuMotion() {
+      $.Velocity.RunSequence([
+        { e: $('.brand'), p: { opacity: 1 }, o: { duration: 100 } },
+        { e: $('.logo'), p: { opacity: 1, top: 0 }, o: { duration: 50} },
+        
+        { e: $('.logo-line-before i'), p: { translateX: "100%" }, o: { duration: 500, sequenceQueue: false } },
+        { e: $('.logo-line-after i'), p: { translateX: "-100%" }, o: { duration: 500, sequenceQueue: false } },
+        
+        { e: $('.site-title'), p: { opacity: 1, top: 0 }, o: { duration: 200 } }
+      ]);
+      $('.menu-item').velocity('transition.slideDownIn', {display: null});
+    }
+
+
+    function backToTopMotion () {
+      var b2top = $('.back-to-top');
+      b2top.on('click', function () {
+        body.velocity('scroll');
+      });
+    }
+
+    function sidebarShowMotion () {
+
+      sidebarToggleLine1st.velocity(sidebarToogleLine1stStatusClose);
+      sidebarToggleLine2nd.velocity(sidebarToogleLine2ndStatusClose);
+      sidebarToggleLine3rd.velocity(sidebarToogleLine3rdStatusClose);
+
+      sidebar.velocity({width: SIDEBAR_WIDTH}, {
+        display: 'block',
+        duration: SIDEBAR_DISPLAY_DURATION,
+        complete: function () {
+          sidebar.addClass('sidebar-active');
+          sidebar.trigger('sidebar.didShow');
+        }
+      });
+      sidebar.trigger('sidebar.isShowing');
+    }
+
+    function sidebarHideMotion () {
+      isDesktop() && body.velocity({paddingRight: 0});
+      sidebar.velocity('reverse');
+
+      sidebarToggleLine1st.velocity(sidebarToggleLine1stStatusInit);
+      sidebarToggleLine2nd.velocity(sidebarToggleLine2ndStatusInit);
+      sidebarToggleLine3rd.velocity(sidebarToggleLine3rdStatusInit);
+
+      sidebar.removeClass('sidebar-active');
+      sidebar.trigger('sidebar.isHiding');
+    };
+
+    function sidebarContentMotion () {
+      $('.sidebar .motion-element').velocity(
+        'transition.slideRightIn',
+        {stagger: 50, drag: true}
+      );
+    }
+
+    function postsListMotion () {
+      var postMotionOptions = window.postMotionOptions || {stagger: 300, drag: true};
+      $('.post').velocity('transition.slideDownIn', postMotionOptions);
+    }
+
+    function sidebatToggleMotion () {
+      sidebarToggle.on('click', function () {
+        isSidebarVisible ? sidebarHideMotion() : sidebarShowMotion();
+        isSidebarVisible = !isSidebarVisible;
+      });
+
+      sidebarToggle.hover(function () {
+        if (isSidebarVisible) {return}
+        sidebarToggleLine1st.velocity('stop').velocity(sidebarToggleLine1stStatusArrow);
+        sidebarToggleLine2nd.velocity('stop').velocity(sidebarToggleLine2ndStatusArrow);
+        sidebarToggleLine3rd.velocity('stop').velocity(sidebarToggleLine3rdStatusArrow);
+      }, function () {
+        if (isSidebarVisible) {return}
+        sidebarToggleLine1st.velocity('stop').velocity(sidebarToggleLine1stStatusInit);
+        sidebarToggleLine2nd.velocity('stop').velocity(sidebarToggleLine2ndStatusInit);
+        sidebarToggleLine3rd.velocity('stop').velocity(sidebarToggleLine3rdStatusInit);
+      });
+    }
+  });
+
+</script>
+
+
+
+
+
+  
+  
+<script type="text/javascript" id="bootstrap.scrollspy.custom">
+  /* ========================================================================
+  * Bootstrap: scrollspy.js v3.3.2
+  * http://getbootstrap.com/javascript/#scrollspy
+  * ========================================================================
+  * Copyright 2011-2015 Twitter, Inc.
+  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+  * ======================================================================== */
+
+  /**
+   * Custom by iissnan
+   *
+   * - Add a `clear.bs.scrollspy` event.
+   * - Esacpe targets selector.
+   */
+
+
+  +function ($) {
+    'use strict';
+
+    // SCROLLSPY CLASS DEFINITION
+    // ==========================
+
+    function ScrollSpy(element, options) {
+      this.$body          = $(document.body)
+      this.$scrollElement = $(element).is(document.body) ? $(window) : $(element)
+      this.options        = $.extend({}, ScrollSpy.DEFAULTS, options)
+      this.selector       = (this.options.target || '') + ' .nav li > a'
+      this.offsets        = []
+      this.targets        = []
+      this.activeTarget   = null
+      this.scrollHeight   = 0
+
+      this.$scrollElement.on('scroll.bs.scrollspy', $.proxy(this.process, this))
+      this.refresh()
+      this.process()
+    }
+
+    ScrollSpy.VERSION  = '3.3.2'
+
+    ScrollSpy.DEFAULTS = {
+      offset: 10
+    }
+
+    ScrollSpy.prototype.getScrollHeight = function () {
+      return this.$scrollElement[0].scrollHeight || Math.max(this.$body[0].scrollHeight, document.documentElement.scrollHeight)
+    }
+
+    ScrollSpy.prototype.refresh = function () {
+      var that          = this
+      var offsetMethod  = 'offset'
+      var offsetBase    = 0
+
+      this.offsets      = []
+      this.targets      = []
+      this.scrollHeight = this.getScrollHeight()
+
+      if (!$.isWindow(this.$scrollElement[0])) {
+        offsetMethod = 'position'
+        offsetBase   = this.$scrollElement.scrollTop()
+      }
+
+      this.$body
+        .find(this.selector)
+        .map(function () {
+          var $el   = $(this)
+          var href  = $el.data('target') || $el.attr('href')
+          var $href = /^#./.test(href) && $(escapeSelector(href)) // Need to escape selector.
+
+          return ($href
+            && $href.length
+            && $href.is(':visible')
+            && [[$href[offsetMethod]().top + offsetBase, href]]) || null
+        })
+        .sort(function (a, b) { return a[0] - b[0] })
+        .each(function () {
+          that.offsets.push(this[0])
+          that.targets.push(this[1])
+        })
+
+
+    }
+
+    ScrollSpy.prototype.process = function () {
+      var scrollTop    = this.$scrollElement.scrollTop() + this.options.offset
+      var scrollHeight = this.getScrollHeight()
+      var maxScroll    = this.options.offset + scrollHeight - this.$scrollElement.height()
+      var offsets      = this.offsets
+      var targets      = this.targets
+      var activeTarget = this.activeTarget
+      var i
+
+      if (this.scrollHeight != scrollHeight) {
+        this.refresh()
+      }
+
+      if (scrollTop >= maxScroll) {
+        return activeTarget != (i = targets[targets.length - 1]) && this.activate(i)
+      }
+
+      if (activeTarget && scrollTop < offsets[0]) {
+        $(this.selector).trigger('clear.bs.scrollspy')  // Add a custom event.
+        this.activeTarget = null
+        return this.clear()
+      }
+
+      for (i = offsets.length; i--;) {
+        activeTarget != targets[i]
+          && scrollTop >= offsets[i]
+          && (!offsets[i + 1] || scrollTop <= offsets[i + 1])
+          && this.activate(targets[i])
+      }
+    }
+
+    ScrollSpy.prototype.activate = function (target) {
+      this.activeTarget = target
+
+      this.clear()
+
+      var selector = this.selector +
+        '[data-target="' + target + '"],' +
+        this.selector + '[href="' + target + '"]'
+
+      var active = $(selector)
+        .parents('li')
+        .addClass('active')
+
+      if (active.parent('.dropdown-menu').length) {
+        active = active
+          .closest('li.dropdown')
+          .addClass('active')
+      }
+
+      active.trigger('activate.bs.scrollspy')
+    }
+
+    ScrollSpy.prototype.clear = function () {
+      $(this.selector)
+        .parentsUntil(this.options.target, '.active')
+        .removeClass('active')
+    }
+
+
+    // SCROLLSPY PLUGIN DEFINITION
+    // ===========================
+
+    function Plugin(option) {
+      return this.each(function () {
+        var $this   = $(this)
+        var data    = $this.data('bs.scrollspy')
+        var options = typeof option == 'object' && option
+
+        if (!data) $this.data('bs.scrollspy', (data = new ScrollSpy(this, options)))
+        if (typeof option == 'string') data[option]()
+      })
+    }
+
+    var old = $.fn.scrollspy
+
+    $.fn.scrollspy             = Plugin
+    $.fn.scrollspy.Constructor = ScrollSpy
+
+
+    // SCROLLSPY NO CONFLICT
+    // =====================
+
+    $.fn.scrollspy.noConflict = function () {
+      $.fn.scrollspy = old
+      return this
+    }
+
+
+    // SCROLLSPY DATA-API
+    // ==================
+
+    $(window).on('load.bs.scrollspy.data-api', function () {
+      $('[data-spy="scroll"]').each(function () {
+        var $spy = $(this)
+        Plugin.call($spy, $spy.data())
+      })
+    })
+
+  }(jQuery);
+</script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var $sidebarInner = $('.sidebar-inner');
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.didShow', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+          var self = this;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      $(indicator).velocity('stop').velocity({
+        opacity: action === 'show' ? 0.4 : 0
+      }, { duration: 100 });
+    }
+
+  });
+</script>
+
+
+  <script type="text/javascript" id="sidebar.nav">
+    $(document).ready(function () {
+      var html = $('html');
+
+      $('.sidebar-nav li').on('click', function () {
+        var item = $(this);
+        var activeTabClassName = 'sidebar-nav-active';
+        var activePanelClassName = 'sidebar-panel-active';
+        if (item.hasClass(activeTabClassName)) {
+          return;
+        }
+
+        var currentTarget = $('.' + activePanelClassName);
+        var target = $('.' + item.data('target'));
+
+        currentTarget.velocity('transition.slideUpOut', 200, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', 200)
+            .addClass(activePanelClassName);
+        });
+
+        item.siblings().removeClass(activeTabClassName);
+        item.addClass(activeTabClassName);
+      });
+
+      $('.post-toc a').on('click', function (e) {
+        e.preventDefault();
+        var offset = $(escapeSelector(this.getAttribute('href'))).offset().top;
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        });
+      });
+
+      // Expand sidebar on post detail page by default, when post has a toc.
+      var $tocContent = $('.post-toc-content');
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0 && isDesktop()) {
+        setTimeout(function () {
+          $('.sidebar-toggle').trigger('click');
+        }, 800);
+      }
+    });
+  </script>
+
+
+
+
+  
+
+  
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ahbing"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+
+
+  
+  
+</body>
+</html>

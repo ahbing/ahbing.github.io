@@ -1,0 +1,941 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.2"/>
+
+
+    <meta name="description" content="诗意的栖居在这个星球上" />
+
+
+
+  <meta name="keywords" content="mongodb," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.2" />
+
+
+
+
+  <title> mongodb和mongoose的总结 // 九月烟树 </title>
+</head>
+
+<body>
+<!--[if lte IE 8]> <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'> <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode"><img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari." style='margin-left:auto;margin-right:auto;display: block;'/></a></div> <![endif]-->
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <div id="header" class="header">
+      <div class="header-inner">
+        <h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand">
+      <span class="logo">
+        <i class="icon-logo"></i>
+      </span>
+      <span class="site-title">九月烟树</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+
+  <ul id="menu" class="menu">
+     
+    
+      
+      <li class="menu-item menu-item-home">
+        <a href="/">
+          <i class="menu-item-icon icon-home"></i> <br />
+          首页
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-archives">
+        <a href="/archives">
+          <i class="menu-item-icon icon-archives"></i> <br />
+          归档
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-about">
+        <a href="/about">
+          <i class="menu-item-icon icon-about"></i> <br />
+          关于
+        </a>
+      </li>
+    
+  </ul>
+
+
+      </div>
+    </div>
+
+    <div id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
+              mongodb和mongoose的总结
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于 2015-05-14
+        </span>
+
+        
+          <span class="post-category">
+            &nbsp; | &nbsp; 分类于
+            
+              <a href="/categories/mongodb/">mongodb</a>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/05/14/mongodb和mongoose的总结/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2015/05/14/mongodb和mongoose的总结/"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </div>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <p>nodejs和mongodb搭配，就好像傳統的php和mysql搭配一樣，是比較常見的一種組合，本文的mongodb都是基於nodejs項目，也假設你已經安裝了mongodb和nodejs。<br>如果還沒有安裝，可以在網上搜索一下。<br><a href="http://docs.mongodb.org/manual/administration/install-on-linux/" target="_blank" rel="external">官方文檔</a> 選擇相應系統安裝mongodb,英語文檔吃力可以和下面的中文文檔對應看。<br><a href="http://docs.mongoing.com/manual-zh/tutorial/install-mongodb-on-os-x.html" target="_blank" rel="external">mongodb中文文檔</a><br><a id="more"></a></p>
+<h2 id="mongodb">mongodb</h2><h3 id="mongodb是什么">mongodb是什么</h3><blockquote>
+<p>MongoDB 是一个基于分布式文件存储的数据库。由C++语言编写。旨在为WEB应用提供可扩展的高性能数据存储解决方案。<br>MongoDB 是一个介于关系数据库和非关系数据库之间的产品，是非关系数据库当中功能最丰富，最像关系数据库的。他支持的数据结构非常松散，是类似json的bson格式，因此可以存储比较复杂的数据类型。Mongo最大的特点是他支持的查询语言非常强大，其语法有点类似于面向对象的查询语言，几乎可以实现类似关系数据库单表查询的绝大部分功能，而且还支持对数据建立索引。 –百度百科</p>
+</blockquote>
+<p>與傳統的sql數據庫不一樣的是，mongodb是nosql數據庫（非關聯數據庫），所以mongodb是沒有表概念的，相應的mongodb有一個叫集合的東西，某種理解上也可以當作是表。</p>
+<h3 id="初識mongodb">初識mongodb</h3><p>在終端輸入 mongo，即打開mongodb了，默認鏈接到test數據庫</p>
+<p><img src="/images/mongodb1.jpg" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show dbs  //&#26597;&#30475;&#26377;&#21738;&#20123;&#25976;&#25818;&#24235;</span><br></pre></td></tr></table></figure>
+<p>這是我電腦上現在有的數據庫</p>
+<p><img src="/images/mongodb2.jpg" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">use dataName   //&#36984;&#25799;&#20351;&#29992;&#30340;&#25976;&#25818;&#24235; &#22914;&#26524;dataName &#19981;&#23384;&#22312;&#65292;&#30070;&#20320;&#26377;&#25976;&#25818;&#23531;&#20837;&#26178;&#65292;&#26371;&#26032;&#24314;&#19968;&#20491;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show collections  //&#39023;&#31034;&#25976;&#25818;&#24235;&#37324;&#30340;&#38598;&#21512;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/mongodb3.jpg" alt=""></p>
+<h3 id="mongodb的CURD">mongodb的CURD</h3><p>存儲數據</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// &#22312;&#60;collectionName&#62;&#20013;&#19968;&#26781;&#25976;&#25818;&#10;// &#22914;&#26524;&#60;collectionName&#62; &#19981;&#23384;&#22312; &#23559;&#21109;&#24314;&#19968;&#20491;&#60;collectionName&#62;&#38598;&#21512;&#10;db.&#60;collectionName&#62;.insert(&#123;&#10;&#9;name:&#39;ahbing&#39;,&#10;&#9;password:&#39;123456&#39;&#10;&#125;);</span><br></pre></td></tr></table></figure>
+<p>查找你的文檔</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//&#36820;&#22238;&#20840;&#37096;&#25991;&#27284;&#10;db.&#60;collectionName&#62;.find(&#123;&#125;);&#10;&#10;// &#25353;&#26781;&#20214;&#26597;&#25214;&#10;db.&#60;collectionName&#62;.find(&#123;name:&#39;ahbing&#39;&#125;);</span><br></pre></td></tr></table></figure>
+<p>更新文檔</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// &#25214;&#21040;&#23559;name&#23383;&#27573;&#28858;ahbing&#30340;&#65292;&#20351;&#29992;$set&#23559;password&#20462;&#25913;&#10;db.&#60;collectionName&#62;.update(&#10;&#9;//&#26597;&#25214;&#26781;&#20214;&#10;&#9;&#123;name:&#39;ahbing&#125;,&#10;&#9;//&#26356;&#26032;&#20351;&#29992;$set&#10;&#9;&#123;$set:&#123;&#10;&#9;&#9;password:&#39;654321&#39;&#10;&#9;&#125;&#125;&#10;&#9;&#10;)</span><br></pre></td></tr></table></figure>
+<p>刪除文檔</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// &#21034;&#38500;&#20840;&#37096;&#25991;&#27284;&#10;db.&#60;collectionName&#62;.remove(&#123;&#125;)&#10;&#10;//  &#21034;&#38500;name&#23383;&#27573;&#28858;ahbing&#30340;&#25991;&#27284;&#10;db.&#60;collectionName&#62;.remove(&#123;name&#34;ahbing&#34;&#125;)</span><br></pre></td></tr></table></figure>
+<p>更多內容可以去看官方文檔。</p>
+<h3 id="mongodb在项目中的使用实例">mongodb在项目中的使用实例</h3><p>我在自己的第一個nodejs項目里使用了mongodb，<a href="https://github.com/ahbing/hdubook.git" target="_blank" rel="external">杭電書城</a> 前端頁面還有待重構。這裡做一下總結</p>
+<h4 id="鏈接數據庫">鏈接數據庫</h4><p>setting.js   存儲了數據庫名，主機，端口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//  &#36890;&#36942;module.exports &#23559;&#25972;&#20491;&#37197;&#32622;&#20449;&#24687;&#23566;&#20986;&#10;module.exports = &#123;&#10;&#9;db : &#39;hdubook&#39;,&#10;&#9;host : &#39;localhost&#39;,&#10;&#9;port : 27017&#10;&#125;;</span><br></pre></td></tr></table></figure>
+<p>/models/db.js</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// &#23559;&#23566;&#20986;&#30340;&#25976;&#25818;&#24235;&#37197;&#32622;&#20449;&#24687;&#23566;&#20837;&#10;var settings = require(&#39;../settings&#39;),&#10;&#9;// &#24341;&#20837;mongodb&#10;    Db = require(&#39;mongodb&#39;).Db,&#10;    Connection = require(&#39;mongodb&#39;).Connection,&#10;    Server = require(&#39;mongodb&#39;).Server;&#10;    // &#21109;&#24314;&#25976;&#25818;&#24235;&#37832;&#25509;  &#20006;&#23559;&#25976;&#25818;&#24235;&#30340;&#37832;&#25509;&#23526;&#20363;&#23566;&#20986; &#26041;&#20415;&#20854;&#20182;&#27169;&#22411;&#24341;&#29992;&#10;module.exports = new Db(settings.db, new Server(settings.host, settings.port), &#123;safe: true&#125;);</span><br></pre></td></tr></table></figure>
+<p>以User模型為例，裡面封裝了一些操作用戶數據的方法。</p>
+<p>/model/User.js  存儲一條數據</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//&#24341;&#20837;&#25976;&#25818;&#24235;&#23526;&#20363;&#10;var mongodb = require(&#39;./db&#39;);&#10;&#10;// user &#26159;&#19968;&#20491;&#23384;&#25918;&#29992;&#25142;&#20449;&#24687;&#30340;&#23565;&#35937;&#10;function User(user)&#123;&#10;&#9;this.name = user.name;  //&#29992;&#25142;&#21517;&#10;&#9;this.password = user.password;  //&#23494;&#30908;&#10;&#125;&#10;&#10;// &#23559;&#29992;&#25142;&#27169;&#22411;&#23566;&#20986;&#65292;&#22312;&#36335;&#30001;&#26366;&#24341;&#20837;&#65292;&#20006;&#20351;&#29992;&#27169;&#22411;&#37324;&#30340;&#30456;&#25033;&#30340;&#26041;&#27861;&#10;&#10;module.exports = User;&#10;&#10;&#22312;User&#21407;&#22411;&#19978;&#23531;&#19968;&#20491;insert&#30340;&#26041;&#27861;&#10;&#10;User.prototype.save = function(callback)&#123;&#10;&#9;var date = new Date();&#10;&#9;//&#23384;&#20786;&#30340;&#26178;&#38291;&#36611;&#28304;&#30908;&#31245;&#20316;&#20102;&#31777;&#21270;&#10;&#9;var time = date.getFullYear() + &#39;-&#39; + (date.getMonth()+1) + &#39;-&#39; +date.getDay();&#10;&#9;var user = &#123;&#10;&#9;&#9;name :this.name,&#10;&#9;&#9;password : this.password,&#10;&#9;&#9;//  &#29992;&#25142;&#23384;&#20786;&#25844;&#23637;&#10;&#9;&#125;;&#10;&#9;//  &#36890;&#36942;&#24341;&#20837;&#30340;mongodb &#23526;&#20363; &#21435;&#25805;&#20316;&#25976;&#25818;&#24235;&#10;&#9;// &#25171;&#38283;&#25976;&#25818;&#24235;  &#22238;&#35519;&#20989;&#25976;&#30340;&#31532;&#19968;&#20491;&#21443;&#25976;&#26159;&#37679;&#35492;&#65292;&#31532;&#20108;&#20491;&#21443;&#25976;&#26159;&#21478;&#19968;&#20491;&#22238;&#35519;&#65292;&#22312;router&#26366;&#35519;&#29992;&#10;&#9;mongodb.open(function(err,callback)&#123;&#10;&#9;&#9;// &#37679;&#35492;&#27298;&#28204;  &#20197;&#38450;&#24847;&#24819;&#19981;&#21040;&#30340;&#37679;&#35492;&#10;&#9;&#9;if(err)&#123;&#10;&#9;&#9;&#9;//  &#38364;&#38281;&#25976;&#25818;&#24235;&#10;&#9;&#9;&#9;mongodb.close();&#10;&#9;&#9;&#9;//  return&#32102;router&#65292;&#20006;&#23559;err&#30070;&#37679;&#21443;&#25976;&#20659;&#32102;&#35201;&#35519;&#29992;&#30340;&#22238;&#35519;&#20989;&#25976;&#10;&#9;&#9;&#9;return callback(err);&#10;&#9;&#9;&#125;&#10;&#9;&#9;db.collection(&#39;users&#39;,function(err,collection)&#123;if(err)&#123;&#10;&#9;&#9;mondodb.close();&#10;&#9;&#9;return callback(err)&#125;&#10;&#9;&#9;&#125;&#10;&#9;&#9;//&#23559;&#35201;&#20786;&#23384;&#30340;&#20449;&#24687; &#25554;&#20837; users &#38598;&#21512;&#10;&#9;&#9;&#9;// &#36889;&#35041;&#30340;user &#26159;&#19968;&#20491;json&#23384;&#20786;&#32773;&#29992;&#25142;&#20449;&#24687;&#10;&#9;&#9;&#9;collection.insert(user,&#123;safe:true&#125;,function(err)&#123;&#10;&#9;&#9;&#9;&#9;mongodb.close();&#10;&#9;&#9;&#9;&#9;if(err)&#123;&#10;&#9;&#9;&#9;&#9;&#9;return callback(err);&#10;&#9;&#9;&#9;&#9;&#125;&#10;&#9;&#9;&#9;&#9;callback(null);&#10;&#9;&#9;&#9;&#125;););&#10;&#9;&#125;);&#10;&#125;;</span><br></pre></td></tr></table></figure>
+<p>路由曾調用User 模型的 save 方法 較源碼稍作簡化</p>
+<p>routes/index.js</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var User = require(&#39;../models/user.js&#39;);&#10;&#10;//  &#30070;&#26377;&#29992;&#25142;&#25552;&#20132;&#35387;&#20874;&#20449;&#24687;&#30340;&#26178;&#20505;&#22519;&#34892;save&#10;&#10;app.post(&#39;/reg&#39;,function(req,res)&#123;&#10;&#9;var newUser = new User(&#123;&#10;&#9;&#9;name:req.body.name,&#10;&#9;&#9;password:req.body.password, &#9;&#10;&#9;&#125;);&#10;&#9;//save&#26041;&#27861;&#23531;&#22312;&#21407;&#22411;&#19978; &#36890;&#36942;&#23526;&#20363;&#35519;&#29992;&#10;&#9;newUser.save(function(err,user)&#123;&#10;&#9;&#9;if(err)&#123;&#10;&#9;&#9;&#9;req.flash(&#39;error&#39;,err);&#10;&#9;&#9;&#9;return res.redirect(&#39;/reg&#39;);&#10;&#9;&#9;&#125;&#10;&#9;&#9;//&#27794;&#26377;&#37679;&#35492; &#23601;&#23559;&#29992;&#25142;&#20449;&#24687;&#23531;&#20837;session&#10;&#9;&#9;req.session.user = user;&#10;&#9;&#9;req.flash(&#39;success&#39;,&#39;&#27489;&#36814;&#20320; :-)&#39;);&#10;&#9;&#9;res.redirect(&#39;/&#39;);   //&#35387;&#20874;&#25104;&#21151;&#36820;&#22238;&#20027;&#38913;&#10;&#9;&#125;);&#10;&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="mongoose">mongoose</h2><p>使用mongoose可以優雅的操作mongodb，前提是你需要安裝了nodejs和mongodb<br>使用npm安裝mongoose</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install mongoose</span><br></pre></td></tr></table></figure>
+<h3 id="用mongoose优雅的操作mongodb">用mongoose优雅的操作mongodb</h3><p><a href="http://mongoosejs.com/" target="_blank" rel="external">mongoose官網</a><br><a href="https://cnodejs.org/topic/504b4924e2b84515770103dd" target="_blank" rel="external">Mongoose学习参考文档</a></p>
+<blockquote>
+<p>Schema ： 一种以文件形式存储的数据库模型骨架，不具备数据库的操作能力</p>
+<p>Model ：由Schema发布生成的模型，具有抽象属性和行为的数据库操作对</p>
+<p>Entity ：由Model创建的实体，他的操作也会影响数据库</p>
+<p> —-Mongoose学习参考文档</p>
+</blockquote>
+<p>mongoose的學習，主要是要理解他的結構，上面的文章和官網能帶你理解，<a href="https://github.com/airuikun/mongoose_crud" target="_blank" rel="external">https://github.com/airuikun/mongoose_crud</a> 看這為同學的實例代碼能更快的理解到mongoose的CURD的使用</p>
+<h3 id="beta分享中的mongoose總結">beta分享中的mongoose總結</h3><p>models/connect.js</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//&#24341;&#20837;mongoose &#10;&#10;var mongoose = require(&#39;mongoose&#39;);&#10;&#10;//&#37832;&#25509;&#26412;&#22320;&#21517;&#28858;share&#30340;&#25976;&#25818;&#24235;&#10;// &#23559;mongoose&#23526;&#20363;&#23566;&#20986;&#10;&#10;module.exports = mongoose.connect(&#39;mongodb://localhost/share&#39;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#24341;&#20837;&#37832;&#25509;&#25976;&#25818;&#24235;&#23526;&#20363;&#10;var mongoose = require(&#39;./connect&#39;);&#10;&#10;// &#23384;mongoose &#30340; Schema&#10;var Schema = mongoose.Schema;&#10;&#10;//&#36611;&#28304;&#30908;&#24050;&#32147;&#31777;&#21270;&#10;var UserSchema = new Schema(&#123;&#10;&#9;email:String,&#10;&#9;name:String,&#10;&#9;password:String&#10;&#125;);&#10;//  &#23559;addUser &#26041;&#27861;&#23531;&#22312; Schema&#26159;&#19978;  &#25152;&#26377;&#30340;model &#37117;&#21487;&#20197;&#29992;&#10;// params:1&#26159;user&#30340;&#29992;&#25142;&#25976;&#25818;&#23565;&#35937;   2&#26159;&#19968;&#20491;&#22238;&#35519;&#10;UserSchema.methods.addUser = function(user,callback)&#123;&#10;&#9;this.email = user.email;&#10;&#9;this.name = user.name;&#10;&#9;this.password = user.password;&#10;&#9;// &#35519;&#29992;model&#30340;save api  &#36889;&#35041;&#30340;this&#25351;&#21521; &#26032;new &#30340; User &#23526;&#20363;&#65288;&#22312;&#36335;&#30001;&#23652;&#65289;&#10;&#9;this.save(callback);&#10;&#125;;&#10;&#10;//&#21109;&#24314; users &#30340;&#19968;&#20010;&#38598;&#21512;&#10;var User = mongoose.model(&#39;users&#39;,UserSchema);&#10;module.exports = User;</span><br></pre></td></tr></table></figure>
+<p>路由層的實例,代碼已做相應簡化，重在說明問題<br>routes/index.js</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// &#24341;&#20837;User models&#10;var User = require(&#39;../models/User&#39;);&#10;&#10;router.post(&#39;/&#39;,function(req,res)&#123;&#10;&#9;// &#35387;&#20874;  &#24050;&#32147;&#31777;&#21270;&#20102;&#20195;&#30908;&#10;&#9;var user = new User();&#10;&#9;var name = req.body.name;&#10;&#9;var password = req.body.password;&#10;&#9;var newuser = &#123;&#10;&#9;&#9;name:name,&#10;&#9;&#9;password:password&#10;&#9;&#125;;&#10;&#9;// &#35519;&#29992;addUser&#10;&#9;user.addUser(newuser,function(err,user)&#123;&#10;&#9;&#9;if(err)&#123;&#10;&#9;&#9;&#9;//&#26377;&#37679;&#35492;&#37325;&#23450;&#21521;&#10;&#9;&#9;&#9;console.log(err);&#10;&#9;&#9;&#9;return res.redirect(&#39;/&#39;);&#10;&#9;&#9;&#125;&#10;&#9;&#9;// &#35387;&#20874;&#25104;&#21151;&#20063;&#22238;&#21040;&#20027;&#38913;&#10;&#9;&#9;res.redirect(&#39;/&#39;);&#10;&#9;&#125;);&#10;&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="mongoose的常用api">mongoose的常用api</h3><p><a href="http://mongoosejs.com/docs/api.html#model_Model.find" target="_blank" rel="external">Model.find</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var query = &#123; name:&#39;ahbing&#39; &#125;;&#10;&#10;// &#26597;&#25214;&#21517;&#28858;name &#23383;&#27573;&#28858;ahbing&#30340;&#25152;&#26377;&#29992;&#25142;&#10;Model.find(query,function(err,users)&#123;&#10;&#9;// doSomethig&#10;&#125;);&#10;&#10;// &#26597;&#25214;&#21517;&#28858;name &#23383;&#27573;&#28858;ahbing&#65292;&#19988;age&#36889;&#20491;&#23383;&#27573;&#22823;&#26044;18&#30340;&#25152;&#26377;&#29992;&#25142;&#10;Model.find(query, age: &#123; $gte: 18 &#125;&#125;,function(err,users)&#123;&#10;&#9;//doSomething&#10;&#125;);</span><br></pre></td></tr></table></figure>
+<p><a href="http://mongoosejs.com/docs/api.html#model_Model.update" target="_blank" rel="external">Model.update</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// &#23559;name&#23383;&#27573;&#28858;ahbing&#30340;password **&#20840;&#37096;** &#26356;&#26032;&#28858; 6543321&#10;var conditions = &#123; name : &#39;ahbing&#39;&#125;,&#10;&#9;update = &#123; $set:&#123;password : &#39;654321&#39;&#125; &#125;,&#10;&#9;//true &#26356;&#26032;&#22810;&#20491;&#10;&#9;options = &#123; multi: true &#125;;&#10;&#10;Model.update(conditions,update,options,callback);</span><br></pre></td></tr></table></figure>
+<p>如果不提供回调函数，所有这些方法都返回 Query 对象，它们都可以被再次修改（比如增加选项、键等），直到调用 exec 方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var query = Model.find(&#123;&#125;);&#10;// &#36339;&#36942;&#26597;&#35426;&#32080;&#26524;&#30340;&#21069;10&#20491;&#10;query.skip(10);&#10;// &#26597;&#35426;&#32080;&#26524;&#21462;&#21313;&#20491;&#10;query.limit(10);&#10;// &#26597;&#35426;&#32080;&#26524;&#26681;&#25818;time &#23383;&#27573; &#20498;&#24207;&#10;query.sort(&#123;time:-1&#125;);&#10;//&#22519;&#34892;&#26597;&#35426;&#10;query.exec(function(err,docs)&#123;&#10;&#9;//doSomething&#10;&#125;);</span><br></pre></td></tr></table></figure>
+<p>此外</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//&#26597;&#35426;&#25976;&#37327;&#10;Model.count(conditions, [callback])&#10;&#10;// &#26681;&#25818;id&#23383;&#27573;&#26597;&#10;Model.findById(id, [projection], [options], [callback])&#10;&#10;// &#26597;&#35426;&#32080;&#26524;&#36820;&#22238;&#19968;&#20491;&#10;Model.findOne([conditions], [projection], [options], [callback])</span><br></pre></td></tr></table></figure>
+<p><a href="http://mongoosejs.com/docs/api.html" target="_blank" rel="external">mongoose全部API</a></p>
+<h2 id="參考鏈接">參考鏈接</h2><p>參考鏈接部分已經在文章中</p>
+<p><a href="https://github.com/alsotang/node-lessons/tree/master/lesson15" target="_blank" rel="external">《Mongodb 与 Mongoose 的使用》</a></p>
+
+      
+    </div>
+
+    <div class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mongodb/"> #mongodb </a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/05/15/ajax的使用總結/">ajax的使用總結</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/05/13/nodejs和mongodb项目在线部署/">nodejs和mongodb项目在线部署</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </div>
+  </div>
+
+
+
+    
+      <div class="comments" id="comments">
+        
+          <div class="ds-thread" data-thread-key="2015/05/14/mongodb和mongoose的总结/"
+               data-title="mongodb和mongoose的总结" data-url="http://huangbingbing.com/2015/05/14/mongodb和mongoose的总结/">
+          </div>
+        
+      </div>
+    
+  </div>
+
+
+        </div>
+
+        
+      </div>
+
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview">
+        <div class="site-author motion-element">
+          <img class="site-author-image" src="http://tp2.sinaimg.cn/5622195893/180/40087750383/1" alt="阿炳" />
+          <p class="site-author-name">阿炳</p>
+        </div>
+        <p class="site-description motion-element">诗意的栖居在这个星球上</p>
+        <div class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">26</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-name">分类</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            
+              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-name">标签</span>
+              
+          </div>
+
+        </div>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+              <a href="https://github.com/ahbing/" target="_blank">GitHub</a>
+            </span>
+            
+              <span class="links-of-author-item">
+              <a href="https://twitter.com/aahbing" target="_blank">Twitter</a>
+            </span>
+            
+              <span class="links-of-author-item">
+              <a href="http://weibo.com/u/5622195893" target="_blank">Weibo</a>
+            </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+      </div>
+
+      
+        <div class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#mongodb"><span class="nav-number">1.</span> <span class="nav-text">mongodb</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#mongodb是什么"><span class="nav-number">1.1.</span> <span class="nav-text">mongodb是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#初識mongodb"><span class="nav-number">1.2.</span> <span class="nav-text">初識mongodb</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mongodb的CURD"><span class="nav-number">1.3.</span> <span class="nav-text">mongodb的CURD</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mongodb在项目中的使用实例"><span class="nav-number">1.4.</span> <span class="nav-text">mongodb在项目中的使用实例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#鏈接數據庫"><span class="nav-number">1.4.1.</span> <span class="nav-text">鏈接數據庫</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mongoose"><span class="nav-number">2.</span> <span class="nav-text">mongoose</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#用mongoose优雅的操作mongodb"><span class="nav-number">2.1.</span> <span class="nav-text">用mongoose优雅的操作mongodb</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#beta分享中的mongoose總結"><span class="nav-number">2.2.</span> <span class="nav-text">beta分享中的mongoose總結</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mongoose的常用api"><span class="nav-number">2.3.</span> <span class="nav-text">mongoose的常用api</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#參考鏈接"><span class="nav-number">3.</span> <span class="nav-text">參考鏈接</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </div>
+      
+
+    </div>
+  </div>
+
+
+    </div>
+
+    <div id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; &nbsp; 
+  2015
+  <span class="with-love">
+    <i class="icon-heart"></i>
+  </span>
+  <span class="author">阿炳</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </div>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('.content img').each(function () {
+        var $image = $(this);
+        var $imageWrapLink = $image.parent('a');
+
+        if ($imageWrapLink.size() < 1) {
+          $imageWrapLink = $image.wrap('<a href="' + this.getAttribute('src') + '"></a>').parent('a');
+        }
+        $imageWrapLink.addClass('fancybox');
+      });
+    });
+    $('.fancybox').fancybox({
+      helpers: {
+        overlay: {
+          locked: false
+        }
+      }
+    });
+  </script>
+
+
+  <script type="text/javascript">
+  function hasMobileUA () {
+    var nav = window.navigator;
+    var ua = nav.userAgent;
+    var pa = /iPad|iPhone|Android|Opera Mini|BlackBerry|webOS|UCWEB|Blazer|PSP|IEMobile|Symbian/g;
+
+    return pa.test(ua);
+  }
+
+  function isDesktop () {
+    return screen.width > 991 && !hasMobileUA();
+  }
+
+  function isTablet () {
+    return screen.width < 992 && screen.width > 767 && hasMobileUA();
+  }
+
+  function isMobile () {
+    return screen.width < 767 && hasMobileUA();
+  }
+
+  function escapeSelector (selector) {
+    return selector.replace(/[!"$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\$&")
+  }
+</script>
+
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" id="motion.global">
+  $(document).ready(function () {
+    var body = $('body');
+    var isSidebarVisible = false;
+    var sidebarToggle = $('.sidebar-toggle');
+    var sidebarToggleLine1st = $('.sidebar-toggle-line-first')
+    var sidebarToggleLine2nd = $('.sidebar-toggle-line-middle');
+    var sidebarToggleLine3rd = $('.sidebar-toggle-line-last');
+    var sidebar = $('.sidebar');
+
+    var SIDEBAR_WIDTH = '320px';
+    var SIDEBAR_DISPLAY_DURATION = 300;
+
+    var sidebarToogleLineStatusInit = {width: '100%', opacity: 1, left: 0, rotateZ: 0, top: 0};
+
+    var sidebarToggleLine1stStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine1stStatusArrow = {width: '50%', rotateZ: '-45deg', top: '2px'};
+    var sidebarToogleLine1stStatusClose = {width: '100%', rotateZ: '-45deg', top: '5px'};
+
+    var sidebarToggleLine2ndStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine2ndStatusArrow = {width: '90%'};
+    var sidebarToogleLine2ndStatusClose = {opacity: 0};
+
+    var sidebarToggleLine3rdStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine3rdStatusArrow = {width: '50%', rotateZ: '45deg', top: '-2px'};
+    var sidebarToogleLine3rdStatusClose = {width: '100%', rotateZ: '45deg', top: '-5px'};
+
+    LogoAndMenuMotion();
+    sidebatToggleMotion();
+    postsListMotion();
+    backToTopMotion();
+
+
+    $(document)
+      .on('sidebar.isShowing', function () {
+        isDesktop() && body.velocity(
+          {paddingRight: SIDEBAR_WIDTH},
+          SIDEBAR_DISPLAY_DURATION
+        );
+        sidebarContentMotion();
+      })
+      .on('sidebar.isHiding', function () {});
+
+    function LogoAndMenuMotion() {
+      $.Velocity.RunSequence([
+        { e: $('.brand'), p: { opacity: 1 }, o: { duration: 100 } },
+        { e: $('.logo'), p: { opacity: 1, top: 0 }, o: { duration: 50} },
+        
+        { e: $('.logo-line-before i'), p: { translateX: "100%" }, o: { duration: 500, sequenceQueue: false } },
+        { e: $('.logo-line-after i'), p: { translateX: "-100%" }, o: { duration: 500, sequenceQueue: false } },
+        
+        { e: $('.site-title'), p: { opacity: 1, top: 0 }, o: { duration: 200 } }
+      ]);
+      $('.menu-item').velocity('transition.slideDownIn', {display: null});
+    }
+
+
+    function backToTopMotion () {
+      var b2top = $('.back-to-top');
+      b2top.on('click', function () {
+        body.velocity('scroll');
+      });
+    }
+
+    function sidebarShowMotion () {
+
+      sidebarToggleLine1st.velocity(sidebarToogleLine1stStatusClose);
+      sidebarToggleLine2nd.velocity(sidebarToogleLine2ndStatusClose);
+      sidebarToggleLine3rd.velocity(sidebarToogleLine3rdStatusClose);
+
+      sidebar.velocity({width: SIDEBAR_WIDTH}, {
+        display: 'block',
+        duration: SIDEBAR_DISPLAY_DURATION,
+        complete: function () {
+          sidebar.addClass('sidebar-active');
+          sidebar.trigger('sidebar.didShow');
+        }
+      });
+      sidebar.trigger('sidebar.isShowing');
+    }
+
+    function sidebarHideMotion () {
+      isDesktop() && body.velocity({paddingRight: 0});
+      sidebar.velocity('reverse');
+
+      sidebarToggleLine1st.velocity(sidebarToggleLine1stStatusInit);
+      sidebarToggleLine2nd.velocity(sidebarToggleLine2ndStatusInit);
+      sidebarToggleLine3rd.velocity(sidebarToggleLine3rdStatusInit);
+
+      sidebar.removeClass('sidebar-active');
+      sidebar.trigger('sidebar.isHiding');
+    };
+
+    function sidebarContentMotion () {
+      $('.sidebar .motion-element').velocity(
+        'transition.slideRightIn',
+        {stagger: 50, drag: true}
+      );
+    }
+
+    function postsListMotion () {
+      var postMotionOptions = window.postMotionOptions || {stagger: 300, drag: true};
+      $('.post').velocity('transition.slideDownIn', postMotionOptions);
+    }
+
+    function sidebatToggleMotion () {
+      sidebarToggle.on('click', function () {
+        isSidebarVisible ? sidebarHideMotion() : sidebarShowMotion();
+        isSidebarVisible = !isSidebarVisible;
+      });
+
+      sidebarToggle.hover(function () {
+        if (isSidebarVisible) {return}
+        sidebarToggleLine1st.velocity('stop').velocity(sidebarToggleLine1stStatusArrow);
+        sidebarToggleLine2nd.velocity('stop').velocity(sidebarToggleLine2ndStatusArrow);
+        sidebarToggleLine3rd.velocity('stop').velocity(sidebarToggleLine3rdStatusArrow);
+      }, function () {
+        if (isSidebarVisible) {return}
+        sidebarToggleLine1st.velocity('stop').velocity(sidebarToggleLine1stStatusInit);
+        sidebarToggleLine2nd.velocity('stop').velocity(sidebarToggleLine2ndStatusInit);
+        sidebarToggleLine3rd.velocity('stop').velocity(sidebarToggleLine3rdStatusInit);
+      });
+    }
+  });
+
+</script>
+
+
+
+
+
+  
+  
+<script type="text/javascript" id="bootstrap.scrollspy.custom">
+  /* ========================================================================
+  * Bootstrap: scrollspy.js v3.3.2
+  * http://getbootstrap.com/javascript/#scrollspy
+  * ========================================================================
+  * Copyright 2011-2015 Twitter, Inc.
+  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+  * ======================================================================== */
+
+  /**
+   * Custom by iissnan
+   *
+   * - Add a `clear.bs.scrollspy` event.
+   * - Esacpe targets selector.
+   */
+
+
+  +function ($) {
+    'use strict';
+
+    // SCROLLSPY CLASS DEFINITION
+    // ==========================
+
+    function ScrollSpy(element, options) {
+      this.$body          = $(document.body)
+      this.$scrollElement = $(element).is(document.body) ? $(window) : $(element)
+      this.options        = $.extend({}, ScrollSpy.DEFAULTS, options)
+      this.selector       = (this.options.target || '') + ' .nav li > a'
+      this.offsets        = []
+      this.targets        = []
+      this.activeTarget   = null
+      this.scrollHeight   = 0
+
+      this.$scrollElement.on('scroll.bs.scrollspy', $.proxy(this.process, this))
+      this.refresh()
+      this.process()
+    }
+
+    ScrollSpy.VERSION  = '3.3.2'
+
+    ScrollSpy.DEFAULTS = {
+      offset: 10
+    }
+
+    ScrollSpy.prototype.getScrollHeight = function () {
+      return this.$scrollElement[0].scrollHeight || Math.max(this.$body[0].scrollHeight, document.documentElement.scrollHeight)
+    }
+
+    ScrollSpy.prototype.refresh = function () {
+      var that          = this
+      var offsetMethod  = 'offset'
+      var offsetBase    = 0
+
+      this.offsets      = []
+      this.targets      = []
+      this.scrollHeight = this.getScrollHeight()
+
+      if (!$.isWindow(this.$scrollElement[0])) {
+        offsetMethod = 'position'
+        offsetBase   = this.$scrollElement.scrollTop()
+      }
+
+      this.$body
+        .find(this.selector)
+        .map(function () {
+          var $el   = $(this)
+          var href  = $el.data('target') || $el.attr('href')
+          var $href = /^#./.test(href) && $(escapeSelector(href)) // Need to escape selector.
+
+          return ($href
+            && $href.length
+            && $href.is(':visible')
+            && [[$href[offsetMethod]().top + offsetBase, href]]) || null
+        })
+        .sort(function (a, b) { return a[0] - b[0] })
+        .each(function () {
+          that.offsets.push(this[0])
+          that.targets.push(this[1])
+        })
+
+
+    }
+
+    ScrollSpy.prototype.process = function () {
+      var scrollTop    = this.$scrollElement.scrollTop() + this.options.offset
+      var scrollHeight = this.getScrollHeight()
+      var maxScroll    = this.options.offset + scrollHeight - this.$scrollElement.height()
+      var offsets      = this.offsets
+      var targets      = this.targets
+      var activeTarget = this.activeTarget
+      var i
+
+      if (this.scrollHeight != scrollHeight) {
+        this.refresh()
+      }
+
+      if (scrollTop >= maxScroll) {
+        return activeTarget != (i = targets[targets.length - 1]) && this.activate(i)
+      }
+
+      if (activeTarget && scrollTop < offsets[0]) {
+        $(this.selector).trigger('clear.bs.scrollspy')  // Add a custom event.
+        this.activeTarget = null
+        return this.clear()
+      }
+
+      for (i = offsets.length; i--;) {
+        activeTarget != targets[i]
+          && scrollTop >= offsets[i]
+          && (!offsets[i + 1] || scrollTop <= offsets[i + 1])
+          && this.activate(targets[i])
+      }
+    }
+
+    ScrollSpy.prototype.activate = function (target) {
+      this.activeTarget = target
+
+      this.clear()
+
+      var selector = this.selector +
+        '[data-target="' + target + '"],' +
+        this.selector + '[href="' + target + '"]'
+
+      var active = $(selector)
+        .parents('li')
+        .addClass('active')
+
+      if (active.parent('.dropdown-menu').length) {
+        active = active
+          .closest('li.dropdown')
+          .addClass('active')
+      }
+
+      active.trigger('activate.bs.scrollspy')
+    }
+
+    ScrollSpy.prototype.clear = function () {
+      $(this.selector)
+        .parentsUntil(this.options.target, '.active')
+        .removeClass('active')
+    }
+
+
+    // SCROLLSPY PLUGIN DEFINITION
+    // ===========================
+
+    function Plugin(option) {
+      return this.each(function () {
+        var $this   = $(this)
+        var data    = $this.data('bs.scrollspy')
+        var options = typeof option == 'object' && option
+
+        if (!data) $this.data('bs.scrollspy', (data = new ScrollSpy(this, options)))
+        if (typeof option == 'string') data[option]()
+      })
+    }
+
+    var old = $.fn.scrollspy
+
+    $.fn.scrollspy             = Plugin
+    $.fn.scrollspy.Constructor = ScrollSpy
+
+
+    // SCROLLSPY NO CONFLICT
+    // =====================
+
+    $.fn.scrollspy.noConflict = function () {
+      $.fn.scrollspy = old
+      return this
+    }
+
+
+    // SCROLLSPY DATA-API
+    // ==================
+
+    $(window).on('load.bs.scrollspy.data-api', function () {
+      $('[data-spy="scroll"]').each(function () {
+        var $spy = $(this)
+        Plugin.call($spy, $spy.data())
+      })
+    })
+
+  }(jQuery);
+</script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var $sidebarInner = $('.sidebar-inner');
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.didShow', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+          var self = this;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      $(indicator).velocity('stop').velocity({
+        opacity: action === 'show' ? 0.4 : 0
+      }, { duration: 100 });
+    }
+
+  });
+</script>
+
+
+  <script type="text/javascript" id="sidebar.nav">
+    $(document).ready(function () {
+      var html = $('html');
+
+      $('.sidebar-nav li').on('click', function () {
+        var item = $(this);
+        var activeTabClassName = 'sidebar-nav-active';
+        var activePanelClassName = 'sidebar-panel-active';
+        if (item.hasClass(activeTabClassName)) {
+          return;
+        }
+
+        var currentTarget = $('.' + activePanelClassName);
+        var target = $('.' + item.data('target'));
+
+        currentTarget.velocity('transition.slideUpOut', 200, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', 200)
+            .addClass(activePanelClassName);
+        });
+
+        item.siblings().removeClass(activeTabClassName);
+        item.addClass(activeTabClassName);
+      });
+
+      $('.post-toc a').on('click', function (e) {
+        e.preventDefault();
+        var offset = $(escapeSelector(this.getAttribute('href'))).offset().top;
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        });
+      });
+
+      // Expand sidebar on post detail page by default, when post has a toc.
+      var $tocContent = $('.post-toc-content');
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0 && isDesktop()) {
+        setTimeout(function () {
+          $('.sidebar-toggle').trigger('click');
+        }, 800);
+      }
+    });
+  </script>
+
+
+
+
+  
+
+  
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ahbing"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+
+
+  
+  
+</body>
+</html>

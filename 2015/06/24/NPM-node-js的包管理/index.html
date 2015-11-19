@@ -1,0 +1,995 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.2"/>
+
+
+    <meta name="description" content="诗意的栖居在这个星球上" />
+
+
+
+  <meta name="keywords" content="nodejs," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.2" />
+
+
+
+
+  <title> NPM--node.js的包管理 // 九月烟树 </title>
+</head>
+
+<body>
+<!--[if lte IE 8]> <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'> <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode"><img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari." style='margin-left:auto;margin-right:auto;display: block;'/></a></div> <![endif]-->
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <div id="header" class="header">
+      <div class="header-inner">
+        <h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand">
+      <span class="logo">
+        <i class="icon-logo"></i>
+      </span>
+      <span class="site-title">九月烟树</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+
+  <ul id="menu" class="menu">
+     
+    
+      
+      <li class="menu-item menu-item-home">
+        <a href="/">
+          <i class="menu-item-icon icon-home"></i> <br />
+          首页
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-archives">
+        <a href="/archives">
+          <i class="menu-item-icon icon-archives"></i> <br />
+          归档
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-about">
+        <a href="/about">
+          <i class="menu-item-icon icon-about"></i> <br />
+          关于
+        </a>
+      </li>
+    
+  </ul>
+
+
+      </div>
+    </div>
+
+    <div id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
+              NPM--node.js的包管理
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于 2015-06-24
+        </span>
+
+        
+          <span class="post-category">
+            &nbsp; | &nbsp; 分类于
+            
+              <a href="/categories/nodejs/">nodejs</a>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/06/24/NPM-node-js的包管理/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2015/06/24/NPM-node-js的包管理/"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </div>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <p>npm是nodejs的官方包管理，本文介绍了一些你需要知道的重点可以让你高效的使用npm。</p>
+<p><a href="https://www.npmjs.com/" target="_blank" rel="external">npm</a>包管理是和<a href="https://nodejs.org/" target="_blank" rel="external">node.js</a>捆绑安装的，他保存所有nodejs项目的的依赖路径，而且你有权限去管理依赖。</p>
+<p>NPM可以很简单复用成千上万个开源的包来解决大量的常见问题，你也可以通过在NPM的注册表，在社区分享你的代码。</p>
+<p>因为现在JavaScript可以在客户端和服务器端使用，所有有很多种不同的包：有些是为服务器端准备的，有些实质上是命令行的程序，还有些是为前端开发所创造的，所有的包都在NPM的官方网站上罗列。</p>
+<p>本文介绍你可以通过NPM做些什么，也涉及了大量常用的命令。</p>
+<a id="more"></a>
+<h3 id="初始化一个项目">初始化一个项目</h3><p>当你使用nodejs启动一个新项目，你需要创建一个<code>package.json</code>文件。这是一个你包依赖路径的清单文件，为你的项目提供元数据，也可以通过命令行执行，有选项的定义一些项目的具体任务。</p>
+<p>如果你已经装了node.js，npm 命令已经存在，通过以下命令检查是否安装了npm。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm -v</span><br></pre></td></tr></table></figure>
+<p>你可以手动的创建一个<code>package.json</code>文件，或者通过命令行互动的引导。进程将会通过一些项目常用的问题引导你，让你先预览这个文件，然后生成。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir ~/myproject&#10;$ cd ~/myproject&#10;$ npm init&#10;name: (a) myapp&#10;version: (1.0.0) &#10;description: A very cool app&#10;entry point: (index.js) &#10;test command: &#10;git repository: &#10;keywords:&#10;author: mrfoo@acme.com&#10;license: (ISC) &#10;About to write to /home/mrfoo/myproject/package.json:&#10;&#10;&#123;&#10;  &#34;name&#34;: &#34;myapp&#34;,&#10;  &#34;version&#34;: &#34;1.0.0&#34;,&#10;  &#34;description&#34;: &#34;A very cool app&#34;,&#10;  &#34;main&#34;: &#34;index.js&#34;,&#10;  &#34;scripts&#34;: &#123;&#10;    &#34;test&#34;: &#34;echo \&#34;Error: no test specified\&#34; &#38;&#38; exit 1&#34;&#10;  &#125;,&#10;  &#34;author&#34;: &#34;Mr Foo &#60;mrfoo@acme.com&#62;&#34;,&#10;  &#34;license&#34;: &#34;ISC&#34;&#10;&#125;&#10;&#10;Is this ok? (yes)</span><br></pre></td></tr></table></figure>
+<p><strong>注意</strong>：如果你不计划将他放入一个实际的存储库，可以通过向<code>package.json</code>添加<code>private</code>属性，标记这个应用程序是私有的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#34;private&#34;: true</span><br></pre></td></tr></table></figure>
+<p>其<a href="https://docs.npmjs.com/files/package.json" target="_blank" rel="external">官方文档</a>提供一个不错的<code>package.json</code>可访问的属性的概览。</p>
+<p>你也可以查看完整的<a href="http://browsenpm.org/package.json" target="_blank" rel="external"><code>package.json</code>互动生成的例子</a>。</p>
+<h3 id="安装依赖">安装依赖</h3><p>你可以在NPM的官方网站上找到超过100,000个的可获取项目，他们按照不同的标准排名。他们都有一件事情要做就是检查包是否在被积极的维护。</p>
+<p>你也可以通过以下命令行来搜索包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm search &#60;search term&#62;</span><br></pre></td></tr></table></figure>
+<p>你可以在你的默认浏览器里执行以下命令，访问他的主页</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm home &#60;package name&#62;</span><br></pre></td></tr></table></figure>
+<h4 id="局部安装">局部安装</h4><p>既然你已经有了<code>package.json</code>文件，现在就可以往里面添加依赖罗列你所需要的一切。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#34;dependencies&#34;: &#123;&#10;  &#34;express&#34;: &#34;*&#34;,&#10;  &#34;grunt&#34;: &#34;*&#34;,&#10;  &#34;bower&#34;: &#34;*&#34;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>去安装在<code>package.json</code>中罗列的包和包的依赖，切换到你项目的路径，执行<code>install</code>命令,就会创建一个<code>node_modules</code>文件夹，把你下载的包全部放在那里。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install</span><br></pre></td></tr></table></figure>
+<p>你也可以在终端记录并安装新的包。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save &#60;package name&#62;</span><br></pre></td></tr></table></figure>
+<p>其他一些有用的选择：</p>
+<ul>
+<li><p>从<code>package.js</code>中写在或者删除包：<code>npm uninstall --save &lt;packagename&gt;</code></p>
+</li>
+<li><p>直接从git仓库安装包：<code>npm install git://github.com/mrfoo/mypackage.git</code></p>
+</li>
+<li><p>安装一个明确版本号的包：<code>npm install somepackage@1.1.0 or npm install somepackage@latest</code></p>
+</li>
+</ul>
+<p>需要特别注意的是，通过以上方法安装的包是<strong>局部的</strong>，意味着他们储存在当前的项目，并只为当前项目所用，这种做法适合，让每一个项目定义自己的模块，他们有明确的版本号并且可以单独下载。</p>
+<h4 id="全局安装">全局安装</h4><p>还有一种安装包的方法是<strong>全局</strong>安装，这经常被用于安装那些提供命令行功能的包，比如<code>grunt</code>，<code>bower</code>和<code>yo</code>。</p>
+<p>举个例子，全局安装<a href="https://www.npmjs.com/package/jshint" target="_blank" rel="external">JSHint</a>,用root权限执行<code>install</code>命令时伴随着<code>-g</code>标记。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo npm install -g jshint</span><br></pre></td></tr></table></figure>
+<p>现在JSHint应该在这台电脑上被全局安装了，现在可以在终端执行任意地方一个JavaScript文件了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jshint hello.js</span><br></pre></td></tr></table></figure>
+<p>不建议所有包走全局安装，这个方法主要是为了提供命令行功能的包存在的。</p>
+<h3 id="管理依赖">管理依赖</h3><p>NPM可以管理你项目的依赖，和相应的版本。开源的项目往往更新比较快，所以版本号是经常变化的。你可以控制哪些类型更新是可以被<code>package.json</code>接受的。</p>
+<p>NPM使用<a href="http://semver.org/lang/zh-CN/" target="_blank" rel="external">语义化版本</a>,是一个标准来显示，发布实施的代码有哪些变化，因为他会影响代码的稳定性。</p>
+<p>发行号通常包含三个元素：</p>
+<ul>
+<li><p>主要版本打破向后兼容性，如2.0.0</p>
+</li>
+<li><p>次要版本添加新功能，不打破现有功能，如1.1.0</p>
+</li>
+<li><p>补丁发布包含bug修复或者其他小的改动，如1.0.1  </p>
+</li>
+</ul>
+<h4 id="定义包的版本">定义包的版本</h4><p>比方说你现在用一个明确的版本号开发。你可以通过指定接受更新的范围来保持更新并保证兼容性。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#34;dependencies&#34;: &#123;&#10;  &#34;package1&#34;: &#34;1.0.0&#34;,         // &#21482;&#25509;&#21463;1.0.0&#30340;&#29256;&#26412;&#10;  &#34;package2&#34;: &#34;1.0.x&#34;,         // &#25509;&#21463;1.0&#29256;&#26412;&#30340;bug&#20462;&#22797;&#25110;&#23567;&#26356;&#26032;&#10;  &#34;package3&#34;: &#34;*&#34;,             // &#26368;&#26032;&#30340;&#29256;&#26412;&#65292;&#19981;&#25512;&#33616;&#10;  &#34;package4&#34;: &#34;&#62;=1.0.0&#34;,       // &#25509;&#21463;&#20219;&#20309;1.0.0&#29256;&#26412;&#21518;&#30340;&#26356;&#26032;&#10;  &#34;package5&#34;: &#34;&#60;1.9.0&#34;,        // &#25509;&#21463;&#19981;&#36229;&#36807;1.9.0&#29256;&#26412;&#30340;&#26356;&#26032;&#10;  &#34;package6&#34;: &#34;~1.8.0&#34;,        // &#25509;&#21463; &#62;= 1.8.0 &#24182; &#60; 1.9.0 &#30340;&#29256;&#26412;&#10;  &#34;package7&#34;: &#34;^1.1.0&#34;,        // &#25509;&#21463; &#62;=1.1.0 &#24182; &#60; 2.0.0 &#30340;&#29256;&#26412;&#10;  &#34;package8&#34;: &#34;latest&#34;,        // tag name for latest version&#10;  &#34;package9&#34;: &#34;&#34;,              // &#21516; * &#21363;&#26368;&#26032;&#29256;&#26412;&#12290;&#10;  &#34;packageX&#34;: &#34;&#60;1.0.0 || &#62;=2.3.1 &#60;2.4.5 || &#62;=2.5.2 &#60;3.0.0&#34;  &#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>想要获得更精细的方法，可以访问<a href="https://docs.npmjs.com/misc/semver" target="_blank" rel="external">NPM语义化文档</a></p>
+<p>确定使用<a href="http://blog.nodejitsu.com/package-dependencies-done-right/" target="_blank" rel="external">最佳实践</a>和补丁发布版本的包，那么你的代码不会被中断。</p>
+<p><strong>注意</strong>:如果你不确定使用哪个版本，就设置<code>*</code>，然后执行<code>npm update --save</code>，他将安装模块，并会改变星号安装带有<code>^</code>的数字版本号，他将接受较小的或者补丁更新。</p>
+<h4 id="给包升级">给包升级</h4><p>使用<code>ls</code>命令可以查看所有局部安装的包，添加<code>-l</code>标签可以获得简短的描述。<code>--depth=0</code>可以获得简介的包信息。（如果你想查看全局的包的信息，可以添加<code>-g</code>标签）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm ls -l --depth=0</span><br></pre></td></tr></table></figure>
+<p>查看哪个包可以全局和局部更新，分别执行如下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm outdated &#10;npm outdated -g --depth=0</span><br></pre></td></tr></table></figure>
+<p>局部的包升级到最高的可接受版本只要执行命令（升级全局的只要添加<code>-g</code>标签，并有root权限）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm update</span><br></pre></td></tr></table></figure>
+<p>如果你在<code>package.json</code>文件夹中删除了一个包，只要执行<code>prune</code>命令，那么这个包也会在<code>node_modules</code>文件夹中删除。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm prune</span><br></pre></td></tr></table></figure>
+<p>想升级npm本身，你需要再一次全局安装该模块。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo npm install -g npm@latest</span><br></pre></td></tr></table></figure>
+<p>你甚至可以通过NPM安装一个特定的模块<code>n</code>,用任意或者稳定的版本号作为参数执行该命令来更新node.js.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo npm install n -g   // &#20840;&#23616;&#23433;&#35013; n &#27169;&#22359;&#10;sudo n stable   //</span><br></pre></td></tr></table></figure>
+<p>你可以执行<code>npm</code>获得可用命令和帮助列表，或者访问<a href="https://docs.npmjs.com/" target="_blank" rel="external">官方文档</a></p>
+<h3 id="设置NPM脚本">设置NPM脚本</h3><p>NPM有一个内置的<code>run-script</code>命令(或者用<code>npm run</code>简短一些)，这有点像一个操作系统里的别名。</p>
+<p>你在<code>scripts</code>对象中定义个别名作为属性，他就会将属性的值作为命令在操作系统默认的shell中执行。</p>
+<p>你在<code>package.json</code>中定义一个<code>scripts</code>，就像这样(这里假定你已经安装了必须的依赖):</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#34;scripts&#34;: &#123;&#10;    &#34;lint&#34;: &#34;jshint **.js&#34;,&#10;    &#34;test&#34;: &#34;mocha test/&#34;&#10;  &#125;</span><br></pre></td></tr></table></figure>
+<p>现在，我们在终端执行<code>npm run lint</code>，和我们手动执行<code>jshint **.js</code>一样。这让<code>scripts</code>属性对于程序，链命令，调用其他模块，使用系统命令，或者任何一个普通shell脚本 来说是十分灵活的。</p>
+<p>还有一些可使用的npm的快捷键：<code>npm test</code>, <code>npm start</code>, <code>npm stop</code> 和 <code>npm restart</code>。</p>
+<p>如果你执行<code>npm test</code>，这和在系统默认的shell上跑<code>npm run-script test</code>或者<code>npm run test</code>是一样的，即<code>mocha test/</code>。</p>
+<p>开始的脚本是被定义了的，比如在node.js中开启主文件<code>app.js</code>，<code>&quot;start&quot;: &quot;node app.js&quot;</code></p>
+<p>当我们执行<code>npm run lint</code>(或者其他脚本)，NPM也会用<code>pre-</code>和<code>post-</code>挂钩执行相应的命令，就像<code>npm run prelint</code>,<code>npm run postlint</code>。这就给我们编程一个机会，去控制命令发生前后的一些东西。</p>
+<p>通过配置脚本文件，你甚至可以消除<a href="http://gruntjs.com/" target="_blank" rel="external">grunt</a>和<a href="http://gulpjs.com/" target="_blank" rel="external">glup</a>等编译工具。你可以查看<a href="http://blog.keithcirkel.co.uk/how-to-use-npm-as-a-build-tool/" target="_blank" rel="external">如何使用NPM就像编译工具</a>的文章</p>
+<h3 id="开发依赖">开发依赖</h3><p>只有在开发时候用到的依赖，可以单独添加到依赖列表里。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">devDependencies : &#123;&#10;  &#34;packageX&#34;: &#34;*&#34;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p><code>devDependencies</code>是意味着只有在开发时用到的包，比如单元测试，linting, minification and similar.在大多数情况下，如果你是一个终端用户，你只需要<code>dependencies</code></p>
+<p>默认情况下，当你在项目目录执行<code>npm install</code>，他会安装<code>dependencies</code>以及<code>devDependencies</code>(因为这里已经假设你在源码目录，所有你一定是一个开发者)。</p>
+<p>如果你增加<code>--production</code>标签，他只会安装<code>dependencies</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --production</span><br></pre></td></tr></table></figure>
+<p>如果你用<code>npm install &lt;package&gt;</code>从公开的注册表安装，他将只会安装<code>dependencies</code>，因为你只是包的使用者。</p>
+<p>在终端安装包并保存在<code>package.json</code>下的<code>devDependencies</code>中，需要增加<code>--save-dev</code>标签。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev &#60;package&#62;</span><br></pre></td></tr></table></figure>
+<p>Stackoverflow上有回答<a href="http://stackoverflow.com/questions/18875674/whats-the-difference-between-dependencies-devdependencies-and-peerdependencies" target="_blank" rel="external">清晰的解释了<code>dependencies</code>和<code>devDependencies</code>之间的不同</a></p>
+<h3 id="发布Node-js包">发布Node.js包</h3><p>因为每个包的只是一个<code>package.json</code>或者其他文件的一个目录，你可以把自己的工程打包，分享到社区，或者和其他开发者合作。</p>
+<p>首先你要通过终端在NPM的注册表上注册，提供用户名，密码个email地址。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm adduser</span><br></pre></td></tr></table></figure>
+<p>现在你已经有一个账户了，可以将你的项目root，并发布：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm publish</span><br></pre></td></tr></table></figure>
+<h3 id="总个结">总个结</h3><p>npm让安装，管理，发布包变得十分简单，你可以通过创建<code>package.json</code>文件，在里面列出依赖，并安装，开启一个新项目。命令行工具安装全局软件包。</p>
+<p>虽然你的工作是定期检查更新，添加一些新的依赖，编写自定义脚本。你也可以将依赖分成<code>devDependencies</code>和<code>dependencies</code>，是他们在生产环境和开发环境有所区别。</p>
+<p>当你完成了项目，可以将它发布，让其他开发者使用。</p>
+<p>更多内容可以访问：</p>
+<ul>
+<li><p><a href="https://docs.npmjs.com/" target="_blank" rel="external">npm官文档</a></p>
+</li>
+<li><p><a href="https://docs.npmjs.com/files/package.json" target="_blank" rel="external">npm package.json的细节处理</a></p>
+</li>
+<li><p><a href="http://browsenpm.org/package.json" target="_blank" rel="external">互动的package.json</a></p>
+</li>
+<li><p><a href="https://docs.npmjs.com/misc/semver" target="_blank" rel="external">npm的语义化版本</a></p>
+</li>
+<li><p><a href="https://www.npmjs.com/browse/depended" target="_blank" rel="external">大多被依赖的包</a></p>
+</li>
+</ul>
+<p>原文：<a href="https://semaphoreci.com/community/tutorials/npm-node-js-package-manager" target="_blank" rel="external">NPM – Node.js package manager</a></p>
+
+      
+    </div>
+
+    <div class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/nodejs/"> #nodejs </a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/08/19/開始使用vue-js/">開始使用vue.js</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/06/23/Express的一个简单实例/">Express的一个简单实例</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </div>
+  </div>
+
+
+
+    
+      <div class="comments" id="comments">
+        
+          <div class="ds-thread" data-thread-key="2015/06/24/NPM-node-js的包管理/"
+               data-title="NPM--node.js的包管理" data-url="http://huangbingbing.com/2015/06/24/NPM-node-js的包管理/">
+          </div>
+        
+      </div>
+    
+  </div>
+
+
+        </div>
+
+        
+      </div>
+
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview">
+        <div class="site-author motion-element">
+          <img class="site-author-image" src="http://tp2.sinaimg.cn/5622195893/180/40087750383/1" alt="阿炳" />
+          <p class="site-author-name">阿炳</p>
+        </div>
+        <p class="site-description motion-element">诗意的栖居在这个星球上</p>
+        <div class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">26</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-name">分类</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            
+              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-name">标签</span>
+              
+          </div>
+
+        </div>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+              <a href="https://github.com/ahbing/" target="_blank">GitHub</a>
+            </span>
+            
+              <span class="links-of-author-item">
+              <a href="https://twitter.com/aahbing" target="_blank">Twitter</a>
+            </span>
+            
+              <span class="links-of-author-item">
+              <a href="http://weibo.com/u/5622195893" target="_blank">Weibo</a>
+            </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+      </div>
+
+      
+        <div class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#初始化一个项目"><span class="nav-number">1.</span> <span class="nav-text">初始化一个项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装依赖"><span class="nav-number">2.</span> <span class="nav-text">安装依赖</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#局部安装"><span class="nav-number">2.1.</span> <span class="nav-text">局部安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#全局安装"><span class="nav-number">2.2.</span> <span class="nav-text">全局安装</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#管理依赖"><span class="nav-number">3.</span> <span class="nav-text">管理依赖</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#定义包的版本"><span class="nav-number">3.1.</span> <span class="nav-text">定义包的版本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#给包升级"><span class="nav-number">3.2.</span> <span class="nav-text">给包升级</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置NPM脚本"><span class="nav-number">4.</span> <span class="nav-text">设置NPM脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开发依赖"><span class="nav-number">5.</span> <span class="nav-text">开发依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#发布Node-js包"><span class="nav-number">6.</span> <span class="nav-text">发布Node.js包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总个结"><span class="nav-number">7.</span> <span class="nav-text">总个结</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </div>
+      
+
+    </div>
+  </div>
+
+
+    </div>
+
+    <div id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; &nbsp; 
+  2015
+  <span class="with-love">
+    <i class="icon-heart"></i>
+  </span>
+  <span class="author">阿炳</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </div>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('.content img').each(function () {
+        var $image = $(this);
+        var $imageWrapLink = $image.parent('a');
+
+        if ($imageWrapLink.size() < 1) {
+          $imageWrapLink = $image.wrap('<a href="' + this.getAttribute('src') + '"></a>').parent('a');
+        }
+        $imageWrapLink.addClass('fancybox');
+      });
+    });
+    $('.fancybox').fancybox({
+      helpers: {
+        overlay: {
+          locked: false
+        }
+      }
+    });
+  </script>
+
+
+  <script type="text/javascript">
+  function hasMobileUA () {
+    var nav = window.navigator;
+    var ua = nav.userAgent;
+    var pa = /iPad|iPhone|Android|Opera Mini|BlackBerry|webOS|UCWEB|Blazer|PSP|IEMobile|Symbian/g;
+
+    return pa.test(ua);
+  }
+
+  function isDesktop () {
+    return screen.width > 991 && !hasMobileUA();
+  }
+
+  function isTablet () {
+    return screen.width < 992 && screen.width > 767 && hasMobileUA();
+  }
+
+  function isMobile () {
+    return screen.width < 767 && hasMobileUA();
+  }
+
+  function escapeSelector (selector) {
+    return selector.replace(/[!"$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\$&")
+  }
+</script>
+
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" id="motion.global">
+  $(document).ready(function () {
+    var body = $('body');
+    var isSidebarVisible = false;
+    var sidebarToggle = $('.sidebar-toggle');
+    var sidebarToggleLine1st = $('.sidebar-toggle-line-first')
+    var sidebarToggleLine2nd = $('.sidebar-toggle-line-middle');
+    var sidebarToggleLine3rd = $('.sidebar-toggle-line-last');
+    var sidebar = $('.sidebar');
+
+    var SIDEBAR_WIDTH = '320px';
+    var SIDEBAR_DISPLAY_DURATION = 300;
+
+    var sidebarToogleLineStatusInit = {width: '100%', opacity: 1, left: 0, rotateZ: 0, top: 0};
+
+    var sidebarToggleLine1stStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine1stStatusArrow = {width: '50%', rotateZ: '-45deg', top: '2px'};
+    var sidebarToogleLine1stStatusClose = {width: '100%', rotateZ: '-45deg', top: '5px'};
+
+    var sidebarToggleLine2ndStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine2ndStatusArrow = {width: '90%'};
+    var sidebarToogleLine2ndStatusClose = {opacity: 0};
+
+    var sidebarToggleLine3rdStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine3rdStatusArrow = {width: '50%', rotateZ: '45deg', top: '-2px'};
+    var sidebarToogleLine3rdStatusClose = {width: '100%', rotateZ: '45deg', top: '-5px'};
+
+    LogoAndMenuMotion();
+    sidebatToggleMotion();
+    postsListMotion();
+    backToTopMotion();
+
+
+    $(document)
+      .on('sidebar.isShowing', function () {
+        isDesktop() && body.velocity(
+          {paddingRight: SIDEBAR_WIDTH},
+          SIDEBAR_DISPLAY_DURATION
+        );
+        sidebarContentMotion();
+      })
+      .on('sidebar.isHiding', function () {});
+
+    function LogoAndMenuMotion() {
+      $.Velocity.RunSequence([
+        { e: $('.brand'), p: { opacity: 1 }, o: { duration: 100 } },
+        { e: $('.logo'), p: { opacity: 1, top: 0 }, o: { duration: 50} },
+        
+        { e: $('.logo-line-before i'), p: { translateX: "100%" }, o: { duration: 500, sequenceQueue: false } },
+        { e: $('.logo-line-after i'), p: { translateX: "-100%" }, o: { duration: 500, sequenceQueue: false } },
+        
+        { e: $('.site-title'), p: { opacity: 1, top: 0 }, o: { duration: 200 } }
+      ]);
+      $('.menu-item').velocity('transition.slideDownIn', {display: null});
+    }
+
+
+    function backToTopMotion () {
+      var b2top = $('.back-to-top');
+      b2top.on('click', function () {
+        body.velocity('scroll');
+      });
+    }
+
+    function sidebarShowMotion () {
+
+      sidebarToggleLine1st.velocity(sidebarToogleLine1stStatusClose);
+      sidebarToggleLine2nd.velocity(sidebarToogleLine2ndStatusClose);
+      sidebarToggleLine3rd.velocity(sidebarToogleLine3rdStatusClose);
+
+      sidebar.velocity({width: SIDEBAR_WIDTH}, {
+        display: 'block',
+        duration: SIDEBAR_DISPLAY_DURATION,
+        complete: function () {
+          sidebar.addClass('sidebar-active');
+          sidebar.trigger('sidebar.didShow');
+        }
+      });
+      sidebar.trigger('sidebar.isShowing');
+    }
+
+    function sidebarHideMotion () {
+      isDesktop() && body.velocity({paddingRight: 0});
+      sidebar.velocity('reverse');
+
+      sidebarToggleLine1st.velocity(sidebarToggleLine1stStatusInit);
+      sidebarToggleLine2nd.velocity(sidebarToggleLine2ndStatusInit);
+      sidebarToggleLine3rd.velocity(sidebarToggleLine3rdStatusInit);
+
+      sidebar.removeClass('sidebar-active');
+      sidebar.trigger('sidebar.isHiding');
+    };
+
+    function sidebarContentMotion () {
+      $('.sidebar .motion-element').velocity(
+        'transition.slideRightIn',
+        {stagger: 50, drag: true}
+      );
+    }
+
+    function postsListMotion () {
+      var postMotionOptions = window.postMotionOptions || {stagger: 300, drag: true};
+      $('.post').velocity('transition.slideDownIn', postMotionOptions);
+    }
+
+    function sidebatToggleMotion () {
+      sidebarToggle.on('click', function () {
+        isSidebarVisible ? sidebarHideMotion() : sidebarShowMotion();
+        isSidebarVisible = !isSidebarVisible;
+      });
+
+      sidebarToggle.hover(function () {
+        if (isSidebarVisible) {return}
+        sidebarToggleLine1st.velocity('stop').velocity(sidebarToggleLine1stStatusArrow);
+        sidebarToggleLine2nd.velocity('stop').velocity(sidebarToggleLine2ndStatusArrow);
+        sidebarToggleLine3rd.velocity('stop').velocity(sidebarToggleLine3rdStatusArrow);
+      }, function () {
+        if (isSidebarVisible) {return}
+        sidebarToggleLine1st.velocity('stop').velocity(sidebarToggleLine1stStatusInit);
+        sidebarToggleLine2nd.velocity('stop').velocity(sidebarToggleLine2ndStatusInit);
+        sidebarToggleLine3rd.velocity('stop').velocity(sidebarToggleLine3rdStatusInit);
+      });
+    }
+  });
+
+</script>
+
+
+
+
+
+  
+  
+<script type="text/javascript" id="bootstrap.scrollspy.custom">
+  /* ========================================================================
+  * Bootstrap: scrollspy.js v3.3.2
+  * http://getbootstrap.com/javascript/#scrollspy
+  * ========================================================================
+  * Copyright 2011-2015 Twitter, Inc.
+  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+  * ======================================================================== */
+
+  /**
+   * Custom by iissnan
+   *
+   * - Add a `clear.bs.scrollspy` event.
+   * - Esacpe targets selector.
+   */
+
+
+  +function ($) {
+    'use strict';
+
+    // SCROLLSPY CLASS DEFINITION
+    // ==========================
+
+    function ScrollSpy(element, options) {
+      this.$body          = $(document.body)
+      this.$scrollElement = $(element).is(document.body) ? $(window) : $(element)
+      this.options        = $.extend({}, ScrollSpy.DEFAULTS, options)
+      this.selector       = (this.options.target || '') + ' .nav li > a'
+      this.offsets        = []
+      this.targets        = []
+      this.activeTarget   = null
+      this.scrollHeight   = 0
+
+      this.$scrollElement.on('scroll.bs.scrollspy', $.proxy(this.process, this))
+      this.refresh()
+      this.process()
+    }
+
+    ScrollSpy.VERSION  = '3.3.2'
+
+    ScrollSpy.DEFAULTS = {
+      offset: 10
+    }
+
+    ScrollSpy.prototype.getScrollHeight = function () {
+      return this.$scrollElement[0].scrollHeight || Math.max(this.$body[0].scrollHeight, document.documentElement.scrollHeight)
+    }
+
+    ScrollSpy.prototype.refresh = function () {
+      var that          = this
+      var offsetMethod  = 'offset'
+      var offsetBase    = 0
+
+      this.offsets      = []
+      this.targets      = []
+      this.scrollHeight = this.getScrollHeight()
+
+      if (!$.isWindow(this.$scrollElement[0])) {
+        offsetMethod = 'position'
+        offsetBase   = this.$scrollElement.scrollTop()
+      }
+
+      this.$body
+        .find(this.selector)
+        .map(function () {
+          var $el   = $(this)
+          var href  = $el.data('target') || $el.attr('href')
+          var $href = /^#./.test(href) && $(escapeSelector(href)) // Need to escape selector.
+
+          return ($href
+            && $href.length
+            && $href.is(':visible')
+            && [[$href[offsetMethod]().top + offsetBase, href]]) || null
+        })
+        .sort(function (a, b) { return a[0] - b[0] })
+        .each(function () {
+          that.offsets.push(this[0])
+          that.targets.push(this[1])
+        })
+
+
+    }
+
+    ScrollSpy.prototype.process = function () {
+      var scrollTop    = this.$scrollElement.scrollTop() + this.options.offset
+      var scrollHeight = this.getScrollHeight()
+      var maxScroll    = this.options.offset + scrollHeight - this.$scrollElement.height()
+      var offsets      = this.offsets
+      var targets      = this.targets
+      var activeTarget = this.activeTarget
+      var i
+
+      if (this.scrollHeight != scrollHeight) {
+        this.refresh()
+      }
+
+      if (scrollTop >= maxScroll) {
+        return activeTarget != (i = targets[targets.length - 1]) && this.activate(i)
+      }
+
+      if (activeTarget && scrollTop < offsets[0]) {
+        $(this.selector).trigger('clear.bs.scrollspy')  // Add a custom event.
+        this.activeTarget = null
+        return this.clear()
+      }
+
+      for (i = offsets.length; i--;) {
+        activeTarget != targets[i]
+          && scrollTop >= offsets[i]
+          && (!offsets[i + 1] || scrollTop <= offsets[i + 1])
+          && this.activate(targets[i])
+      }
+    }
+
+    ScrollSpy.prototype.activate = function (target) {
+      this.activeTarget = target
+
+      this.clear()
+
+      var selector = this.selector +
+        '[data-target="' + target + '"],' +
+        this.selector + '[href="' + target + '"]'
+
+      var active = $(selector)
+        .parents('li')
+        .addClass('active')
+
+      if (active.parent('.dropdown-menu').length) {
+        active = active
+          .closest('li.dropdown')
+          .addClass('active')
+      }
+
+      active.trigger('activate.bs.scrollspy')
+    }
+
+    ScrollSpy.prototype.clear = function () {
+      $(this.selector)
+        .parentsUntil(this.options.target, '.active')
+        .removeClass('active')
+    }
+
+
+    // SCROLLSPY PLUGIN DEFINITION
+    // ===========================
+
+    function Plugin(option) {
+      return this.each(function () {
+        var $this   = $(this)
+        var data    = $this.data('bs.scrollspy')
+        var options = typeof option == 'object' && option
+
+        if (!data) $this.data('bs.scrollspy', (data = new ScrollSpy(this, options)))
+        if (typeof option == 'string') data[option]()
+      })
+    }
+
+    var old = $.fn.scrollspy
+
+    $.fn.scrollspy             = Plugin
+    $.fn.scrollspy.Constructor = ScrollSpy
+
+
+    // SCROLLSPY NO CONFLICT
+    // =====================
+
+    $.fn.scrollspy.noConflict = function () {
+      $.fn.scrollspy = old
+      return this
+    }
+
+
+    // SCROLLSPY DATA-API
+    // ==================
+
+    $(window).on('load.bs.scrollspy.data-api', function () {
+      $('[data-spy="scroll"]').each(function () {
+        var $spy = $(this)
+        Plugin.call($spy, $spy.data())
+      })
+    })
+
+  }(jQuery);
+</script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var $sidebarInner = $('.sidebar-inner');
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.didShow', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+          var self = this;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      $(indicator).velocity('stop').velocity({
+        opacity: action === 'show' ? 0.4 : 0
+      }, { duration: 100 });
+    }
+
+  });
+</script>
+
+
+  <script type="text/javascript" id="sidebar.nav">
+    $(document).ready(function () {
+      var html = $('html');
+
+      $('.sidebar-nav li').on('click', function () {
+        var item = $(this);
+        var activeTabClassName = 'sidebar-nav-active';
+        var activePanelClassName = 'sidebar-panel-active';
+        if (item.hasClass(activeTabClassName)) {
+          return;
+        }
+
+        var currentTarget = $('.' + activePanelClassName);
+        var target = $('.' + item.data('target'));
+
+        currentTarget.velocity('transition.slideUpOut', 200, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', 200)
+            .addClass(activePanelClassName);
+        });
+
+        item.siblings().removeClass(activeTabClassName);
+        item.addClass(activeTabClassName);
+      });
+
+      $('.post-toc a').on('click', function (e) {
+        e.preventDefault();
+        var offset = $(escapeSelector(this.getAttribute('href'))).offset().top;
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        });
+      });
+
+      // Expand sidebar on post detail page by default, when post has a toc.
+      var $tocContent = $('.post-toc-content');
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0 && isDesktop()) {
+        setTimeout(function () {
+          $('.sidebar-toggle').trigger('click');
+        }, 800);
+      }
+    });
+  </script>
+
+
+
+
+  
+
+  
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ahbing"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+
+
+  
+  
+</body>
+</html>

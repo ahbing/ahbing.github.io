@@ -1,0 +1,939 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.2"/>
+
+
+    <meta name="description" content="诗意的栖居在这个星球上" />
+
+
+
+  <meta name="keywords" content="ajax," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.2" />
+
+
+
+
+  <title> web文件操作的总结 // 九月烟树 </title>
+</head>
+
+<body>
+<!--[if lte IE 8]> <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'> <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode"><img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari." style='margin-left:auto;margin-right:auto;display: block;'/></a></div> <![endif]-->
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <div id="header" class="header">
+      <div class="header-inner">
+        <h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand">
+      <span class="logo">
+        <i class="icon-logo"></i>
+      </span>
+      <span class="site-title">九月烟树</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+
+  <ul id="menu" class="menu">
+     
+    
+      
+      <li class="menu-item menu-item-home">
+        <a href="/">
+          <i class="menu-item-icon icon-home"></i> <br />
+          首页
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-archives">
+        <a href="/archives">
+          <i class="menu-item-icon icon-archives"></i> <br />
+          归档
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-about">
+        <a href="/about">
+          <i class="menu-item-icon icon-about"></i> <br />
+          关于
+        </a>
+      </li>
+    
+  </ul>
+
+
+      </div>
+    </div>
+
+    <div id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
+              web文件操作的总结
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于 2015-05-16
+        </span>
+
+        
+          <span class="post-category">
+            &nbsp; | &nbsp; 分类于
+            
+              <a href="/categories/js/">js</a>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/05/16/web文件操作的总结/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2015/05/16/web文件操作的总结/"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </div>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <h2 id="读取文件">读取文件</h2><h3 id="input的美化">input的美化</h3><p>使用input控件，将其type设置为file，我们就可以通过他读取文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;input type=&#34;file&#34; id=&#34;fileSelect&#34;&#62;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>要同时上传多个文件我们可以将其改成</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;input type=&#34;file&#34; multiple id=&#34;fileSelect&#34;&#62;</span><br></pre></td></tr></table></figure>
+<p>但他是长成这幅鬼样子的。</p>
+<p><img src="/images/input1.jpg" alt=""></p>
+<p>如下图(beta分享的个人中心)修改背景的按钮，用到的也是input控件，只是做了相应的美化。</p>
+<p><img src="/images/input2.jpg" alt=""></p>
+<p>f12 审查一下元素就可以发现真实的html骨架如下。</p>
+<p><img src="/images/input3.jpg" alt=""></p>
+<p>原理就是将input空间的display设置成none，用js控制click事件，a标签被点击的时候，阻止其默认事件，并给input控件增加click事件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//html&#10;&#60;a id=&#34;inputBtn&#34; href=&#34;#&#34;&#62;&#19978;&#20659;&#60;/a&#62;&#10;&#60;input id=&#34;fileSelect&#34; multiple style=&#34;display:none;&#34; type=&#34;file&#34; &#62;&#10;&#10;//js&#10;&#10;var oBtn = document.getElementById(&#39;inputBtn&#39;);&#10;var oInput = document.getElementById(&#39;fileSelect&#39;);&#10;&#10;oBtn.addEventListener(&#39;click&#39;,function(e)&#123;&#10;&#9;e.preventDefault(); // &#38459;&#27490;&#40664;&#35469;&#20107;&#20214;&#10;&#9;e.stopPropagation();  // &#38459;&#27490;&#20882;&#27873;&#10;&#9;oInput.click();  // &#32102;input&#25511;&#20214;&#22686;&#21152;&#20107;&#20214;&#10;&#125;,false);</span><br></pre></td></tr></table></figure>
+<h3 id="FileList">FileList</h3><p>继续上面的代码，给input增加change事件的监听</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oInput.addEventListener(&#39;change&#39;,function(e)&#123;&#10;&#9;//files &#26159;&#19968;&#20010; FileList &#23545;&#35937;(&#31867;&#20284;&#20110;NodeList&#23545;&#35937;)&#10;&#9;console.log(this.files);&#10;&#9;var fileList = this.files;&#10;&#9;//&#21382;&#36941;&#25152;&#26377;&#25991;&#20214;&#10;&#9;for(var i = 0, len = fileList.length; i &#60; len; i++)&#123;&#10;&#9;&#9;//&#21462;&#24471;&#31532;i&#20010;&#25991;&#20214;&#10;&#9;&#9;var file = fileList[i];&#10;&#9;&#9;console.log(&#34;&#25991;&#20214;&#21517;&#34;+file.name);&#10;&#9;&#9;console.log(&#34;&#25991;&#20214;&#22823;&#23567;&#34;+file.size);&#10;&#9;&#9;console.log(&#34;&#25991;&#20214;&#39006;&#22411;&#34;+file.type);&#10;&#9;&#9;console.log(&#39;--------&#39;);&#10;&#9;&#125;&#10;&#125;,false);</span><br></pre></td></tr></table></figure>
+<p>我尝试上传了两张照片，在控制台打印结果</p>
+<p><img src="/images/fileList1.jpg" alt=""></p>
+<p>File对象上有三个属性提供了所包含文件的相关信息.</p>
+<ul>
+<li><strong>name</strong>  文件名,只读字符串,不包含任何路径信息.</li>
+<li><strong>size</strong>  文件大小,单位为字节,只读的64位整数.</li>
+<li><strong>type</strong>  MIME类型,只读字符串,如果类型未知,则返回空字符串.</li>
+</ul>
+<p>关于<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/FileList" target="_blank" rel="external">FileList</a>可以看看他。</p>
+<h3 id="拖拽读取">拖拽读取</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//html&#10;&#60;div id=&#34;dropBox&#34;&#62;&#10;&#9;&#35531;&#23559;&#25991;&#20214;&#25302;&#21040;&#36889;&#35041;&#10;&#60;/div&#62;&#10;&#10;//css&#10;div&#123;&#10;&#9;margin: 100px auto;&#10;&#9;width: 400px;&#10;&#9;height: 260px;&#10;&#9;border: 2px dashed #ccc;&#10;&#9;color: #ccc;&#10;&#9;text-align: center;;&#10;&#9;line-height: 240px;&#10;&#9;font-size: 1.4em;&#10;&#125;&#10;&#10;//js&#10;&#10;&#9;window.onload = function()&#123;&#10;&#9;var dropBox = document.getElementById(&#39;dropBox&#39;);&#10;&#9;dropBox.addEventListener(&#34;dragenter&#34;,dragenter,false);&#10;&#9;dropBox.addEventListener(&#34;dragover&#34;,dragover,false);&#10;&#9;dropBox.addEventListener(&#34;drop&#34;,drop,false);&#10;&#125;&#10;// dropBox &#21306;&#22495;&#26159;&#30446;&#26631;&#21306;&#22495;&#65292;&#25105;&#20204;&#24517;&#39035;&#38459;&#27490;dragenter&#21644;dragover&#20107;&#20214;&#30340;&#40664;&#35748;&#34892;&#20026;,&#36825;&#26679;&#25165;&#33021;&#35302;&#21457;drop&#20107;&#20214;&#10;function dragenter(e)&#123;&#10;&#9;e.stopPropagation();&#10;&#9;e.preventDefault();&#10;&#125;&#10;&#10;function dragover(e)&#123;&#10;&#9;e.stopPropagation();&#10;&#9;e.preventDefault();&#10;&#125;&#10;&#10;function drop(e)&#123;&#10;&#9;e.stopPropagation();&#10;&#9;e.preventDefault();&#10;&#9;var dt = e.dataTransfer;&#10;&#9;var files = dt.files;&#10;&#9;// &#25171;&#21360;&#19978;&#20256;&#25991;&#20214;&#10;&#9;console.log(files);&#10;&#9;this.innerHTML = &#39;&#28155;&#21152;&#25104;&#21151;&#39;;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>打印的拖拽的文件的信息</p>
+<p><img src="/images/fileList2.jpg" alt=""></p>
+<p>关于<a href="http://www.html5rocks.com/zh/tutorials/dnd/basics/" target="_blank" rel="external">HTML5拖拽</a>可以看看他。</p>
+<h2 id="显示缩略图">显示缩略图</h2><h3 id="FileReader">FileReader</h3><blockquote>
+<p>使用FileReader对象,web应用程序可以异步的读取存储在用户计算机上的文件(或者原始数据缓冲)内容,可以使用File对象或者Blob对象来指定所要处理的文件或数据.其中File对象可以是来自用户在一个input元素上选择文件后返回的FileList对象,也可以来自拖放操作生成的 DataTransfer对象,还可以是来自在一个HTMLCanvasElement上执行mozGetAsFile()方法后的返回结果.  —-<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/FileReader" target="_blank" rel="external">MDN</a></p>
+</blockquote>
+<p>FileReader的方法</p>
+<h4 id="abort()">abort()</h4><p> 中止该读取操作.在返回时,readyState属性的值为DONE.</p>
+<hr>
+<p>以下方法：读取指定的Blob对象或File对象中的内容. 当读取操作完成时,readyState属性的值会成为DONE,如果设置了onloadend事件处理程序,则调用之.</p>
+<h4 id="readAsArrayBuffer()">readAsArrayBuffer()</h4><p>result属性中将包含一个ArrayBuffer(是一种用于呈现通用、固定长度的二进制数据的类型)对象以表示所读取文件的内容.（缓冲数组）</p>
+<h4 id="readAsBinaryString()">readAsBinaryString()</h4><p>result属性中将包含所读取文件的原始二进制数据.</p>
+<h4 id="readAsDataURL()">readAsDataURL()</h4><p>result属性中将包含一个data: URL格式的字符串以表示所读取文件的内容.</p>
+<h4 id="readAsText()">readAsText()</h4><p>result属性中将包含一个data: URL格式的字符串以表示所读取文件的内容.</p>
+<p>FileReader的例子用拖拽的那里例子。<br>在drop函数中增加一条语句</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// drop&#10;handleFiles(files);</span><br></pre></td></tr></table></figure>
+<p>然后，封装一个操作文件的函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function handleFiles(files)&#123;&#10;&#9;for(var i = 0; i&#60; files.length;i++)&#123;&#10;&#9;var file = files[i];&#10;&#9;&#10;&#9;//&#27491;&#21017;&#34920;&#36798;&#24335;&#21305;&#37197;&#23383;&#31526;&#20018;&#8220;image.*&#8221;  &#20063;&#21487;&#20197;&#22312;input &#35373;&#32622; accept=&#34;image/*&#34; &#20358;&#38480;&#21046;&#25991;&#20214;&#39006;&#22411;&#10;&#9;if(!file.type.match(&#39;image.*&#39;))&#123;&#10;&#9;&#9;continue;  // &#36339;&#20986;&#30070;&#21069;&#24490;&#29872;,&#24490;&#29872;&#19979;&#19968;&#20491;&#10;&#9;&#125;&#10;&#9;&#10;&#9;var oImg = document.createElement(&#39;img&#39;);&#10;&#9;var reader = new FileReader();&#10;&#9;document.body.appendChild(oImg);&#10;&#9;&#10;&#9;// &#35712;&#21462;&#23436;&#30340;&#20540; &#36070;&#20540;&#32102;&#30070;&#21069;img&#30340;src&#10;&#9;reader.onload = (function(oImg)&#123;&#10;&#9;&#9;return function(e)&#123;&#10;&#9;&#9;&#9;//&#26159;&#19968;&#20491;base 64 &#30340;URL&#10;&#9;&#9;&#9;console.log(e.target.result);&#10;&#9;&#9;&#9;oImg.src = e.target.result;&#10;&#9;&#9;&#125;&#10;&#9;&#125;)(oImg);&#10;&#9;&#10;&#9;// &#36716;&#25442;&#25104;&#19968;&#20010;data:URL&#10;&#9;reader.readAsDataURL(file);&#10;&#9;&#125;&#10;&#125;;</span><br></pre></td></tr></table></figure>
+<p>缩略图的大小没有做处理，可以尝试配合css设计一个漂亮的缩略图效果</p>
+<p><a href="http://codepen.io/ahbing/pen/aOZdKw" target="_blank" rel="external">查看demo</a></p>
+<p>fileReader的兼容</p>
+<p><img src="/images/fieReader1.jpg" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//&#25903;&#25345;&#26816;&#27979;&#10;if (window.File &#38;&#38; window.FileReader &#38;&#38; window.FileList &#38;&#38; window.Blob) &#123;&#10;&#9;//doSomething();&#10;&#125; else &#123;&#10;&#9;alert(&#39;&#20320;&#30340;&#27983;&#35272;&#22120;&#19981;&#25903;&#25345;FileAPI&#65292;&#25105;&#20204;&#24314;&#35758;&#20320;&#20351;&#29992;chrome&#31561;&#20808;&#36827;&#27983;&#35272;&#22120;&#65292;&#35753;&#25105;&#20204;&#25658;&#25163;&#21162;&#21147;&#26089;&#26085;&#36208;&#36827;&#21578;&#35785;&#27983;&#35272;&#22120;&#26102;&#20195;&#12290;);&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>关于<a href="http://www.html5rocks.com/zh/tutorials/file/dndfiles/" target="_blank" rel="external">FileReader</a>可以看看他。</p>
+<h2 id="上传文件">上传文件</h2><h3 id="ajax异步上传">ajax异步上传</h3><p>使用XMLHttpRequest的formData对象，可以实现ajax的异步上传。<br>关于<a href="https://developer.mozilla.org/zh-CN/docs/Web/Guide/Using_FormData_Objects" target="_blank" rel="external">formData</a>的使用可以看这个。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;&#9;//html&#10;&#9;&#60;div id=&#34;dropBox&#34;&#62;&#60;/div&#62;&#10;&#10;//js&#10;window.onload = function()&#123;&#10;&#9;var dropBox = document.getElementById(&#39;dropBox&#39;);&#10;&#10;&#9;dropBox.addEventListener(&#39;dragenter&#39;,dragenter,false);&#10;&#9;dropBox.addEventListener(&#39;dragover&#39;,dragover,false);&#10;&#9;dropBox.addEventListener(&#39;drop&#39;,drop,false);&#10;&#10;&#9;function dragenter(e)&#123;&#10;&#9;&#9;e.stopPropagation();&#10;&#9;&#9;e.preventDefault();&#10;&#9;&#125;&#10;&#9;function dragover(e)&#123;&#10;&#9;&#9;e.stopPropagation();&#10;&#9;&#9;e.preventDefault();&#10;&#9;&#125;&#10;&#9;function drop(e)&#123;&#10;&#9;&#9;e.stopPropagation();&#10;&#9;&#9;e.preventDefault();&#10;&#10;&#9;&#9;var files = e.dataTransfer.files;&#10;&#10;&#9;&#9;for(var i = 0; i&#60;files.length;i++)&#123;&#10;&#9;&#9;&#9;sendFile(files[i]);&#10;&#9;&#9;&#125;&#10;&#9;&#125;&#10;&#125;&#10;&#10;function sendFile(file)&#123;&#10;&#9;var url = &#39;/getFile&#39;;&#10;&#9;var xhr = new XMLHttpRequest();&#10;&#9;var fd = new FormData();&#10;&#10;&#9;xhr.open(&#39;POST&#39;,url,true);&#10;&#10;&#9;xhr.onreadystatehange = function()&#123;&#10;&#9;&#9;if(xhr.readyState == 4)&#123;&#10;&#9;&#9;&#9;var status = xhr.status;&#10;&#9;&#9;&#9;if((status&#62;=200 &#38;&#38; status&#60;300)||status==304)&#123;&#10;&#9;&#9;&#9;&#9;//&#30332;&#36865;&#25104;&#21151;&#10;&#9;&#9;&#9;&#9;//&#34389;&#29702;&#26381;&#21209;&#22120;&#30456;&#25033;&#10;&#9;&#9;&#9;&#125;&#10;&#9;&#9;&#125;&#10;&#9;&#125;;&#10;&#9;fd.append(&#39;myFile&#39;,file);&#10;&#9;xhr.send(fd);&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>关于<a href="http://www.html5rocks.com/zh/tutorials/file/xhr2/" target="_blank" rel="external">XMLHttpRequest2</a>可以看看他。</p>
+<p>formData位序列化表单以及创建与表单格式相同的数据（用于xhr传输）提供了便利。</p>
+<p><a href="http://blog.teamtreehouse.com/uploading-files-ajax" target="_blank" rel="external">form表单使用ajax异步上传文件</a></p>
+<p>当然考虑兼容的化就不能用了</p>
+<p><img src="/images/formData1.jpg" alt=""></p>
+<h2 id="参考链接">参考链接</h2><p><a href="https://developer.mozilla.org/zh-CN/docs/Using_files_from_web_applications" target="_blank" rel="external">MDN-如何在web应用程序中使用文件</a></p>
+
+      
+    </div>
+
+    <div class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ajax/"> #ajax </a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/05/18/DOM-编程艺术1/">DOM 编程艺术1</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/05/15/JSON基礎筆記/">JSON基礎筆記</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </div>
+  </div>
+
+
+
+    
+      <div class="comments" id="comments">
+        
+          <div class="ds-thread" data-thread-key="2015/05/16/web文件操作的总结/"
+               data-title="web文件操作的总结" data-url="http://huangbingbing.com/2015/05/16/web文件操作的总结/">
+          </div>
+        
+      </div>
+    
+  </div>
+
+
+        </div>
+
+        
+      </div>
+
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview">
+        <div class="site-author motion-element">
+          <img class="site-author-image" src="http://tp2.sinaimg.cn/5622195893/180/40087750383/1" alt="阿炳" />
+          <p class="site-author-name">阿炳</p>
+        </div>
+        <p class="site-description motion-element">诗意的栖居在这个星球上</p>
+        <div class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">26</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-name">分类</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            
+              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-name">标签</span>
+              
+          </div>
+
+        </div>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+              <a href="https://github.com/ahbing/" target="_blank">GitHub</a>
+            </span>
+            
+              <span class="links-of-author-item">
+              <a href="https://twitter.com/aahbing" target="_blank">Twitter</a>
+            </span>
+            
+              <span class="links-of-author-item">
+              <a href="http://weibo.com/u/5622195893" target="_blank">Weibo</a>
+            </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+      </div>
+
+      
+        <div class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#读取文件"><span class="nav-number">1.</span> <span class="nav-text">读取文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#input的美化"><span class="nav-number">1.1.</span> <span class="nav-text">input的美化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FileList"><span class="nav-number">1.2.</span> <span class="nav-text">FileList</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#拖拽读取"><span class="nav-number">1.3.</span> <span class="nav-text">拖拽读取</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#显示缩略图"><span class="nav-number">2.</span> <span class="nav-text">显示缩略图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#FileReader"><span class="nav-number">2.1.</span> <span class="nav-text">FileReader</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#abort()"><span class="nav-number">2.1.1.</span> <span class="nav-text">abort()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#readAsArrayBuffer()"><span class="nav-number">2.1.2.</span> <span class="nav-text">readAsArrayBuffer()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#readAsBinaryString()"><span class="nav-number">2.1.3.</span> <span class="nav-text">readAsBinaryString()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#readAsDataURL()"><span class="nav-number">2.1.4.</span> <span class="nav-text">readAsDataURL()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#readAsText()"><span class="nav-number">2.1.5.</span> <span class="nav-text">readAsText()</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#上传文件"><span class="nav-number">3.</span> <span class="nav-text">上传文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ajax异步上传"><span class="nav-number">3.1.</span> <span class="nav-text">ajax异步上传</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考链接"><span class="nav-number">4.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </div>
+      
+
+    </div>
+  </div>
+
+
+    </div>
+
+    <div id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; &nbsp; 
+  2015
+  <span class="with-love">
+    <i class="icon-heart"></i>
+  </span>
+  <span class="author">阿炳</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </div>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('.content img').each(function () {
+        var $image = $(this);
+        var $imageWrapLink = $image.parent('a');
+
+        if ($imageWrapLink.size() < 1) {
+          $imageWrapLink = $image.wrap('<a href="' + this.getAttribute('src') + '"></a>').parent('a');
+        }
+        $imageWrapLink.addClass('fancybox');
+      });
+    });
+    $('.fancybox').fancybox({
+      helpers: {
+        overlay: {
+          locked: false
+        }
+      }
+    });
+  </script>
+
+
+  <script type="text/javascript">
+  function hasMobileUA () {
+    var nav = window.navigator;
+    var ua = nav.userAgent;
+    var pa = /iPad|iPhone|Android|Opera Mini|BlackBerry|webOS|UCWEB|Blazer|PSP|IEMobile|Symbian/g;
+
+    return pa.test(ua);
+  }
+
+  function isDesktop () {
+    return screen.width > 991 && !hasMobileUA();
+  }
+
+  function isTablet () {
+    return screen.width < 992 && screen.width > 767 && hasMobileUA();
+  }
+
+  function isMobile () {
+    return screen.width < 767 && hasMobileUA();
+  }
+
+  function escapeSelector (selector) {
+    return selector.replace(/[!"$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\$&")
+  }
+</script>
+
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" id="motion.global">
+  $(document).ready(function () {
+    var body = $('body');
+    var isSidebarVisible = false;
+    var sidebarToggle = $('.sidebar-toggle');
+    var sidebarToggleLine1st = $('.sidebar-toggle-line-first')
+    var sidebarToggleLine2nd = $('.sidebar-toggle-line-middle');
+    var sidebarToggleLine3rd = $('.sidebar-toggle-line-last');
+    var sidebar = $('.sidebar');
+
+    var SIDEBAR_WIDTH = '320px';
+    var SIDEBAR_DISPLAY_DURATION = 300;
+
+    var sidebarToogleLineStatusInit = {width: '100%', opacity: 1, left: 0, rotateZ: 0, top: 0};
+
+    var sidebarToggleLine1stStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine1stStatusArrow = {width: '50%', rotateZ: '-45deg', top: '2px'};
+    var sidebarToogleLine1stStatusClose = {width: '100%', rotateZ: '-45deg', top: '5px'};
+
+    var sidebarToggleLine2ndStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine2ndStatusArrow = {width: '90%'};
+    var sidebarToogleLine2ndStatusClose = {opacity: 0};
+
+    var sidebarToggleLine3rdStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine3rdStatusArrow = {width: '50%', rotateZ: '45deg', top: '-2px'};
+    var sidebarToogleLine3rdStatusClose = {width: '100%', rotateZ: '45deg', top: '-5px'};
+
+    LogoAndMenuMotion();
+    sidebatToggleMotion();
+    postsListMotion();
+    backToTopMotion();
+
+
+    $(document)
+      .on('sidebar.isShowing', function () {
+        isDesktop() && body.velocity(
+          {paddingRight: SIDEBAR_WIDTH},
+          SIDEBAR_DISPLAY_DURATION
+        );
+        sidebarContentMotion();
+      })
+      .on('sidebar.isHiding', function () {});
+
+    function LogoAndMenuMotion() {
+      $.Velocity.RunSequence([
+        { e: $('.brand'), p: { opacity: 1 }, o: { duration: 100 } },
+        { e: $('.logo'), p: { opacity: 1, top: 0 }, o: { duration: 50} },
+        
+        { e: $('.logo-line-before i'), p: { translateX: "100%" }, o: { duration: 500, sequenceQueue: false } },
+        { e: $('.logo-line-after i'), p: { translateX: "-100%" }, o: { duration: 500, sequenceQueue: false } },
+        
+        { e: $('.site-title'), p: { opacity: 1, top: 0 }, o: { duration: 200 } }
+      ]);
+      $('.menu-item').velocity('transition.slideDownIn', {display: null});
+    }
+
+
+    function backToTopMotion () {
+      var b2top = $('.back-to-top');
+      b2top.on('click', function () {
+        body.velocity('scroll');
+      });
+    }
+
+    function sidebarShowMotion () {
+
+      sidebarToggleLine1st.velocity(sidebarToogleLine1stStatusClose);
+      sidebarToggleLine2nd.velocity(sidebarToogleLine2ndStatusClose);
+      sidebarToggleLine3rd.velocity(sidebarToogleLine3rdStatusClose);
+
+      sidebar.velocity({width: SIDEBAR_WIDTH}, {
+        display: 'block',
+        duration: SIDEBAR_DISPLAY_DURATION,
+        complete: function () {
+          sidebar.addClass('sidebar-active');
+          sidebar.trigger('sidebar.didShow');
+        }
+      });
+      sidebar.trigger('sidebar.isShowing');
+    }
+
+    function sidebarHideMotion () {
+      isDesktop() && body.velocity({paddingRight: 0});
+      sidebar.velocity('reverse');
+
+      sidebarToggleLine1st.velocity(sidebarToggleLine1stStatusInit);
+      sidebarToggleLine2nd.velocity(sidebarToggleLine2ndStatusInit);
+      sidebarToggleLine3rd.velocity(sidebarToggleLine3rdStatusInit);
+
+      sidebar.removeClass('sidebar-active');
+      sidebar.trigger('sidebar.isHiding');
+    };
+
+    function sidebarContentMotion () {
+      $('.sidebar .motion-element').velocity(
+        'transition.slideRightIn',
+        {stagger: 50, drag: true}
+      );
+    }
+
+    function postsListMotion () {
+      var postMotionOptions = window.postMotionOptions || {stagger: 300, drag: true};
+      $('.post').velocity('transition.slideDownIn', postMotionOptions);
+    }
+
+    function sidebatToggleMotion () {
+      sidebarToggle.on('click', function () {
+        isSidebarVisible ? sidebarHideMotion() : sidebarShowMotion();
+        isSidebarVisible = !isSidebarVisible;
+      });
+
+      sidebarToggle.hover(function () {
+        if (isSidebarVisible) {return}
+        sidebarToggleLine1st.velocity('stop').velocity(sidebarToggleLine1stStatusArrow);
+        sidebarToggleLine2nd.velocity('stop').velocity(sidebarToggleLine2ndStatusArrow);
+        sidebarToggleLine3rd.velocity('stop').velocity(sidebarToggleLine3rdStatusArrow);
+      }, function () {
+        if (isSidebarVisible) {return}
+        sidebarToggleLine1st.velocity('stop').velocity(sidebarToggleLine1stStatusInit);
+        sidebarToggleLine2nd.velocity('stop').velocity(sidebarToggleLine2ndStatusInit);
+        sidebarToggleLine3rd.velocity('stop').velocity(sidebarToggleLine3rdStatusInit);
+      });
+    }
+  });
+
+</script>
+
+
+
+
+
+  
+  
+<script type="text/javascript" id="bootstrap.scrollspy.custom">
+  /* ========================================================================
+  * Bootstrap: scrollspy.js v3.3.2
+  * http://getbootstrap.com/javascript/#scrollspy
+  * ========================================================================
+  * Copyright 2011-2015 Twitter, Inc.
+  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+  * ======================================================================== */
+
+  /**
+   * Custom by iissnan
+   *
+   * - Add a `clear.bs.scrollspy` event.
+   * - Esacpe targets selector.
+   */
+
+
+  +function ($) {
+    'use strict';
+
+    // SCROLLSPY CLASS DEFINITION
+    // ==========================
+
+    function ScrollSpy(element, options) {
+      this.$body          = $(document.body)
+      this.$scrollElement = $(element).is(document.body) ? $(window) : $(element)
+      this.options        = $.extend({}, ScrollSpy.DEFAULTS, options)
+      this.selector       = (this.options.target || '') + ' .nav li > a'
+      this.offsets        = []
+      this.targets        = []
+      this.activeTarget   = null
+      this.scrollHeight   = 0
+
+      this.$scrollElement.on('scroll.bs.scrollspy', $.proxy(this.process, this))
+      this.refresh()
+      this.process()
+    }
+
+    ScrollSpy.VERSION  = '3.3.2'
+
+    ScrollSpy.DEFAULTS = {
+      offset: 10
+    }
+
+    ScrollSpy.prototype.getScrollHeight = function () {
+      return this.$scrollElement[0].scrollHeight || Math.max(this.$body[0].scrollHeight, document.documentElement.scrollHeight)
+    }
+
+    ScrollSpy.prototype.refresh = function () {
+      var that          = this
+      var offsetMethod  = 'offset'
+      var offsetBase    = 0
+
+      this.offsets      = []
+      this.targets      = []
+      this.scrollHeight = this.getScrollHeight()
+
+      if (!$.isWindow(this.$scrollElement[0])) {
+        offsetMethod = 'position'
+        offsetBase   = this.$scrollElement.scrollTop()
+      }
+
+      this.$body
+        .find(this.selector)
+        .map(function () {
+          var $el   = $(this)
+          var href  = $el.data('target') || $el.attr('href')
+          var $href = /^#./.test(href) && $(escapeSelector(href)) // Need to escape selector.
+
+          return ($href
+            && $href.length
+            && $href.is(':visible')
+            && [[$href[offsetMethod]().top + offsetBase, href]]) || null
+        })
+        .sort(function (a, b) { return a[0] - b[0] })
+        .each(function () {
+          that.offsets.push(this[0])
+          that.targets.push(this[1])
+        })
+
+
+    }
+
+    ScrollSpy.prototype.process = function () {
+      var scrollTop    = this.$scrollElement.scrollTop() + this.options.offset
+      var scrollHeight = this.getScrollHeight()
+      var maxScroll    = this.options.offset + scrollHeight - this.$scrollElement.height()
+      var offsets      = this.offsets
+      var targets      = this.targets
+      var activeTarget = this.activeTarget
+      var i
+
+      if (this.scrollHeight != scrollHeight) {
+        this.refresh()
+      }
+
+      if (scrollTop >= maxScroll) {
+        return activeTarget != (i = targets[targets.length - 1]) && this.activate(i)
+      }
+
+      if (activeTarget && scrollTop < offsets[0]) {
+        $(this.selector).trigger('clear.bs.scrollspy')  // Add a custom event.
+        this.activeTarget = null
+        return this.clear()
+      }
+
+      for (i = offsets.length; i--;) {
+        activeTarget != targets[i]
+          && scrollTop >= offsets[i]
+          && (!offsets[i + 1] || scrollTop <= offsets[i + 1])
+          && this.activate(targets[i])
+      }
+    }
+
+    ScrollSpy.prototype.activate = function (target) {
+      this.activeTarget = target
+
+      this.clear()
+
+      var selector = this.selector +
+        '[data-target="' + target + '"],' +
+        this.selector + '[href="' + target + '"]'
+
+      var active = $(selector)
+        .parents('li')
+        .addClass('active')
+
+      if (active.parent('.dropdown-menu').length) {
+        active = active
+          .closest('li.dropdown')
+          .addClass('active')
+      }
+
+      active.trigger('activate.bs.scrollspy')
+    }
+
+    ScrollSpy.prototype.clear = function () {
+      $(this.selector)
+        .parentsUntil(this.options.target, '.active')
+        .removeClass('active')
+    }
+
+
+    // SCROLLSPY PLUGIN DEFINITION
+    // ===========================
+
+    function Plugin(option) {
+      return this.each(function () {
+        var $this   = $(this)
+        var data    = $this.data('bs.scrollspy')
+        var options = typeof option == 'object' && option
+
+        if (!data) $this.data('bs.scrollspy', (data = new ScrollSpy(this, options)))
+        if (typeof option == 'string') data[option]()
+      })
+    }
+
+    var old = $.fn.scrollspy
+
+    $.fn.scrollspy             = Plugin
+    $.fn.scrollspy.Constructor = ScrollSpy
+
+
+    // SCROLLSPY NO CONFLICT
+    // =====================
+
+    $.fn.scrollspy.noConflict = function () {
+      $.fn.scrollspy = old
+      return this
+    }
+
+
+    // SCROLLSPY DATA-API
+    // ==================
+
+    $(window).on('load.bs.scrollspy.data-api', function () {
+      $('[data-spy="scroll"]').each(function () {
+        var $spy = $(this)
+        Plugin.call($spy, $spy.data())
+      })
+    })
+
+  }(jQuery);
+</script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var $sidebarInner = $('.sidebar-inner');
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.didShow', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+          var self = this;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      $(indicator).velocity('stop').velocity({
+        opacity: action === 'show' ? 0.4 : 0
+      }, { duration: 100 });
+    }
+
+  });
+</script>
+
+
+  <script type="text/javascript" id="sidebar.nav">
+    $(document).ready(function () {
+      var html = $('html');
+
+      $('.sidebar-nav li').on('click', function () {
+        var item = $(this);
+        var activeTabClassName = 'sidebar-nav-active';
+        var activePanelClassName = 'sidebar-panel-active';
+        if (item.hasClass(activeTabClassName)) {
+          return;
+        }
+
+        var currentTarget = $('.' + activePanelClassName);
+        var target = $('.' + item.data('target'));
+
+        currentTarget.velocity('transition.slideUpOut', 200, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', 200)
+            .addClass(activePanelClassName);
+        });
+
+        item.siblings().removeClass(activeTabClassName);
+        item.addClass(activeTabClassName);
+      });
+
+      $('.post-toc a').on('click', function (e) {
+        e.preventDefault();
+        var offset = $(escapeSelector(this.getAttribute('href'))).offset().top;
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        });
+      });
+
+      // Expand sidebar on post detail page by default, when post has a toc.
+      var $tocContent = $('.post-toc-content');
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0 && isDesktop()) {
+        setTimeout(function () {
+          $('.sidebar-toggle').trigger('click');
+        }, 800);
+      }
+    });
+  </script>
+
+
+
+
+  
+
+  
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ahbing"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+
+
+  
+  
+</body>
+</html>

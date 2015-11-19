@@ -1,0 +1,971 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.2"/>
+
+
+    <meta name="description" content="诗意的栖居在这个星球上" />
+
+
+
+  <meta name="keywords" content="html5," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.2" />
+
+
+
+
+  <title> [译]开始使用Web Audio // 九月烟树 </title>
+</head>
+
+<body>
+<!--[if lte IE 8]> <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'> <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode"><img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari." style='margin-left:auto;margin-right:auto;display: block;'/></a></div> <![endif]-->
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <div id="header" class="header">
+      <div class="header-inner">
+        <h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand">
+      <span class="logo">
+        <i class="icon-logo"></i>
+      </span>
+      <span class="site-title">九月烟树</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+
+  <ul id="menu" class="menu">
+     
+    
+      
+      <li class="menu-item menu-item-home">
+        <a href="/">
+          <i class="menu-item-icon icon-home"></i> <br />
+          首页
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-archives">
+        <a href="/archives">
+          <i class="menu-item-icon icon-archives"></i> <br />
+          归档
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-about">
+        <a href="/about">
+          <i class="menu-item-icon icon-about"></i> <br />
+          关于
+        </a>
+      </li>
+    
+  </ul>
+
+
+      </div>
+    </div>
+
+    <div id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
+              [译]开始使用Web Audio
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于 2015-06-03
+        </span>
+
+        
+          <span class="post-category">
+            &nbsp; | &nbsp; 分类于
+            
+              <a href="/categories/html5/">html5</a>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/06/03/译-开始使用Web-Audio/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2015/06/03/译-开始使用Web-Audio/"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </div>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <p>在html5的audio元素之前，Flash和其他插件被引用来打破web的寂静，而当有了audio之后，web不再需要引用插件，但音频标签带来了复杂的游戏和互动应用显著的局限性。</p>
+<p>Web Audio API是一个用来处理和合成音频的应用的高水准的JavaScript API，这些API的目的是包括在现代游戏音频引擎和其他一些的混合，处理和过滤在现代台式音频制作应用程序中的任务。接下来，我将温柔为你讲述这些强劲的API。<br><a id="more"></a></p>
+<h2 id="开始使用AudioContext">开始使用AudioContext</h2><p>一个<a href="http://www.w3.org/TR/webaudio/#AudioContext-section" target="_blank" rel="external">AudioContext</a>用来管理和播放所有音频，要Web Audio API 产生一个声音，创建一个或多个声源，并将他们链接到由AudioContext实例提供的声源目的地。这个链接并不需要是直达的，中间是可以通过任意数量用来充当音频信号处理模块的<a href="http://www.w3.org/TR/webaudio/#AudioNode-section" target="_blank" rel="external">Audio Nodes</a>。该<a href="http://www.w3.org/TR/webaudio/#ModularRouting-section" target="_blank" rel="external">路由</a>在Web Audio<a href="http://www.w3.org/TR/webaudio/" target="_blank" rel="external">规范</a>中描述的更为详细。</p>
+<p>AudioContext的单个实例可以支持多个声音的输入和复杂的音频图，所以每一个音频的应用我们只需要创建一个AudioContext。Web Audio API有很多有趣的功能，比如创建音频节点和解码音频文件数据，他们都是AudioContext的方法。</p>
+<p>下面这个例子用来创建AudioContext</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var context;&#10;window.addEventListener(&#39;load&#39;,init,false);&#10;function init()&#123;&#10;    try&#123;&#10;        // &#35774;&#32622;&#20860;&#23481;&#21069;&#32512;&#10;        window.AudioContext = window.AudioContext || window.webkitAudioContext;&#10;        context = new AudioContext;&#10;    &#125;catch(err)&#123;&#10;        console.log(&#39;&#20320;&#30340;&#27983;&#35272;&#22120;&#19981;&#25903;&#25345;Web Audio API&#39;);&#10;    &#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>对于Webkit 和 Blink为基础的浏览器，你当前需要使用webkit前缀，即webkitAudioContext</p>
+<h2 id="加载声音">加载声音</h2><p>web Audio API 使用AudioBuffer来加载中短长度的声音，他的基本方法是使用<a href="https://developer.mozilla.org/En/XMLHttpRequest/Using_XMLHttpRequest" target="_blank" rel="external">XMLHttpRequest</a>来提取声音文件。</p>
+<p>API 支持多种格式的音频文件数据，比如WAV, MP3, AAC, OGG和<a href="http://en.wikipedia.org/wiki/Audio_file_format" target="_blank" rel="external">其他</a>,浏览器支持不同音频格式<a href="https://developer.mozilla.org/En/Media_formats_supported_by_the_audio_and_video_elements#Browser_compatibility" target="_blank" rel="external">varies</a>.</p>
+<p>以下的例子就是加载声音的一个例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;var dogBarkingBuffer = null;&#10;window.AudioContext = window.AudioContext || window.webkitAudioContext;&#10;var context = new AudioContext();&#10;function loadDogSound(url)&#123;&#10;    var request = new HTTPXmlRequest();&#10;    request.open(&#39;GET&#39;,url,false);&#10;    &#10;    request.responseType = &#39;arraybuffer&#39;;&#10;    //&#24322;&#27493;&#35299;&#30721;&#10;    resquest.onload = function()&#123;&#10;      context.decodeAudioData(request.response,function(buffer)&#123;&#10;&#9;    dogBarkingBuffer.buffer = buffer;&#10;&#9;&#125;,onError);&#10;    &#125;&#10;       &#10;    request.send();&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>音频文件数据是二进制的（不是文本），所以我们设置请求响应类型为’arraybuffer’，关于ArrayBuffers更多的信息，请浏览这篇关于<a href="http://www.html5rocks.com/en/tutorials/file/xhr2/" target="_blank" rel="external">XHR2</a>文章.</p>
+<p>一旦（未解码的）音频文件数据已经被接收，他可以被缓存供以后解码，或者他可以被AudioContext的decodeAudioData方法正确解码。这个方法可以把音频资源的缓冲数组储存在请求中，响应和解码的过程是异步的（不阻塞Javascript的执行线程）。</p>
+<p>当decodeAudioData(音频解码)完成。他会调用一个回调函数，该回调函数提供解码的PCM音频数据为音频缓冲（AudioBuffer）。</p>
+<h2 id="播放声音">播放声音</h2><p>  <img src="/images/audio1.jpg" alt=""></p>
+<p> 一旦一个或多个音频缓冲被加载，他们就准备播放声音，我们假定我们已经加载了一个狗叫的音频缓存的声音，而且加载已经完成了，然后我们就可以用以下的代码来播放这个缓存。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">window.AudioContext = window.AudioContext || window.webkitAudioContext;&#10;&#10;var context = new AudioContext();&#10;&#10;function playSound(buffer)&#123;&#10;   var source = context.createBuffserSource();        //&#21019;&#24314;&#38899;&#39057;&#28304;&#22836;&#10;   source.buffer = buffer;    //&#21578;&#35785;&#38899;&#28304;&#25773;&#25918;&#21738;&#20010;&#22768;&#38899;&#10;   source.connect(context.destination);     //&#22768;&#28304;&#38142;&#25509;&#21040;&#22768;&#38899;&#30446;&#30340;&#22320;&#65288;&#25773;&#25918;&#22120;&#65289;&#10;   source.start(0);  //&#31435;&#21051;&#25773;&#25918;&#36825;&#20010;&#22768;&#28304;&#10;                     //&#27880;&#24847;:&#22312;&#36807;&#26102;&#30340;&#27983;&#35272;&#22120;&#37324;&#65292;&#21487;&#33021;&#38656;&#35201;&#29992;&#36807;&#26102;&#30340;noteOn(time)&#26469;&#25773;&#25918;&#22768;&#38899;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>当有人按键或者点击鼠标的时候，playSound函数可以被调用。</p>
+<p>start(time)函数使得给游戏或者其他时序要求严格的应用简单而精确的播放声音。然而，要让start精确的运行，你要保证声音的缓存是被提前加载的。（在老旧的浏览器里，你也许应该调用noteOn()来代替start()）.</p>
+<p>值得注意的是，在iOS，Apple里，苹果关闭目前所有的声音输出，直到用户在交互事件中播放声音。例如，在触摸事件的时候调用playSound函数，你可能得到Web Audio在iOS上不运行，除非你避免这个问题。为了避免这个问题，只要在早先的UI事件中播放声音（他可以通过链接到调节音量节点，设置0的音量来静音），例如”触摸此处播放”。</p>
+<h2 id="抽象Web_Audio_API">抽象Web Audio API</h2><p>当然，如果把加载声音的音频函数抽象出来会比硬编码去加载特殊的声音要好很多。在音频应用或者游戏里有许多方法来处理很多短到中长度的声音。下面是一种使用<a href="http://www.html5rocks.com/en/tutorials/webaudio/intro/js/buffer-loader.js" target="_blank" rel="external">BufferLoader</a>类的方法。</p>
+<p>下面是一个你可以使用的BufferLoader的例子。我们可以创建两个音频缓冲，一旦加载他们，就让他们同时播放。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//&#23553;&#35013;&#30340;BufferLoader&#10;&#10;function BufferLoader(context, urlList, callback) &#123;&#10;  this.context = context;&#10;  this.urlList = urlList;&#10;  this.onload = callback;&#10;  this.bufferList = new Array();&#10;  this.loadCount = 0;&#10;&#125;&#10;&#10;BufferLoader.prototype.loadBuffer = function(url, index) &#123;&#10;  // &#24322;&#27493;&#21152;&#36733;buffer&#10;  var request = new XMLHttpRequest();&#10;  request.open(&#34;GET&#34;, url, true);&#10;  request.responseType = &#34;arraybuffer&#34;;&#10;&#10;  var loader = this;&#10;&#10;  request.onload = function() &#123;&#10;    // &#22312;&#35831;&#27714;&#30340;&#21709;&#24212;&#37324;&#65292;&#24322;&#27493;&#35299;&#30721;&#38899;&#39057;&#25991;&#20214;&#25968;&#25454;&#10;    loader.context.decodeAudioData(&#10;      request.response,&#10;      function(buffer) &#123;&#10;        if (!buffer) &#123;&#10;          alert(&#39;error decoding file data: &#39; + url);&#10;          return;&#10;        &#125;&#10;        loader.bufferList[index] = buffer;&#10;        if (++loader.loadCount == loader.urlList.length)&#10;          loader.onload(loader.bufferList);&#10;      &#125;,&#10;      function(error) &#123;&#10;        console.error(&#39;decodeAudioData error&#39;, error);&#10;      &#125;&#10;    );&#10;  &#125;&#10;&#10;  request.onerror = function() &#123;&#10;    alert(&#39;BufferLoader: XHR error&#39;);&#10;  &#125;&#10;&#10;  request.send();&#10;&#125;&#10;&#10;BufferLoader.prototype.load = function() &#123;&#10;  for (var i = 0; i &#60; this.urlList.length; ++i)&#10;  this.loadBuffer(this.urlList[i], i);&#10;&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">window.onload = init;&#10;var context;&#10;var bufferLoader;&#10;&#10;function init() &#123;&#10;  // Fix up prefixing&#10;  window.AudioContext = window.AudioContext || window.webkitAudioContext;&#10;  context = new AudioContext();&#10;&#10;  bufferLoader = new BufferLoader(&#10;    context,&#10;    [&#10;      &#39;../sounds/hyper-reality/br-jam-loop.wav&#39;,&#10;      &#39;../sounds/hyper-reality/laughter.wav&#39;,&#10;    ],&#10;    finishedLoading&#10;    );&#10;&#10;  bufferLoader.load();&#10;&#125;&#10;&#10;function finishedLoading(bufferList) &#123;&#10;  // &#21019;&#24314;&#20004;&#20010;&#38899;&#28304; &#28982;&#21518;&#35753;&#20182;&#20204;&#21516;&#26102;&#25773;&#25918;&#10;  var source1 = context.createBufferSource();&#10;  var source2 = context.createBufferSource();&#10;  source1.buffer = bufferList[0];&#10;  source2.buffer = bufferList[1];&#10;&#10;  source1.connect(context.destination);&#10;  source2.connect(context.destination);&#10;  source1.start(0);&#10;  source2.start(0);&#10;&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="时间处理：有节奏的播放声音">时间处理：有节奏的播放声音</h2><p>Web Aduio API允许开发者根据时间表精确的播放声音，为了示范，我们设置一个简单的节奏轨道，以下可能是最广为认知的鼓组模式。</p>
+<p>译者注:并不知道:(</p>
+<p><img src="/images/audio2.jpg" alt=""></p>
+<p>in which a hihat is played every eighth note, and kick and snare are played alternating every quarter, in 4/4 time.</p>
+<p>假设我们已经加载了kick，snare和hihat缓冲区，要做到这一点代码十分简单：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">for (var bar = 0; bar &#60; 2; bar++) &#123;&#10;  var time = startTime + bar * 8 * eighthNoteTime;&#10;  // Play the bass (kick) drum on beats 1, 5&#10;  playSound(kick, time);&#10;  playSound(kick, time + 4 * eighthNoteTime);&#10;&#10;  // Play the snare drum on beats 3, 7&#10;  playSound(snare, time + 2 * eighthNoteTime);&#10;  playSound(snare, time + 6 * eighthNoteTime);&#10;&#10;  // Play the hi-hat every eighth note.&#10;  for (var i = 0; i &#60; 8; ++i) &#123;&#10;    playSound(hihat, time + i * eighthNoteTime);&#10;  &#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>我们根据乐谱，在这里只做一次成重复，而不是无限制的循环。</p>
+<p>playSound函数是一个在特定时间，播放缓冲音频的方法,如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function playSound(buffer, time) &#123;&#10;  var source = context.createBufferSource();&#10;  source.buffer = buffer;&#10;  source.connect(context.destination);&#10;  source.start(time);&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p><a href="http://www.html5rocks.com/en/tutorials/webaudio/intro/js/rhythm-sample.js" target="_blank" rel="external">查看全部的代码</a></p>
+<h2 id="改变声音的音量">改变声音的音量</h2><p>使用Web Audio API，改变声音的音量可能是你想要的最基础的功能之一,我们可以通过<a href="http://www.w3.org/TR/webaudio/#GainNode" target="_blank" rel="external">GainNode</a>来操纵音量，GainNode可以插入到音源和音频目的地之间。</p>
+<p><img src="/images/audio3.jpg" alt=""></p>
+<p>链接设置可以通过以下代码实现：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// Create a gain node.&#10;var gainNode = context.createGain();&#10;// Connect the source to the gain node.&#10;source.connect(gainNode);&#10;// Connect the gain node to the destination.&#10;gainNode.connect(context.destination);</span><br></pre></td></tr></table></figure>
+<p>在上面代码的基础上，我们可以通过操纵gainNode.gain.value来改变音量，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// Reduce the volume.&#10;gainNode.gain.value = 0.5;</span><br></pre></td></tr></table></figure>
+<p><a href="http://www.html5rocks.com/en/tutorials/webaudio/intro/js/volume-sample.js" target="_blank" rel="external">查看所有代码</a></p>
+<h2 id="两个声音交叉淡化">两个声音交叉淡化</h2><p>现在假设我们有一个稍微复杂的场景，我们同时播放多个声音，但是想要交叉淡化他们，这种场景在类似DJ的场景中常常需要，我们有两个唱机转盘，希望从一个声音平稳的过度到另一个声音。</p>
+<p>上述场景可以通过如下的一张音频图表实现：</p>
+<p><img src="/images/audio4.jpg" alt=""></p>
+<p>要用到此功能，我们简单的创建两个GainNodes,并通过该节点链接到相应的声源。</p>
+<p>使用类似的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function createSource(buffer) &#123;&#10;  var source = context.createBufferSource();&#10;  // Create a gain node.&#10;  var gainNode = context.createGain();&#10;  source.buffer = buffer;&#10;  // Turn on looping.&#10;  source.loop = true;&#10;  // Connect source to gain.&#10;  source.connect(gainNode);&#10;  // Connect gain to destination.&#10;  gainNode.connect(context.destination);&#10;&#10;  return &#123;&#10;    source: source,&#10;    gainNode: gainNode&#10;  &#125;;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>等同的功率淡入淡出</p>
+<p>一个天真的线性淡入淡出的方式表现出你的样本之间的平移量。</p>
+<p><img src="/images/audio5.jpg" alt=""></p>
+<p>线性的交叉衰减</p>
+<p>为了解决以上问题，我们使用等同功率的曲线，其相应的增量也是曲线而非直线，并且想教育较高的幅度，这最大幅度的减小音量骤降的区域，从而导致均匀的交叉衰减，可能在不同的阶段有轻微的差异。</p>
+<p><img src="/images/audio6.jpg" alt=""></p>
+<p><a href="http://www.html5rocks.com/en/tutorials/webaudio/intro/js/crossfade-sample.js" target="_blank" rel="external">查看全部代码</a></p>
+<h2 id="播放列表淡入淡出">播放列表淡入淡出</h2><p>另外经常平滑转换的应用是音乐播放应用。当改变一首歌的时候，为了避免过渡期的刺耳声，我们想让当前的歌慢慢淡出，新的歌慢慢淡入。要实现这一点，把淡入淡出安排在稍后面，虽然我们可以使用setTimeout去执行词调度，但这是不精确的。在Web Audio API中，我们可以使用<a href="http://www.w3.org/TR/webaudio/#AudioParam-section" target="_blank" rel="external">AudioParam</a>接口，通过向GainNode的gain value 类似的参数来调度稍后面的值。</p>
+<p>因此，给定的播放列表，我们可以通过减小当前正在播放的音轨音量，增大下一个要播放的音轨的音量，在两个音轨上过度，双双小幅之前，结束当前正在播放的内容。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function playHelper(bufferNow, bufferLater) &#123;&#10;  var playNow = createSource(bufferNow);&#10;  var source = playNow.source;&#10;  var gainNode = playNow.gainNode;&#10;  var duration = bufferNow.duration;&#10;  var currTime = context.currentTime;&#10;  // Fade the playNow track in.&#10;  gainNode.gain.linearRampToValueAtTime(0, currTime);&#10;  gainNode.gain.linearRampToValueAtTime(1, currTime + ctx.FADE_TIME);&#10;  // Play the playNow track.&#10;  source.start(0);&#10;  // At the end of the track, fade it out.&#10;  gainNode.gain.linearRampToValueAtTime(1, currTime + duration-ctx.FADE_TIME);&#10;  gainNode.gain.linearRampToValueAtTime(0, currTime + duration);&#10;  // Schedule a recursive track change with the tracks swapped.&#10;  var recurse = arguments.callee;&#10;  ctx.timer = setTimeout(function() &#123;&#10;    recurse(bufferLater, bufferNow);&#10;  &#125;, (duration - ctx.FADE_TIME) * 1000);&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>Web Audio API提供了一组RampToValue方法，方便逐渐的改变一个参数的值，比如<code>linearRampToValueAtTime</code>和<code>exponentialRampToValueAtTime</code>。</p>
+<p>而过渡定时功能可从内置的线性和指数选择（如上），你也可以通过使用setValueCurveAtTime函数值的数组指定自己的值的曲线。</p>
+<p><a href="http://www.html5rocks.com/en/tutorials/webaudio/intro/js/crossfade-playlist-sample.js" target="_blank" rel="external">查看所有代码</a></p>
+<h2 id="应用简单的过滤器影响声音">应用简单的过滤器影响声音</h2><p><img src="/images/audio7.jpg" alt=""></p>
+<p>Web Audio API允许你通过声音管道，把声音从一个音频节点转移到另一个节点。创建一个潜在的复杂的处理的链，并添加给soundforms复杂的效果。</p>
+<p>实现过滤的一种方法是通过在声音源头和声音目的地中间的<a href="http://www.w3.org/TR/webaudio/#BiquadFilterNode-section" target="_blank" rel="external">BiquadFilterNodes</a>，这种类型的音频节点可以做各种可用于构建图形均衡器，甚至更复杂的影响低阶滤波器，但他还是主要用来选择，声音的那部分的频谱要重点突出，那部分的要减弱。</p>
+<p>支持的过滤器的类型包括</p>
+<ul>
+<li>Low pass filter</li>
+<li>High pass filter</li>
+<li>Band pass filter</li>
+<li>Low shelf filter</li>
+<li>High shelf filter</li>
+<li>Peaking filter</li>
+<li>Notch filter</li>
+<li>All pass filter</li>
+</ul>
+<p>所有筛选条件的包括:参数来指定一定量的增益，应用过滤器的频率，以及一个品质因素。低通滤波器保持低的频率范围，丢弃高频。折断点由频率的值决定，并且<a href="http://en.wikipedia.org/wiki/Q_factor" target="_blank" rel="external">Q_factor</a>是无单位的，也决定了图的形状，增益只影响特定的过滤器，比如低货架和峰值滤波器，而不影响低通滤波器。</p>
+<p>让我们设置一个简单的低通滤波器，仅仅选择提取出声音样本的基础：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// &#21019;&#24314;&#19968;&#20010;&#36807;&#28388;&#22120;&#10;var filter = context.createBiquadFilter();&#10;// Create the audio graph.&#10;source.connect(filter);&#10;filter.connect(context.destination);&#10;// Create and specify parameters for the low-pass filter.&#10;//&#21019;&#24314;&#24182;&#19988;&#25351;&#23450;&#21442;&#25968;&#20026;low-pass&#36807;&#28388;&#22120;&#10;filter.type = &#39;lowpass&#39;; // Low-pass filter. See BiquadFilterNode docs&#10;filter.frequency.value = 440; // Set cutoff to 440 HZ&#10;// Playback the sound.&#10;source.start(0);</span><br></pre></td></tr></table></figure>
+<p><a href="http://www.html5rocks.com/en/tutorials/webaudio/intro/js/filter-sample.js" target="_blank" rel="external">查看全部代码</a></p>
+<p>通常来讲，频率控制需要进行调整工作的对数刻度，因为人的听觉本身工作原理相同（即，A 4为440Hz的，并且A5是880hz），想了解更多，去看上面<code>FilterSample.changeFrequency</code>方法的源代码。</p>
+<p>最后，注意上面的示例代码，允许你链接和断开过滤器。动态的改变AduioContext的图表。我们可以通过调用<code>node.disconnect(outputNumber)</code>断开graph音频节点。例如，从一个过滤器重新路由graph，去直达一个链接，我们可以向下面这样做：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// Disconnect the source and filter.&#10;// &#26029;&#24320;&#38899;&#28304;&#21644;&#36807;&#28388;&#22120;&#10;source.disconnect(0);&#10;filter.disconnect(0);&#10;// Connect the source directly.&#10;//&#37325;&#26032;&#38142;&#25509;&#38899;&#28304;&#10;source.connect(context.destination);</span><br></pre></td></tr></table></figure>
+<h2 id="Further_listening">Further listening</h2><p>上文已经涵盖了基础的一些API，包括加载，播放音频的示例，我们创建了音频图（audio graphs），增益(gain)节点，过滤器，定音（scheduled sounds）和音频参数调整实现一些常见音效，在这一点上，你已经准备好去创建一些有趣的web audio的应用了吗！ </p>
+<p>如果你正在找寻灵感，很多开发者已经用Web Audio API创造了一些<a href="http://chromium.googlecode.com/svn/trunk/samples/audio/samples.html" target="_blank" rel="external">伟大的作品</a>,一些我个人比较喜欢的是：</p>
+<ul>
+<li><a href="http://audiojedit.herokuapp.com/" target="_blank" rel="external">AudioJedit</a>, an in-browser sound splicing tool that uses SoundCloud permalinks.</li>
+<li><a href="http://dinahmoelabs.com/tonecraft" target="_blank" rel="external">ToneCraft</a>, a sound sequencer where sounds are created by stacking 3D blocks.</li>
+<li><a href="http://dinahmoelabs.com/plink" target="_blank" rel="external">Plink</a>, a collaborative music-making game using Web Audio and Web Sockets.</li>
+</ul>
+<h2 id="原文"><a href="http://www.html5rocks.com/en/tutorials/webaudio/intro" target="_blank" rel="external">原文</a></h2><h2 id="补充">补充</h2><p><img src="/images/web_audio_api.jpg" alt=""></p>
+
+      
+    </div>
+
+    <div class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/html5/"> #html5 </a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/06/03/js字符串处理（便查阅）/">js字符串处理（便查阅）</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/06/02/我所理解的this之this的坑/">我所理解的this之this的坑</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </div>
+  </div>
+
+
+
+    
+      <div class="comments" id="comments">
+        
+          <div class="ds-thread" data-thread-key="2015/06/03/译-开始使用Web-Audio/"
+               data-title="[译]开始使用Web Audio" data-url="http://huangbingbing.com/2015/06/03/译-开始使用Web-Audio/">
+          </div>
+        
+      </div>
+    
+  </div>
+
+
+        </div>
+
+        
+      </div>
+
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview">
+        <div class="site-author motion-element">
+          <img class="site-author-image" src="http://tp2.sinaimg.cn/5622195893/180/40087750383/1" alt="阿炳" />
+          <p class="site-author-name">阿炳</p>
+        </div>
+        <p class="site-description motion-element">诗意的栖居在这个星球上</p>
+        <div class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">26</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-name">分类</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            
+              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-name">标签</span>
+              
+          </div>
+
+        </div>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+              <a href="https://github.com/ahbing/" target="_blank">GitHub</a>
+            </span>
+            
+              <span class="links-of-author-item">
+              <a href="https://twitter.com/aahbing" target="_blank">Twitter</a>
+            </span>
+            
+              <span class="links-of-author-item">
+              <a href="http://weibo.com/u/5622195893" target="_blank">Weibo</a>
+            </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+      </div>
+
+      
+        <div class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#开始使用AudioContext"><span class="nav-number">1.</span> <span class="nav-text">开始使用AudioContext</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加载声音"><span class="nav-number">2.</span> <span class="nav-text">加载声音</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#播放声音"><span class="nav-number">3.</span> <span class="nav-text">播放声音</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#抽象Web_Audio_API"><span class="nav-number">4.</span> <span class="nav-text">抽象Web Audio API</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#时间处理：有节奏的播放声音"><span class="nav-number">5.</span> <span class="nav-text">时间处理：有节奏的播放声音</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#改变声音的音量"><span class="nav-number">6.</span> <span class="nav-text">改变声音的音量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#两个声音交叉淡化"><span class="nav-number">7.</span> <span class="nav-text">两个声音交叉淡化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#播放列表淡入淡出"><span class="nav-number">8.</span> <span class="nav-text">播放列表淡入淡出</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#应用简单的过滤器影响声音"><span class="nav-number">9.</span> <span class="nav-text">应用简单的过滤器影响声音</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Further_listening"><span class="nav-number">10.</span> <span class="nav-text">Further listening</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原文"><span class="nav-number">11.</span> <span class="nav-text">原文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#补充"><span class="nav-number">12.</span> <span class="nav-text">补充</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </div>
+      
+
+    </div>
+  </div>
+
+
+    </div>
+
+    <div id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; &nbsp; 
+  2015
+  <span class="with-love">
+    <i class="icon-heart"></i>
+  </span>
+  <span class="author">阿炳</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </div>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('.content img').each(function () {
+        var $image = $(this);
+        var $imageWrapLink = $image.parent('a');
+
+        if ($imageWrapLink.size() < 1) {
+          $imageWrapLink = $image.wrap('<a href="' + this.getAttribute('src') + '"></a>').parent('a');
+        }
+        $imageWrapLink.addClass('fancybox');
+      });
+    });
+    $('.fancybox').fancybox({
+      helpers: {
+        overlay: {
+          locked: false
+        }
+      }
+    });
+  </script>
+
+
+  <script type="text/javascript">
+  function hasMobileUA () {
+    var nav = window.navigator;
+    var ua = nav.userAgent;
+    var pa = /iPad|iPhone|Android|Opera Mini|BlackBerry|webOS|UCWEB|Blazer|PSP|IEMobile|Symbian/g;
+
+    return pa.test(ua);
+  }
+
+  function isDesktop () {
+    return screen.width > 991 && !hasMobileUA();
+  }
+
+  function isTablet () {
+    return screen.width < 992 && screen.width > 767 && hasMobileUA();
+  }
+
+  function isMobile () {
+    return screen.width < 767 && hasMobileUA();
+  }
+
+  function escapeSelector (selector) {
+    return selector.replace(/[!"$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\$&")
+  }
+</script>
+
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" id="motion.global">
+  $(document).ready(function () {
+    var body = $('body');
+    var isSidebarVisible = false;
+    var sidebarToggle = $('.sidebar-toggle');
+    var sidebarToggleLine1st = $('.sidebar-toggle-line-first')
+    var sidebarToggleLine2nd = $('.sidebar-toggle-line-middle');
+    var sidebarToggleLine3rd = $('.sidebar-toggle-line-last');
+    var sidebar = $('.sidebar');
+
+    var SIDEBAR_WIDTH = '320px';
+    var SIDEBAR_DISPLAY_DURATION = 300;
+
+    var sidebarToogleLineStatusInit = {width: '100%', opacity: 1, left: 0, rotateZ: 0, top: 0};
+
+    var sidebarToggleLine1stStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine1stStatusArrow = {width: '50%', rotateZ: '-45deg', top: '2px'};
+    var sidebarToogleLine1stStatusClose = {width: '100%', rotateZ: '-45deg', top: '5px'};
+
+    var sidebarToggleLine2ndStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine2ndStatusArrow = {width: '90%'};
+    var sidebarToogleLine2ndStatusClose = {opacity: 0};
+
+    var sidebarToggleLine3rdStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine3rdStatusArrow = {width: '50%', rotateZ: '45deg', top: '-2px'};
+    var sidebarToogleLine3rdStatusClose = {width: '100%', rotateZ: '45deg', top: '-5px'};
+
+    LogoAndMenuMotion();
+    sidebatToggleMotion();
+    postsListMotion();
+    backToTopMotion();
+
+
+    $(document)
+      .on('sidebar.isShowing', function () {
+        isDesktop() && body.velocity(
+          {paddingRight: SIDEBAR_WIDTH},
+          SIDEBAR_DISPLAY_DURATION
+        );
+        sidebarContentMotion();
+      })
+      .on('sidebar.isHiding', function () {});
+
+    function LogoAndMenuMotion() {
+      $.Velocity.RunSequence([
+        { e: $('.brand'), p: { opacity: 1 }, o: { duration: 100 } },
+        { e: $('.logo'), p: { opacity: 1, top: 0 }, o: { duration: 50} },
+        
+        { e: $('.logo-line-before i'), p: { translateX: "100%" }, o: { duration: 500, sequenceQueue: false } },
+        { e: $('.logo-line-after i'), p: { translateX: "-100%" }, o: { duration: 500, sequenceQueue: false } },
+        
+        { e: $('.site-title'), p: { opacity: 1, top: 0 }, o: { duration: 200 } }
+      ]);
+      $('.menu-item').velocity('transition.slideDownIn', {display: null});
+    }
+
+
+    function backToTopMotion () {
+      var b2top = $('.back-to-top');
+      b2top.on('click', function () {
+        body.velocity('scroll');
+      });
+    }
+
+    function sidebarShowMotion () {
+
+      sidebarToggleLine1st.velocity(sidebarToogleLine1stStatusClose);
+      sidebarToggleLine2nd.velocity(sidebarToogleLine2ndStatusClose);
+      sidebarToggleLine3rd.velocity(sidebarToogleLine3rdStatusClose);
+
+      sidebar.velocity({width: SIDEBAR_WIDTH}, {
+        display: 'block',
+        duration: SIDEBAR_DISPLAY_DURATION,
+        complete: function () {
+          sidebar.addClass('sidebar-active');
+          sidebar.trigger('sidebar.didShow');
+        }
+      });
+      sidebar.trigger('sidebar.isShowing');
+    }
+
+    function sidebarHideMotion () {
+      isDesktop() && body.velocity({paddingRight: 0});
+      sidebar.velocity('reverse');
+
+      sidebarToggleLine1st.velocity(sidebarToggleLine1stStatusInit);
+      sidebarToggleLine2nd.velocity(sidebarToggleLine2ndStatusInit);
+      sidebarToggleLine3rd.velocity(sidebarToggleLine3rdStatusInit);
+
+      sidebar.removeClass('sidebar-active');
+      sidebar.trigger('sidebar.isHiding');
+    };
+
+    function sidebarContentMotion () {
+      $('.sidebar .motion-element').velocity(
+        'transition.slideRightIn',
+        {stagger: 50, drag: true}
+      );
+    }
+
+    function postsListMotion () {
+      var postMotionOptions = window.postMotionOptions || {stagger: 300, drag: true};
+      $('.post').velocity('transition.slideDownIn', postMotionOptions);
+    }
+
+    function sidebatToggleMotion () {
+      sidebarToggle.on('click', function () {
+        isSidebarVisible ? sidebarHideMotion() : sidebarShowMotion();
+        isSidebarVisible = !isSidebarVisible;
+      });
+
+      sidebarToggle.hover(function () {
+        if (isSidebarVisible) {return}
+        sidebarToggleLine1st.velocity('stop').velocity(sidebarToggleLine1stStatusArrow);
+        sidebarToggleLine2nd.velocity('stop').velocity(sidebarToggleLine2ndStatusArrow);
+        sidebarToggleLine3rd.velocity('stop').velocity(sidebarToggleLine3rdStatusArrow);
+      }, function () {
+        if (isSidebarVisible) {return}
+        sidebarToggleLine1st.velocity('stop').velocity(sidebarToggleLine1stStatusInit);
+        sidebarToggleLine2nd.velocity('stop').velocity(sidebarToggleLine2ndStatusInit);
+        sidebarToggleLine3rd.velocity('stop').velocity(sidebarToggleLine3rdStatusInit);
+      });
+    }
+  });
+
+</script>
+
+
+
+
+
+  
+  
+<script type="text/javascript" id="bootstrap.scrollspy.custom">
+  /* ========================================================================
+  * Bootstrap: scrollspy.js v3.3.2
+  * http://getbootstrap.com/javascript/#scrollspy
+  * ========================================================================
+  * Copyright 2011-2015 Twitter, Inc.
+  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+  * ======================================================================== */
+
+  /**
+   * Custom by iissnan
+   *
+   * - Add a `clear.bs.scrollspy` event.
+   * - Esacpe targets selector.
+   */
+
+
+  +function ($) {
+    'use strict';
+
+    // SCROLLSPY CLASS DEFINITION
+    // ==========================
+
+    function ScrollSpy(element, options) {
+      this.$body          = $(document.body)
+      this.$scrollElement = $(element).is(document.body) ? $(window) : $(element)
+      this.options        = $.extend({}, ScrollSpy.DEFAULTS, options)
+      this.selector       = (this.options.target || '') + ' .nav li > a'
+      this.offsets        = []
+      this.targets        = []
+      this.activeTarget   = null
+      this.scrollHeight   = 0
+
+      this.$scrollElement.on('scroll.bs.scrollspy', $.proxy(this.process, this))
+      this.refresh()
+      this.process()
+    }
+
+    ScrollSpy.VERSION  = '3.3.2'
+
+    ScrollSpy.DEFAULTS = {
+      offset: 10
+    }
+
+    ScrollSpy.prototype.getScrollHeight = function () {
+      return this.$scrollElement[0].scrollHeight || Math.max(this.$body[0].scrollHeight, document.documentElement.scrollHeight)
+    }
+
+    ScrollSpy.prototype.refresh = function () {
+      var that          = this
+      var offsetMethod  = 'offset'
+      var offsetBase    = 0
+
+      this.offsets      = []
+      this.targets      = []
+      this.scrollHeight = this.getScrollHeight()
+
+      if (!$.isWindow(this.$scrollElement[0])) {
+        offsetMethod = 'position'
+        offsetBase   = this.$scrollElement.scrollTop()
+      }
+
+      this.$body
+        .find(this.selector)
+        .map(function () {
+          var $el   = $(this)
+          var href  = $el.data('target') || $el.attr('href')
+          var $href = /^#./.test(href) && $(escapeSelector(href)) // Need to escape selector.
+
+          return ($href
+            && $href.length
+            && $href.is(':visible')
+            && [[$href[offsetMethod]().top + offsetBase, href]]) || null
+        })
+        .sort(function (a, b) { return a[0] - b[0] })
+        .each(function () {
+          that.offsets.push(this[0])
+          that.targets.push(this[1])
+        })
+
+
+    }
+
+    ScrollSpy.prototype.process = function () {
+      var scrollTop    = this.$scrollElement.scrollTop() + this.options.offset
+      var scrollHeight = this.getScrollHeight()
+      var maxScroll    = this.options.offset + scrollHeight - this.$scrollElement.height()
+      var offsets      = this.offsets
+      var targets      = this.targets
+      var activeTarget = this.activeTarget
+      var i
+
+      if (this.scrollHeight != scrollHeight) {
+        this.refresh()
+      }
+
+      if (scrollTop >= maxScroll) {
+        return activeTarget != (i = targets[targets.length - 1]) && this.activate(i)
+      }
+
+      if (activeTarget && scrollTop < offsets[0]) {
+        $(this.selector).trigger('clear.bs.scrollspy')  // Add a custom event.
+        this.activeTarget = null
+        return this.clear()
+      }
+
+      for (i = offsets.length; i--;) {
+        activeTarget != targets[i]
+          && scrollTop >= offsets[i]
+          && (!offsets[i + 1] || scrollTop <= offsets[i + 1])
+          && this.activate(targets[i])
+      }
+    }
+
+    ScrollSpy.prototype.activate = function (target) {
+      this.activeTarget = target
+
+      this.clear()
+
+      var selector = this.selector +
+        '[data-target="' + target + '"],' +
+        this.selector + '[href="' + target + '"]'
+
+      var active = $(selector)
+        .parents('li')
+        .addClass('active')
+
+      if (active.parent('.dropdown-menu').length) {
+        active = active
+          .closest('li.dropdown')
+          .addClass('active')
+      }
+
+      active.trigger('activate.bs.scrollspy')
+    }
+
+    ScrollSpy.prototype.clear = function () {
+      $(this.selector)
+        .parentsUntil(this.options.target, '.active')
+        .removeClass('active')
+    }
+
+
+    // SCROLLSPY PLUGIN DEFINITION
+    // ===========================
+
+    function Plugin(option) {
+      return this.each(function () {
+        var $this   = $(this)
+        var data    = $this.data('bs.scrollspy')
+        var options = typeof option == 'object' && option
+
+        if (!data) $this.data('bs.scrollspy', (data = new ScrollSpy(this, options)))
+        if (typeof option == 'string') data[option]()
+      })
+    }
+
+    var old = $.fn.scrollspy
+
+    $.fn.scrollspy             = Plugin
+    $.fn.scrollspy.Constructor = ScrollSpy
+
+
+    // SCROLLSPY NO CONFLICT
+    // =====================
+
+    $.fn.scrollspy.noConflict = function () {
+      $.fn.scrollspy = old
+      return this
+    }
+
+
+    // SCROLLSPY DATA-API
+    // ==================
+
+    $(window).on('load.bs.scrollspy.data-api', function () {
+      $('[data-spy="scroll"]').each(function () {
+        var $spy = $(this)
+        Plugin.call($spy, $spy.data())
+      })
+    })
+
+  }(jQuery);
+</script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var $sidebarInner = $('.sidebar-inner');
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.didShow', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+          var self = this;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      $(indicator).velocity('stop').velocity({
+        opacity: action === 'show' ? 0.4 : 0
+      }, { duration: 100 });
+    }
+
+  });
+</script>
+
+
+  <script type="text/javascript" id="sidebar.nav">
+    $(document).ready(function () {
+      var html = $('html');
+
+      $('.sidebar-nav li').on('click', function () {
+        var item = $(this);
+        var activeTabClassName = 'sidebar-nav-active';
+        var activePanelClassName = 'sidebar-panel-active';
+        if (item.hasClass(activeTabClassName)) {
+          return;
+        }
+
+        var currentTarget = $('.' + activePanelClassName);
+        var target = $('.' + item.data('target'));
+
+        currentTarget.velocity('transition.slideUpOut', 200, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', 200)
+            .addClass(activePanelClassName);
+        });
+
+        item.siblings().removeClass(activeTabClassName);
+        item.addClass(activeTabClassName);
+      });
+
+      $('.post-toc a').on('click', function (e) {
+        e.preventDefault();
+        var offset = $(escapeSelector(this.getAttribute('href'))).offset().top;
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        });
+      });
+
+      // Expand sidebar on post detail page by default, when post has a toc.
+      var $tocContent = $('.post-toc-content');
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0 && isDesktop()) {
+        setTimeout(function () {
+          $('.sidebar-toggle').trigger('click');
+        }, 800);
+      }
+    });
+  </script>
+
+
+
+
+  
+
+  
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ahbing"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+
+
+  
+  
+</body>
+</html>

@@ -1,0 +1,941 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.2"/>
+
+
+    <meta name="description" content="诗意的栖居在这个星球上" />
+
+
+
+  <meta name="keywords" content="js," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.2" />
+
+
+
+
+  <title> JavaScript中的原型 // 九月烟树 </title>
+</head>
+
+<body>
+<!--[if lte IE 8]> <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'> <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode"><img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari." style='margin-left:auto;margin-right:auto;display: block;'/></a></div> <![endif]-->
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <div id="header" class="header">
+      <div class="header-inner">
+        <h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand">
+      <span class="logo">
+        <i class="icon-logo"></i>
+      </span>
+      <span class="site-title">九月烟树</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+
+  <ul id="menu" class="menu">
+     
+    
+      
+      <li class="menu-item menu-item-home">
+        <a href="/">
+          <i class="menu-item-icon icon-home"></i> <br />
+          首页
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-archives">
+        <a href="/archives">
+          <i class="menu-item-icon icon-archives"></i> <br />
+          归档
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-about">
+        <a href="/about">
+          <i class="menu-item-icon icon-about"></i> <br />
+          关于
+        </a>
+      </li>
+    
+  </ul>
+
+
+      </div>
+    </div>
+
+    <div id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
+              JavaScript中的原型
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于 2015-06-12
+        </span>
+
+        
+          <span class="post-category">
+            &nbsp; | &nbsp; 分类于
+            
+              <a href="/categories/js/">js</a>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/06/12/JavaScript中的原型/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2015/06/12/JavaScript中的原型/"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </div>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <p>当你在JavaScript中定义一个函数，他会有一些预定义的属性，其中之一就是令人迷惑的原型。这在篇文章中，我会详细的解释原型是什么，并且解释为什么你应该在你的项目中使用原型。<br><a id="more"></a></p>
+<h2 id="什么是原型">什么是原型</h2><p>对象的初始化原型是一个空对象。你可以将其他人和对象添加到原型上。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var myObject = function(name)&#123;&#10;&#9;this.name = name;&#10;&#9;return this;&#10;&#125;;&#10;&#10;console.log(typeof myObject.prototype);  //object&#10;&#10;myObject.prototype.getName = function()&#123;&#10;&#9;return this.name;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码片段，我们创建了一个函数，但当我们调用<code>myObject()</code>，他将简单的返回<code>window</code>对象。因为他是在全局作用域中定义的。当这个函数还没有被实例化，<code>this</code>因此将会返回全局对象。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.log(myObject() === window);  //true</span><br></pre></td></tr></table></figure>
+<h2 id="‘隐秘’的属性">‘隐秘’的属性</h2><blockquote>
+<p>JavaScript中的每一个对象都有一个‘隐秘’的属性。</p>
+</blockquote>
+<p>在我们继续之前，我想讨论一下关于原型的‘隐秘’的属性。</p>
+<p>每一个JavaScript的对象在定义或者实例之后，会添加一个叫<code>__proto__</code>‘隐秘’的属性.他也是原型链访问的核心。然而，在你的应用中访问<code>__proto__</code>并不是一个好主意。因为他并不被所有浏览器支持。</p>
+<p>不应该将<code>__proto__</code>和对象的原型混为一谈。因为他们是两个不同的属性，但他们又紧密相连。区分他们很重要，在刚开始理解 的时候可能有点小复杂。那么<code>__proto__</code>到底意味着什么吗?让我来解释一下，当我们创建了<code>myObject</code>函数，我们定义了一个<code>Function</code>类型的对象。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.log(typeof myObject);  //function</span><br></pre></td></tr></table></figure>
+<p><code>Function</code>是一个JavaScript的预定义对象，他有自己的属性(比如<code>length</code>和<code>arguments</code>)和方法(比如<code>call</code>和<code>apply</code>)。是的，他还有自己的原型对象，也有一个‘隐秘’的<code>__proto__</code>属性，这就意味着，在JavaScript引擎的某个地方，可能有和下面类似的一些代码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Function.prototype = &#123;&#10;&#9;arguments:null,&#10;&#9;length:0,&#10;&#9;call:function()&#123;&#10;&#9;&#9;//&#38544;&#31192;&#30340;&#20195;&#30721;&#10;&#9;&#125;,&#10;&#9;apply:function()&#123;&#10;&#9;&#9;//&#38544;&#31192;&#30340;&#20195;&#30721;&#10;&#9;&#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>事实上，<code>Function</code>的定义并没有这么简单，这仅仅是举个例子来说明，原型链是怎么工作的。</p>
+<p>所以虽然我们已经定义了一个<code>myObject</code>函数，并传了一个<code>name</code>参数进来，但我们并没有设置任何属性和方法，比如<code>length</code>和<code>call</code>。那接下来这段代码是怎么运行的呢？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.log(myObject.length);  //1 (&#21487;&#35775;&#38382;&#21442;&#25968;&#30340;&#25968;&#37327;)</span><br></pre></td></tr></table></figure>
+<p>那是因为，当我们定义了<code>myObject</code>对象时，其内置的<code>__protto__</code>属性的值是<code>Function.prototype</code>，所以，当我们访问<code>myObject.length</code>的时候，    他就开始在<code>myObject</code>上找有没有叫<code>length</code>的属性，并没有找到，然后他就沿着原型链继续往上找，通过<code>__proto__</code>链，找到了<code>length</code>属性，并将其返回。</p>
+<p>你也许想知道，为什么<code>length</code>是被设置成1而不是0或者其他数字，那是因为<code>myObject</code>事实上是一个<code>Function</code>的实例。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.log(myObject instanceof Function); //true&#10;&#10;console.log(myObject === Function);  //false</span><br></pre></td></tr></table></figure>
+<p>当一个对象的实例被创建，<code>__proto__</code>属性会重新指向给构造函数的原型，这个例子中，也就是<code>Function</code>的原型。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.log(myObject.__proto__ === Function.prototype); //true</span><br></pre></td></tr></table></figure>
+<p>还有，当你新建一个<code>Function</code>对象，<code>Function</code>构造函数将会获取行参的数量并更新<code>this.length</code>,因此，在上例中，<code>myObject.length</code>是1。</p>
+<p>当然，如果我们使用<code>new</code>关键字，新创建一个<code>myObject</code>的实例，<code>__proto__</code>将会指向<code>myObject.prototype</code>,因为<code>myObject</code>是新实例的构造函数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var myInstance = new myObject(&#39;foo&#39;);&#10;console.log(myInstance.__proto__ === myObject.prototype);  //true</span><br></pre></td></tr></table></figure>
+<p>此外，我们访问<code>Function.prototype</code>上的原生方法，比如<code>call</code>和<code>apply</code>，我现在也可以访问<code>myObject</code>的方法，比如<code>getName</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.log(myInstance.getName()); //foo&#10;&#10;var mySecondInstance = new myObject(&#39;bar&#39;);&#10;&#10;console.log(mySecondInstance.getName());  //bar&#10;&#10;console.log(myInstance.getName());  //foo</span><br></pre></td></tr></table></figure>
+<p>译者注：一个对象实际上包含<code>__proto__</code>和<code>prototype</code>属性，<code>__proto__</code>指向创建该对象的构造函数原型，原型链查找是通过<code>__proto__</code>实现的，<code>prototype</code>指向对象自身的原型。</p>
+<p>正如你所想的，这确实很方便，因为这可以用来设计一个对象结构，可以创建很多个被需要的实例，让我们来讨论下一个话题吧。</p>
+<h2 id="为什么使用原型会更好呢？">为什么使用原型会更好呢？</h2><p>例如，我们正在开发一个canvas游戏，有可能一次就需要几个(有可能几百个)canvas对象在屏幕上，而且每个对象都有自己的属性，比如<code>x</code>和<code>y</code>坐标，<code>width</code>和<code>height</code>还有很多其他的属性。</p>
+<p>我们有可能向下面这样做</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var GameObject1 = &#123;&#10;    x: Math.floor((Math.random() * myCanvasWidth) + 1),&#10;    y: Math.floor((Math.random() * myCanvasHeight) + 1),&#10;    width: 10,&#10;    height: 10,&#10;    draw: function()&#123;&#10;        myCanvasContext.fillRect(this.x, this.y, this.width, this.height);&#10;    &#125;&#10;   ...&#10;&#125;;&#10; &#10;var GameObject2 = &#123;&#10;    x: Math.floor((Math.random() * myCanvasWidth) + 1),&#10;    y: Math.floor((Math.random() * myCanvasHeight) + 1),&#10;    width: 10,&#10;    height: 10,&#10;    draw: function()&#123;&#10;        myCanvasContext.fillRect(this.x, this.y, this.width, this.height);&#10;    &#125;&#10;    ...&#10;&#125;;</span><br></pre></td></tr></table></figure>
+<p>。。。像这样在做98次。。。</p>
+<p>所有的对象创建都储存在内存中，所有的方法定义都是独立的，比如<code>draw</code>或者其他被调用的方法。这明显是十分不合理的，比如这个游戏代码会占用浏览器分配给JavaScript的内存。使其运行缓慢，甚至停止响应。</p>
+<p>当然这在只有100个对象的时候很难发生，但这对性能是一个相当大的影响。因为需要查询100个不同的对象，而不是一个简单的<code>prototype</code>对象。</p>
+<h2 id="如何使用原型">如何使用原型</h2><p>为了让应用跑得更快(遵循最佳实践),我们可以（重新）定义一个<code>GameObject</code>原型。每一个<code>GameObject</code>的实例将会使<code>GameObject.prototype</code>上的方法，就好像这么方法是自己的一样。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;// define the GameObject constructor function&#10;var GameObject = function(width, height) &#123;&#10;    this.x = Math.floor((Math.random() * myCanvasWidth) + 1);&#10;    this.y = Math.floor((Math.random() * myCanvasHeight) + 1);&#10;    this.width = width;&#10;    this.height = height;&#10;    return this;&#10;&#125;;&#10; &#10;// (re)define the GameObject prototype object&#10;GameObject.prototype = &#123;&#10;    x: 0,&#10;    y: 0,&#10;    width: 5,&#10;    width: 5,&#10;    draw: function() &#123;&#10;        myCanvasContext.fillRect(this.x, this.y, this.width, this.height);&#10;    &#125;&#10;&#125;;</span><br></pre></td></tr></table></figure>
+<p>然后，我们可以实例化游戏对象100次。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var x = 100,&#10;arrayOfGameObjects = [];&#10; &#10;do &#123;&#10;    arrayOfGameObjects.push(new GameObject(10, 10));&#10;&#125; while(x--);</span><br></pre></td></tr></table></figure>
+<p>现在我们拥有100个GameObject实例的数组，他们都共享同一个原型和定义的<code>draw</code>方法。这大大的节省了应用程序中的内存。</p>
+<p>当我们调用<code>draw</code>方法，其实就是调用原型上相同的方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var GameLoop = function() &#123;&#10;    for(gameObject in arrayOfGameObjects) &#123;&#10;        gameObject.draw();&#10;    &#125;&#10;&#125;;&#10;var GameLoop = function() &#123;&#10;    for(gameObject in arrayOfGameObjects) &#123;&#10;        gameObject.draw();&#10;    &#125;&#10;&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="原型是动态的对象">原型是动态的对象</h2><p>对象的原型是动态的，换句话说。这意味这在我们创建所有的<code>GameObject</code>实例之后，我们决定是想要画一个圆而不是一个正方形，我们可以相应的更新我们的<code>GameObject.prototype.draw</code>方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GameObject.prototype.draw = function() &#123;&#10;    myCanvasContext.arc(this.x, this.y, this.width, 0, Math.PI*2, true);&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>现在，之前所有<code>GameObject</code>的实例和以后的实例都将绘制圆。</p>
+<h2 id="修改原生的原型">修改原生的原型</h2><p>是的，你可以做到的，以有可能对JavaScript的一些库比较熟悉，比例<a href="http://www.prototypejs.org/" target="_blank" rel="external">Prototype</a>，他就是利用这种方法。</p>
+<p>让我们看一个简单的例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String.prototype.trim = function()&#123;&#10;&#9;return this.replace(/^\s+|\s+$/g,&#39;&#39;);&#10;&#125;;</span><br></pre></td></tr></table></figure>
+<p>我们现在可以在任意一个字符串上调用这个方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#34;foo bar     &#34;.trim();   // &#34;foo bar&#34;</span><br></pre></td></tr></table></figure>
+<p>然而，这有一个小缺点。比如，你可能在你的应用里使用他，但是一两年之后，浏览器可能更新的JavaScript版本在<code>String</code>的原型上实现了一个原生的<code>trim</code>方法，这就意味着你定义的<code>trim</code>方法将会覆盖原生的方法。哎呀！为了解决这个问题，我们可以在定义方法之前，添加一个简单的检查。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if(!String.prototype.trim)&#123;&#10;&#9;String.prototypr.trim = function()&#123;&#10;&#9;&#9;return this.replace(/^\s+|\s+$/g,&#39;&#39;);&#10;&#9;&#125;;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>现在，如果<code>trim</code>方法存在，我们就使用原生的<code>trim</code>方法。</p>
+<blockquote>
+<p>作为第一个经验法则，避免扩展原生的对象，一般被认为是最佳的实践。但是无论怎样，不过有必要，一些法则都可以打破。</p>
+</blockquote>
+<h2 id="结个尾">结个尾</h2><p>但愿阿，这篇文章已经为你解释清楚了JavaScript的核心–原型。你现在应该用你的方式去创造更有影响力的应用。</p>
+<p>如果你有任何有关原型问题的话，请让我在评论里看见，我会尽全力回答你。</p>
+<p>原文<a href="http://code.tutsplus.com/tutorials/prototypes-in-javascript--net-24949" target="_blank" rel="external">Prototypes in JavaScript</a></p>
+
+      
+    </div>
+
+    <div class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/js/"> #js </a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/06/13/css居中之绝对定位/">css居中之绝对定位</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/06/11/JavaScript闭包和作用域的说明/">JavaScript闭包和作用域的说明</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </div>
+  </div>
+
+
+
+    
+      <div class="comments" id="comments">
+        
+          <div class="ds-thread" data-thread-key="2015/06/12/JavaScript中的原型/"
+               data-title="JavaScript中的原型" data-url="http://huangbingbing.com/2015/06/12/JavaScript中的原型/">
+          </div>
+        
+      </div>
+    
+  </div>
+
+
+        </div>
+
+        
+      </div>
+
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview">
+        <div class="site-author motion-element">
+          <img class="site-author-image" src="http://tp2.sinaimg.cn/5622195893/180/40087750383/1" alt="阿炳" />
+          <p class="site-author-name">阿炳</p>
+        </div>
+        <p class="site-description motion-element">诗意的栖居在这个星球上</p>
+        <div class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">26</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-name">分类</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            
+              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-name">标签</span>
+              
+          </div>
+
+        </div>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+              <a href="https://github.com/ahbing/" target="_blank">GitHub</a>
+            </span>
+            
+              <span class="links-of-author-item">
+              <a href="https://twitter.com/aahbing" target="_blank">Twitter</a>
+            </span>
+            
+              <span class="links-of-author-item">
+              <a href="http://weibo.com/u/5622195893" target="_blank">Weibo</a>
+            </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+      </div>
+
+      
+        <div class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是原型"><span class="nav-number">1.</span> <span class="nav-text">什么是原型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#‘隐秘’的属性"><span class="nav-number">2.</span> <span class="nav-text">‘隐秘’的属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么使用原型会更好呢？"><span class="nav-number">3.</span> <span class="nav-text">为什么使用原型会更好呢？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何使用原型"><span class="nav-number">4.</span> <span class="nav-text">如何使用原型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原型是动态的对象"><span class="nav-number">5.</span> <span class="nav-text">原型是动态的对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改原生的原型"><span class="nav-number">6.</span> <span class="nav-text">修改原生的原型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结个尾"><span class="nav-number">7.</span> <span class="nav-text">结个尾</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </div>
+      
+
+    </div>
+  </div>
+
+
+    </div>
+
+    <div id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; &nbsp; 
+  2015
+  <span class="with-love">
+    <i class="icon-heart"></i>
+  </span>
+  <span class="author">阿炳</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </div>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('.content img').each(function () {
+        var $image = $(this);
+        var $imageWrapLink = $image.parent('a');
+
+        if ($imageWrapLink.size() < 1) {
+          $imageWrapLink = $image.wrap('<a href="' + this.getAttribute('src') + '"></a>').parent('a');
+        }
+        $imageWrapLink.addClass('fancybox');
+      });
+    });
+    $('.fancybox').fancybox({
+      helpers: {
+        overlay: {
+          locked: false
+        }
+      }
+    });
+  </script>
+
+
+  <script type="text/javascript">
+  function hasMobileUA () {
+    var nav = window.navigator;
+    var ua = nav.userAgent;
+    var pa = /iPad|iPhone|Android|Opera Mini|BlackBerry|webOS|UCWEB|Blazer|PSP|IEMobile|Symbian/g;
+
+    return pa.test(ua);
+  }
+
+  function isDesktop () {
+    return screen.width > 991 && !hasMobileUA();
+  }
+
+  function isTablet () {
+    return screen.width < 992 && screen.width > 767 && hasMobileUA();
+  }
+
+  function isMobile () {
+    return screen.width < 767 && hasMobileUA();
+  }
+
+  function escapeSelector (selector) {
+    return selector.replace(/[!"$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\$&")
+  }
+</script>
+
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" id="motion.global">
+  $(document).ready(function () {
+    var body = $('body');
+    var isSidebarVisible = false;
+    var sidebarToggle = $('.sidebar-toggle');
+    var sidebarToggleLine1st = $('.sidebar-toggle-line-first')
+    var sidebarToggleLine2nd = $('.sidebar-toggle-line-middle');
+    var sidebarToggleLine3rd = $('.sidebar-toggle-line-last');
+    var sidebar = $('.sidebar');
+
+    var SIDEBAR_WIDTH = '320px';
+    var SIDEBAR_DISPLAY_DURATION = 300;
+
+    var sidebarToogleLineStatusInit = {width: '100%', opacity: 1, left: 0, rotateZ: 0, top: 0};
+
+    var sidebarToggleLine1stStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine1stStatusArrow = {width: '50%', rotateZ: '-45deg', top: '2px'};
+    var sidebarToogleLine1stStatusClose = {width: '100%', rotateZ: '-45deg', top: '5px'};
+
+    var sidebarToggleLine2ndStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine2ndStatusArrow = {width: '90%'};
+    var sidebarToogleLine2ndStatusClose = {opacity: 0};
+
+    var sidebarToggleLine3rdStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine3rdStatusArrow = {width: '50%', rotateZ: '45deg', top: '-2px'};
+    var sidebarToogleLine3rdStatusClose = {width: '100%', rotateZ: '45deg', top: '-5px'};
+
+    LogoAndMenuMotion();
+    sidebatToggleMotion();
+    postsListMotion();
+    backToTopMotion();
+
+
+    $(document)
+      .on('sidebar.isShowing', function () {
+        isDesktop() && body.velocity(
+          {paddingRight: SIDEBAR_WIDTH},
+          SIDEBAR_DISPLAY_DURATION
+        );
+        sidebarContentMotion();
+      })
+      .on('sidebar.isHiding', function () {});
+
+    function LogoAndMenuMotion() {
+      $.Velocity.RunSequence([
+        { e: $('.brand'), p: { opacity: 1 }, o: { duration: 100 } },
+        { e: $('.logo'), p: { opacity: 1, top: 0 }, o: { duration: 50} },
+        
+        { e: $('.logo-line-before i'), p: { translateX: "100%" }, o: { duration: 500, sequenceQueue: false } },
+        { e: $('.logo-line-after i'), p: { translateX: "-100%" }, o: { duration: 500, sequenceQueue: false } },
+        
+        { e: $('.site-title'), p: { opacity: 1, top: 0 }, o: { duration: 200 } }
+      ]);
+      $('.menu-item').velocity('transition.slideDownIn', {display: null});
+    }
+
+
+    function backToTopMotion () {
+      var b2top = $('.back-to-top');
+      b2top.on('click', function () {
+        body.velocity('scroll');
+      });
+    }
+
+    function sidebarShowMotion () {
+
+      sidebarToggleLine1st.velocity(sidebarToogleLine1stStatusClose);
+      sidebarToggleLine2nd.velocity(sidebarToogleLine2ndStatusClose);
+      sidebarToggleLine3rd.velocity(sidebarToogleLine3rdStatusClose);
+
+      sidebar.velocity({width: SIDEBAR_WIDTH}, {
+        display: 'block',
+        duration: SIDEBAR_DISPLAY_DURATION,
+        complete: function () {
+          sidebar.addClass('sidebar-active');
+          sidebar.trigger('sidebar.didShow');
+        }
+      });
+      sidebar.trigger('sidebar.isShowing');
+    }
+
+    function sidebarHideMotion () {
+      isDesktop() && body.velocity({paddingRight: 0});
+      sidebar.velocity('reverse');
+
+      sidebarToggleLine1st.velocity(sidebarToggleLine1stStatusInit);
+      sidebarToggleLine2nd.velocity(sidebarToggleLine2ndStatusInit);
+      sidebarToggleLine3rd.velocity(sidebarToggleLine3rdStatusInit);
+
+      sidebar.removeClass('sidebar-active');
+      sidebar.trigger('sidebar.isHiding');
+    };
+
+    function sidebarContentMotion () {
+      $('.sidebar .motion-element').velocity(
+        'transition.slideRightIn',
+        {stagger: 50, drag: true}
+      );
+    }
+
+    function postsListMotion () {
+      var postMotionOptions = window.postMotionOptions || {stagger: 300, drag: true};
+      $('.post').velocity('transition.slideDownIn', postMotionOptions);
+    }
+
+    function sidebatToggleMotion () {
+      sidebarToggle.on('click', function () {
+        isSidebarVisible ? sidebarHideMotion() : sidebarShowMotion();
+        isSidebarVisible = !isSidebarVisible;
+      });
+
+      sidebarToggle.hover(function () {
+        if (isSidebarVisible) {return}
+        sidebarToggleLine1st.velocity('stop').velocity(sidebarToggleLine1stStatusArrow);
+        sidebarToggleLine2nd.velocity('stop').velocity(sidebarToggleLine2ndStatusArrow);
+        sidebarToggleLine3rd.velocity('stop').velocity(sidebarToggleLine3rdStatusArrow);
+      }, function () {
+        if (isSidebarVisible) {return}
+        sidebarToggleLine1st.velocity('stop').velocity(sidebarToggleLine1stStatusInit);
+        sidebarToggleLine2nd.velocity('stop').velocity(sidebarToggleLine2ndStatusInit);
+        sidebarToggleLine3rd.velocity('stop').velocity(sidebarToggleLine3rdStatusInit);
+      });
+    }
+  });
+
+</script>
+
+
+
+
+
+  
+  
+<script type="text/javascript" id="bootstrap.scrollspy.custom">
+  /* ========================================================================
+  * Bootstrap: scrollspy.js v3.3.2
+  * http://getbootstrap.com/javascript/#scrollspy
+  * ========================================================================
+  * Copyright 2011-2015 Twitter, Inc.
+  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+  * ======================================================================== */
+
+  /**
+   * Custom by iissnan
+   *
+   * - Add a `clear.bs.scrollspy` event.
+   * - Esacpe targets selector.
+   */
+
+
+  +function ($) {
+    'use strict';
+
+    // SCROLLSPY CLASS DEFINITION
+    // ==========================
+
+    function ScrollSpy(element, options) {
+      this.$body          = $(document.body)
+      this.$scrollElement = $(element).is(document.body) ? $(window) : $(element)
+      this.options        = $.extend({}, ScrollSpy.DEFAULTS, options)
+      this.selector       = (this.options.target || '') + ' .nav li > a'
+      this.offsets        = []
+      this.targets        = []
+      this.activeTarget   = null
+      this.scrollHeight   = 0
+
+      this.$scrollElement.on('scroll.bs.scrollspy', $.proxy(this.process, this))
+      this.refresh()
+      this.process()
+    }
+
+    ScrollSpy.VERSION  = '3.3.2'
+
+    ScrollSpy.DEFAULTS = {
+      offset: 10
+    }
+
+    ScrollSpy.prototype.getScrollHeight = function () {
+      return this.$scrollElement[0].scrollHeight || Math.max(this.$body[0].scrollHeight, document.documentElement.scrollHeight)
+    }
+
+    ScrollSpy.prototype.refresh = function () {
+      var that          = this
+      var offsetMethod  = 'offset'
+      var offsetBase    = 0
+
+      this.offsets      = []
+      this.targets      = []
+      this.scrollHeight = this.getScrollHeight()
+
+      if (!$.isWindow(this.$scrollElement[0])) {
+        offsetMethod = 'position'
+        offsetBase   = this.$scrollElement.scrollTop()
+      }
+
+      this.$body
+        .find(this.selector)
+        .map(function () {
+          var $el   = $(this)
+          var href  = $el.data('target') || $el.attr('href')
+          var $href = /^#./.test(href) && $(escapeSelector(href)) // Need to escape selector.
+
+          return ($href
+            && $href.length
+            && $href.is(':visible')
+            && [[$href[offsetMethod]().top + offsetBase, href]]) || null
+        })
+        .sort(function (a, b) { return a[0] - b[0] })
+        .each(function () {
+          that.offsets.push(this[0])
+          that.targets.push(this[1])
+        })
+
+
+    }
+
+    ScrollSpy.prototype.process = function () {
+      var scrollTop    = this.$scrollElement.scrollTop() + this.options.offset
+      var scrollHeight = this.getScrollHeight()
+      var maxScroll    = this.options.offset + scrollHeight - this.$scrollElement.height()
+      var offsets      = this.offsets
+      var targets      = this.targets
+      var activeTarget = this.activeTarget
+      var i
+
+      if (this.scrollHeight != scrollHeight) {
+        this.refresh()
+      }
+
+      if (scrollTop >= maxScroll) {
+        return activeTarget != (i = targets[targets.length - 1]) && this.activate(i)
+      }
+
+      if (activeTarget && scrollTop < offsets[0]) {
+        $(this.selector).trigger('clear.bs.scrollspy')  // Add a custom event.
+        this.activeTarget = null
+        return this.clear()
+      }
+
+      for (i = offsets.length; i--;) {
+        activeTarget != targets[i]
+          && scrollTop >= offsets[i]
+          && (!offsets[i + 1] || scrollTop <= offsets[i + 1])
+          && this.activate(targets[i])
+      }
+    }
+
+    ScrollSpy.prototype.activate = function (target) {
+      this.activeTarget = target
+
+      this.clear()
+
+      var selector = this.selector +
+        '[data-target="' + target + '"],' +
+        this.selector + '[href="' + target + '"]'
+
+      var active = $(selector)
+        .parents('li')
+        .addClass('active')
+
+      if (active.parent('.dropdown-menu').length) {
+        active = active
+          .closest('li.dropdown')
+          .addClass('active')
+      }
+
+      active.trigger('activate.bs.scrollspy')
+    }
+
+    ScrollSpy.prototype.clear = function () {
+      $(this.selector)
+        .parentsUntil(this.options.target, '.active')
+        .removeClass('active')
+    }
+
+
+    // SCROLLSPY PLUGIN DEFINITION
+    // ===========================
+
+    function Plugin(option) {
+      return this.each(function () {
+        var $this   = $(this)
+        var data    = $this.data('bs.scrollspy')
+        var options = typeof option == 'object' && option
+
+        if (!data) $this.data('bs.scrollspy', (data = new ScrollSpy(this, options)))
+        if (typeof option == 'string') data[option]()
+      })
+    }
+
+    var old = $.fn.scrollspy
+
+    $.fn.scrollspy             = Plugin
+    $.fn.scrollspy.Constructor = ScrollSpy
+
+
+    // SCROLLSPY NO CONFLICT
+    // =====================
+
+    $.fn.scrollspy.noConflict = function () {
+      $.fn.scrollspy = old
+      return this
+    }
+
+
+    // SCROLLSPY DATA-API
+    // ==================
+
+    $(window).on('load.bs.scrollspy.data-api', function () {
+      $('[data-spy="scroll"]').each(function () {
+        var $spy = $(this)
+        Plugin.call($spy, $spy.data())
+      })
+    })
+
+  }(jQuery);
+</script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var $sidebarInner = $('.sidebar-inner');
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.didShow', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+          var self = this;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      $(indicator).velocity('stop').velocity({
+        opacity: action === 'show' ? 0.4 : 0
+      }, { duration: 100 });
+    }
+
+  });
+</script>
+
+
+  <script type="text/javascript" id="sidebar.nav">
+    $(document).ready(function () {
+      var html = $('html');
+
+      $('.sidebar-nav li').on('click', function () {
+        var item = $(this);
+        var activeTabClassName = 'sidebar-nav-active';
+        var activePanelClassName = 'sidebar-panel-active';
+        if (item.hasClass(activeTabClassName)) {
+          return;
+        }
+
+        var currentTarget = $('.' + activePanelClassName);
+        var target = $('.' + item.data('target'));
+
+        currentTarget.velocity('transition.slideUpOut', 200, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', 200)
+            .addClass(activePanelClassName);
+        });
+
+        item.siblings().removeClass(activeTabClassName);
+        item.addClass(activeTabClassName);
+      });
+
+      $('.post-toc a').on('click', function (e) {
+        e.preventDefault();
+        var offset = $(escapeSelector(this.getAttribute('href'))).offset().top;
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        });
+      });
+
+      // Expand sidebar on post detail page by default, when post has a toc.
+      var $tocContent = $('.post-toc-content');
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0 && isDesktop()) {
+        setTimeout(function () {
+          $('.sidebar-toggle').trigger('click');
+        }, 800);
+      }
+    });
+  </script>
+
+
+
+
+  
+
+  
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ahbing"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+
+
+  
+  
+</body>
+</html>

@@ -1,0 +1,911 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.2"/>
+
+
+    <meta name="description" content="诗意的栖居在这个星球上" />
+
+
+
+  <meta name="keywords" content="css," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.2" />
+
+
+
+
+  <title> 为什么要用sass来写css--一个demo小实例 // 九月烟树 </title>
+</head>
+
+<body>
+<!--[if lte IE 8]> <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'> <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode"><img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari." style='margin-left:auto;margin-right:auto;display: block;'/></a></div> <![endif]-->
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <div id="header" class="header">
+      <div class="header-inner">
+        <h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand">
+      <span class="logo">
+        <i class="icon-logo"></i>
+      </span>
+      <span class="site-title">九月烟树</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+
+  <ul id="menu" class="menu">
+     
+    
+      
+      <li class="menu-item menu-item-home">
+        <a href="/">
+          <i class="menu-item-icon icon-home"></i> <br />
+          首页
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-archives">
+        <a href="/archives">
+          <i class="menu-item-icon icon-archives"></i> <br />
+          归档
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-about">
+        <a href="/about">
+          <i class="menu-item-icon icon-about"></i> <br />
+          关于
+        </a>
+      </li>
+    
+  </ul>
+
+
+      </div>
+    </div>
+
+    <div id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
+              为什么要用sass来写css--一个demo小实例
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于 2015-11-18
+        </span>
+
+        
+          <span class="post-category">
+            &nbsp; | &nbsp; 分类于
+            
+              <a href="/categories/css/">css</a>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/11/18/为什么要用sass来写css-一个demo小实例/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/18/为什么要用sass来写css-一个demo小实例/"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </div>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <p>我在很早之前就知道世上有sass，less这些css的预处理器，可以根据他们特有的语法来编写生成css。但我始终找不到理由为什么要去学习和使用这些东西。一是不想跳出自己的舒适区，觉得css已经够用了。二来是不知道他们怎么用。我想在这篇文章里试图说服你，为什么我们要使用这些css的预处理器。</p>
+<a id="more"></a>
+<p>我在本文举两个sass例子，sass很简单。如果你学习过css和编程，看一下马上就能理解。如果你对sass还不熟悉，我建议你去看这两篇文章。<br><a href="http://www.ruanyifeng.com/blog/2012/06/sass.html" target="_blank" rel="external">SASS用法指南</a><br><a href="http://yunkus.com/article/css3/290.html" target="_blank" rel="external">最详细的 Sass 基础教程指南</a></p>
+<h2 id="使用sass来实现移动适配">使用sass来实现移动适配</h2><p>如果你看过我上一篇文章，你会发现，我已经在那边有提及<code>sass</code>。也是我了解适配移动方案使用<code>sass</code>可以复用大量的适配<code>css</code>代码，我才开始使用学习和使用<code>sass</code>。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//&#23450;&#20041;&#20010;mixin  &#26681;&#25454;&#19981;&#21516;dpr&#23558;px&#20540;&#36716;&#21270;&#25104;&#30456;&#24212;dpr&#30340;px&#20540;&#10;/*&#10;@params $name &#26159;css&#23646;&#24615; &#27604;&#22914; width&#12289;top &#31561;&#10;@params $px  &#20687;&#32032;&#20540;&#10;*/&#10;&#10;@mixin px2px($name, $px)&#123;&#10;    #&#123;$name&#125;: round($px / 2) * 1px;&#10;    [data-dpr=&#34;2&#34;] &#38; &#123;&#10;        #&#123;$name&#125;: $px * 1px;&#10;    &#125;&#10;    // for mx3&#10;    [data-dpr=&#34;2.5&#34;] &#38; &#123;&#10;        #&#123;$name&#125;: round($px * 2.5 / 2) * 1px;&#10;    &#125;&#10;    // for &#23567;&#31859;note&#10;    [data-dpr=&#34;2.75&#34;] &#38; &#123;&#10;        #&#123;$name&#125;: round($px * 2.75 / 2) * 1px;&#10;    &#125;&#10;    [data-dpr=&#34;3&#34;] &#38; &#123;&#10;        #&#123;$name&#125;: round($px / 2 * 3) * 1px&#10;    &#125;&#10;    // for &#19977;&#26143;note4&#10;    [data-dpr=&#34;4&#34;] &#38; &#123;&#10;        #&#123;$name&#125;: $px * 2px;&#10;    &#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>在使用的过程中，可以像这样写</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@include px2px(&#39;width&#39;,200)</span><br></pre></td></tr></table></figure>
+<p>生成的css</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">width:100px;</span><br><span class="line"></span><br><span class="line">[data-dpr="2"]  &#123;</span><br><span class="line">	width:200px;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// for mx3</span><br><span class="line">[data-dpr="2.5"] &#123;</span><br><span class="line">	width:250px;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// for 小米note</span><br><span class="line">[data-dpr="2.75"]  &#123;</span><br><span class="line">	width:275px</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">[data-dpr="3"]  &#123;</span><br><span class="line">	width:300px;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// for 三星note4</span><br><span class="line">[data-dpr="4"] &amp; &#123;</span><br><span class="line">    width:400px;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>设置一条属性的，我们就可以减少这么多的代码。</p>
+<h2 id="使用sass来优雅布局">使用sass来优雅布局</h2><p>这个例子是我在开发helloworld社区官网移动版的时候遇到的，可以看一下效果先。<br>请自备梯子</p>
+<iframe width="420" height="315" src="https://www.youtube.com/embed/ZBG4M3AF8-I" frameborder="0" allowfullscreen></iframe>
+
+<p>在视频中可以看到，点击技术部的按钮，会有向摩天轮的布局旋转出来，这里其实用到的就是css3的旋转，我要说的是旋转完成之后的几个小球的布局如何实现。</p>
+<p>其实思路也很简单，用到的就是绝对定位。不同的小球给不同的left和top值。</p>
+<p>如果用传统的css做。怎么做？去给每一个小球设置一个值？思路是这样的，不过有很多问题.</p>
+<ul>
+<li><p>首先你要手动计算每一小球的left，top值.</p>
+</li>
+<li><p>其次，你要适配不同的dpr像素，比如，你要dpr为2的时候设置left:200，那么在dpr为4的设备中相应的要改成400。</p>
+</li>
+<li><p>再者，当再需要添加一个小球的时候，几乎现在所有的css代码都没用了。</p>
+</li>
+</ul>
+<p>还好有sass这些技术，能一一化解上面的问题。</p>
+<p>先来看一下html的结构</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">id</span>=<span class="value">"technology"</span> <span class="attribute">class</span>=<span class="value">"big-ball big-ball-4"</span>&gt;</span></span><br><span class="line">	技术部</span><br><span class="line">	<span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"small-ball small-ball-1"</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">p</span> <span class="attribute">class</span>=<span class="value">"small-ball-self-1"</span>&gt;</span>设计组<span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"small-ball small-ball-2"</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">p</span> <span class="attribute">class</span>=<span class="value">"small-ball-self-2"</span>&gt;</span>前端组<span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"small-ball small-ball-3"</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">p</span> <span class="attribute">class</span>=<span class="value">"small-ball-self-3"</span>&gt;</span>后台组<span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"small-ball small-ball-4"</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">p</span> <span class="attribute">class</span>=<span class="value">"small-ball-self-4"</span>&gt;</span>安卓组<span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"small-ball small-ball-5"</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">p</span> <span class="attribute">class</span>=<span class="value">"small-ball-self-5"</span>&gt;</span>iOS组<span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"small-ball small-ball-6"</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">p</span> <span class="attribute">class</span>=<span class="value">"small-ball-self-6"</span>&gt;</span>运营组<span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>接下我们来写sass，为了清晰的说明上面的问题，我删除了其他无关的sass代码。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;$R:100;  // &#25216;&#26415;&#37096;&#22278;&#30340;&#21322;&#24452;&#10;$r:50; // &#25216;&#26415;&#37096;&#19979;&#30340;&#22278;&#21322;&#24452;&#10;&#10;.big-ball&#123;&#10;    position: absolute;&#10;&#125;&#10;&#10;.small-ball&#123;&#10;  position: absolute;&#10;  z-index: -1111;&#10;  left: 0;&#10;  top: 0;&#10;  visibility: hidden;&#10;  /*&#10;  &#23450;&#19979;&#23567;&#22278;&#26174;&#31034;&#26102;&#30340;left&#20540;&#10;  */&#10;  $l: 2*$r; // &#21021;&#22987;left&#20540;  &#10; &#10;   /*&#10;  &#26681;&#25454;&#23567;&#22278;&#30340;&#25968;&#37327;&#21487;&#20197;&#30830;&#23450;&#23567;&#22278;&#22278;&#24515;&#19982;&#22823;&#22278;&#22278;&#24515;&#30340;&#22841;&#35282;&#22823;&#23567;&#10;  &#22312;&#26681;&#25454;$l &#21644; $r $R &#24471;&#20986; $top&#30456;&#23545;&#24212;&#30340;&#20540;&#10;  &#24403;&#23567;&#22278;&#25968;&#37327;&#25913;&#21464;&#30340;&#26102;&#20505; &#21482;&#35201;&#37325;&#26032;&#32473;&#20986;&#30456;&#24212;&#30340;&#20844;&#24335;&#23601;&#21487;&#20197;&#10;  &#26368;&#29702;&#24819;&#30340;&#26041;&#24335;&#26159;&#22841;&#35282;&#21442;&#25968;&#20063;&#30456;&#24212;&#30340;&#20986;&#29616;&#22312;&#20844;&#24335;&#37324;&#10;  &#37027;&#20040;&#20844;&#24335;&#23601;&#26356;&#21152;&#26041;&#20415;&#20462;&#25913;&#10;&#10;  */&#10;  $t:($R+2*$r)*1.73/3-$r; // &#21021;&#22987;top&#20540;  &#20854;&#20013; &#26681;&#21495;3 &#32422;&#31561;&#20110;1.73&#10;  //  px2rem&#26159;&#19968;&#20010;mixin &#29992;&#20110;&#23558;px&#20540;&#36716;&#21270;&#20026;&#30456;&#24212;&#30340;rem&#20540;&#10;  //  &#35814;&#35265;&#19978;&#19968;&#31687;&#25991;&#31456; &#12298;&#31227;&#21160;&#31471;&#36866;&#37197;&#35760;&#12299;&#10;  @include px2rem(&#39;width&#39;,2*$r);  &#10;  @include px2rem(&#39;height&#39;,2*$r);&#10;  &#10;  &#38;.show-small&#123;&#10;  &#9;// &#28155;&#21152;show-small&#31867;&#21517;&#30340;&#26102;&#20505;  &#35774;&#32622;&#21021;&#22987;&#30340;left &#21644;top&#20540;&#10;  &#9;// js&#25511;&#21046;&#28155;&#21152;&#25110;&#21024;&#38500;&#31867;&#21517;&#10;    @include px2rem(&#39;left&#39;,-$l);&#10;    @include px2rem(&#39;top&#39;,-$t);&#10; &#9;&#9;&#10; &#9;&#9;// &#20351;&#29992;sass&#30340;&#24490;&#29615;&#36941;&#21382; &#32473;&#19981;&#21516;&#30340;&#23567;&#29699;&#35774;&#32622;&#19981;&#21516;&#30340;&#20540;&#10;    @for $i from 1 through 6&#123;&#10;    &#9; // &#35774;&#32622;&#26059;&#36716;&#30340;origin&#24231;&#26631; &#36825;&#26159;&#25216;&#26415;&#37096;&#22823;&#22278;&#30340;&#22278;&#24515;&#10;      $x: 2*$r+$R;&#10;      $y: $t+$R;&#10;      &#38;.small-ball-#&#123;$i&#125;&#123;&#10;      &#9;// &#35843;&#29992;&#24231;&#26631;&#28857;  &#22240;&#20026;&#35201;&#36866;&#37197;&#19981;&#21516;&#30340;&#25163;&#26426;  &#25152;&#20197;&#21407;&#28857;&#30340;&#24231;&#26631;&#20540;&#22312;&#19981;&#21516;&#30340;dpr&#35774;&#22791;&#19979;&#20063;&#19981;&#21516; &#35813;mixin &#23553;&#35013;&#22312;&#21518;&#38754;&#10;        @include origin($x,$y);&#10;        // &#19981;&#21516;&#30340;&#23567;&#29699;&#26059;&#36716;&#30340;&#35282;&#24230; = $i*60deg&#10;        -webkit-transform: rotate($i*60deg);&#10;        -moz-transform: rotate($i*60deg);&#10;        transform: rotate($i*60deg);&#10;        // &#36807;&#28193;&#35774;&#32622;&#10;        -webkit-transition:all .5s ease-in;&#10;      &#9;-moz-transition:all .5s ease-in;&#10;      &#9;transition:all .5s ease-in;&#10;      &#125;&#10;    &#125;&#10;    @for $i from 1 through 6&#123;&#10;    &#9;// &#25226;&#23567;&#29699;&#20197;&#33258;&#24049;&#30340;&#26059;&#36716;&#22238;&#27491;&#30830;&#30340;&#35282;&#24230;&#10;      $x: center;&#10;      $y: center;&#10;      &#62;.small-ball-self-#&#123;$i&#125;&#123;&#10;        -webkit-transform-origin:$x $y;&#10;        -moz-transform-origin:$x $y;&#10;        transform-origin:$x $y;&#10;        -webkit-transform: rotate($i*60deg*-1);&#10;        -moz-transform: rotate($i*60deg*-1);&#10;        transform: rotate($i*60deg*-1);&#10;      &#125;&#10;    &#125;&#10;  &#125;&#10;&#125;&#10;  &#10;//  origin mixin&#10;@mixin origin($x:0,$y:0)&#123;&#10;  -webkit-transform-origin:$x/2*1px $y/2*1px;&#10;  -moz-transform-origin:$x/2*1px $y/2*1px;&#10;  transform-origin:$x/2*1px $y/2*1px;&#10;&#10;  [data-dpr=&#34;2&#34;] &#38; &#123;&#10;    -webkit-transform-origin:$x*1px $y*1px;&#10;    -moz-transform-origin:$x*1px $y*1px;&#10;    transform-origin:$x*1px $y*1px;&#10;  &#125;&#10;  // for mx3&#10;  [data-dpr=&#34;2.5&#34;] &#38; &#123;&#10;      -webkit-transform-origin:($x*2.5/2)*1px ($y* 2.5/2)*1px;&#10;      -moz-transform-origin:($x*2.5/2)*1px ($y* 2.5/2)*1px;&#10;      transform-origin:($x*2.5/2)*1px ($y* 2.5/2)*1px;&#10;  &#125;&#10;  // for &#23567;&#31859;note&#10;  [data-dpr=&#34;2.75&#34;] &#38; &#123;&#10;      -webkit-transform-origin:($x*2.75/2)*1px ($y* 2.75/2)*1px;&#10;      -moz-transform-origin:($x*2.75/2)*1px ($y* 2.75/2)*1px;&#10;      transform-origin:($x*2.75/2)*1px ($y* 2.75/2)*1px;&#10;  &#125;&#10;  [data-dpr=&#34;3&#34;] &#38; &#123;&#10;    -webkit-transform-origin:($x*3/2)*1px ($y* 3/2)*1px;&#10;    -moz-transform-origin:($x*3/2)*1px ($y* 3/2)*1px;&#10;    transform-origin:($x*3/2)*1px ($y* 3/2)*1px;&#10;  &#125;&#10;  // for &#19977;&#26143;note4&#10;  [data-dpr=&#34;4&#34;] &#38; &#123;&#10;    -webkit-transform-origin:($x*4/2)*1px ($y*4/2)*1px;&#10;    -moz-transform-origin:($x*4/2)*1px ($y*4/2)*1px;&#10;    transform-origin:($x*4/2)*1px ($y*4/2)*1px;&#10;  &#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="小结">小结</h2><p>我无法想像如果不用sass，将会手动添加多少类似重复的代码，完成之后，维护成本的开销又增加多少。<br>所以，在追求技术的路上，要多尝试，也许会踩很多坑，也许一时的学习成本会有点高，但总的技术方向永远是前进的，拥抱发展回带动发展的思路，从宏观上看，热心学习新技术的往往更加适应未来的发展。</p>
+<p>以上。</p>
+
+      
+    </div>
+
+    <div class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/css/"> #css </a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/11/07/移动端适配记/">移动端适配记</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </div>
+  </div>
+
+
+
+    
+      <div class="comments" id="comments">
+        
+          <div class="ds-thread" data-thread-key="2015/11/18/为什么要用sass来写css-一个demo小实例/"
+               data-title="为什么要用sass来写css--一个demo小实例" data-url="http://huangbingbing.com/2015/11/18/为什么要用sass来写css-一个demo小实例/">
+          </div>
+        
+      </div>
+    
+  </div>
+
+
+        </div>
+
+        
+      </div>
+
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview">
+        <div class="site-author motion-element">
+          <img class="site-author-image" src="http://tp2.sinaimg.cn/5622195893/180/40087750383/1" alt="阿炳" />
+          <p class="site-author-name">阿炳</p>
+        </div>
+        <p class="site-description motion-element">诗意的栖居在这个星球上</p>
+        <div class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">26</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-name">分类</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            
+              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-name">标签</span>
+              
+          </div>
+
+        </div>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+              <a href="https://github.com/ahbing/" target="_blank">GitHub</a>
+            </span>
+            
+              <span class="links-of-author-item">
+              <a href="https://twitter.com/aahbing" target="_blank">Twitter</a>
+            </span>
+            
+              <span class="links-of-author-item">
+              <a href="http://weibo.com/u/5622195893" target="_blank">Weibo</a>
+            </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+      </div>
+
+      
+        <div class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用sass来实现移动适配"><span class="nav-number">1.</span> <span class="nav-text">使用sass来实现移动适配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用sass来优雅布局"><span class="nav-number">2.</span> <span class="nav-text">使用sass来优雅布局</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">3.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </div>
+      
+
+    </div>
+  </div>
+
+
+    </div>
+
+    <div id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; &nbsp; 
+  2015
+  <span class="with-love">
+    <i class="icon-heart"></i>
+  </span>
+  <span class="author">阿炳</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </div>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('.content img').each(function () {
+        var $image = $(this);
+        var $imageWrapLink = $image.parent('a');
+
+        if ($imageWrapLink.size() < 1) {
+          $imageWrapLink = $image.wrap('<a href="' + this.getAttribute('src') + '"></a>').parent('a');
+        }
+        $imageWrapLink.addClass('fancybox');
+      });
+    });
+    $('.fancybox').fancybox({
+      helpers: {
+        overlay: {
+          locked: false
+        }
+      }
+    });
+  </script>
+
+
+  <script type="text/javascript">
+  function hasMobileUA () {
+    var nav = window.navigator;
+    var ua = nav.userAgent;
+    var pa = /iPad|iPhone|Android|Opera Mini|BlackBerry|webOS|UCWEB|Blazer|PSP|IEMobile|Symbian/g;
+
+    return pa.test(ua);
+  }
+
+  function isDesktop () {
+    return screen.width > 991 && !hasMobileUA();
+  }
+
+  function isTablet () {
+    return screen.width < 992 && screen.width > 767 && hasMobileUA();
+  }
+
+  function isMobile () {
+    return screen.width < 767 && hasMobileUA();
+  }
+
+  function escapeSelector (selector) {
+    return selector.replace(/[!"$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\$&")
+  }
+</script>
+
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" id="motion.global">
+  $(document).ready(function () {
+    var body = $('body');
+    var isSidebarVisible = false;
+    var sidebarToggle = $('.sidebar-toggle');
+    var sidebarToggleLine1st = $('.sidebar-toggle-line-first')
+    var sidebarToggleLine2nd = $('.sidebar-toggle-line-middle');
+    var sidebarToggleLine3rd = $('.sidebar-toggle-line-last');
+    var sidebar = $('.sidebar');
+
+    var SIDEBAR_WIDTH = '320px';
+    var SIDEBAR_DISPLAY_DURATION = 300;
+
+    var sidebarToogleLineStatusInit = {width: '100%', opacity: 1, left: 0, rotateZ: 0, top: 0};
+
+    var sidebarToggleLine1stStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine1stStatusArrow = {width: '50%', rotateZ: '-45deg', top: '2px'};
+    var sidebarToogleLine1stStatusClose = {width: '100%', rotateZ: '-45deg', top: '5px'};
+
+    var sidebarToggleLine2ndStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine2ndStatusArrow = {width: '90%'};
+    var sidebarToogleLine2ndStatusClose = {opacity: 0};
+
+    var sidebarToggleLine3rdStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine3rdStatusArrow = {width: '50%', rotateZ: '45deg', top: '-2px'};
+    var sidebarToogleLine3rdStatusClose = {width: '100%', rotateZ: '45deg', top: '-5px'};
+
+    LogoAndMenuMotion();
+    sidebatToggleMotion();
+    postsListMotion();
+    backToTopMotion();
+
+
+    $(document)
+      .on('sidebar.isShowing', function () {
+        isDesktop() && body.velocity(
+          {paddingRight: SIDEBAR_WIDTH},
+          SIDEBAR_DISPLAY_DURATION
+        );
+        sidebarContentMotion();
+      })
+      .on('sidebar.isHiding', function () {});
+
+    function LogoAndMenuMotion() {
+      $.Velocity.RunSequence([
+        { e: $('.brand'), p: { opacity: 1 }, o: { duration: 100 } },
+        { e: $('.logo'), p: { opacity: 1, top: 0 }, o: { duration: 50} },
+        
+        { e: $('.logo-line-before i'), p: { translateX: "100%" }, o: { duration: 500, sequenceQueue: false } },
+        { e: $('.logo-line-after i'), p: { translateX: "-100%" }, o: { duration: 500, sequenceQueue: false } },
+        
+        { e: $('.site-title'), p: { opacity: 1, top: 0 }, o: { duration: 200 } }
+      ]);
+      $('.menu-item').velocity('transition.slideDownIn', {display: null});
+    }
+
+
+    function backToTopMotion () {
+      var b2top = $('.back-to-top');
+      b2top.on('click', function () {
+        body.velocity('scroll');
+      });
+    }
+
+    function sidebarShowMotion () {
+
+      sidebarToggleLine1st.velocity(sidebarToogleLine1stStatusClose);
+      sidebarToggleLine2nd.velocity(sidebarToogleLine2ndStatusClose);
+      sidebarToggleLine3rd.velocity(sidebarToogleLine3rdStatusClose);
+
+      sidebar.velocity({width: SIDEBAR_WIDTH}, {
+        display: 'block',
+        duration: SIDEBAR_DISPLAY_DURATION,
+        complete: function () {
+          sidebar.addClass('sidebar-active');
+          sidebar.trigger('sidebar.didShow');
+        }
+      });
+      sidebar.trigger('sidebar.isShowing');
+    }
+
+    function sidebarHideMotion () {
+      isDesktop() && body.velocity({paddingRight: 0});
+      sidebar.velocity('reverse');
+
+      sidebarToggleLine1st.velocity(sidebarToggleLine1stStatusInit);
+      sidebarToggleLine2nd.velocity(sidebarToggleLine2ndStatusInit);
+      sidebarToggleLine3rd.velocity(sidebarToggleLine3rdStatusInit);
+
+      sidebar.removeClass('sidebar-active');
+      sidebar.trigger('sidebar.isHiding');
+    };
+
+    function sidebarContentMotion () {
+      $('.sidebar .motion-element').velocity(
+        'transition.slideRightIn',
+        {stagger: 50, drag: true}
+      );
+    }
+
+    function postsListMotion () {
+      var postMotionOptions = window.postMotionOptions || {stagger: 300, drag: true};
+      $('.post').velocity('transition.slideDownIn', postMotionOptions);
+    }
+
+    function sidebatToggleMotion () {
+      sidebarToggle.on('click', function () {
+        isSidebarVisible ? sidebarHideMotion() : sidebarShowMotion();
+        isSidebarVisible = !isSidebarVisible;
+      });
+
+      sidebarToggle.hover(function () {
+        if (isSidebarVisible) {return}
+        sidebarToggleLine1st.velocity('stop').velocity(sidebarToggleLine1stStatusArrow);
+        sidebarToggleLine2nd.velocity('stop').velocity(sidebarToggleLine2ndStatusArrow);
+        sidebarToggleLine3rd.velocity('stop').velocity(sidebarToggleLine3rdStatusArrow);
+      }, function () {
+        if (isSidebarVisible) {return}
+        sidebarToggleLine1st.velocity('stop').velocity(sidebarToggleLine1stStatusInit);
+        sidebarToggleLine2nd.velocity('stop').velocity(sidebarToggleLine2ndStatusInit);
+        sidebarToggleLine3rd.velocity('stop').velocity(sidebarToggleLine3rdStatusInit);
+      });
+    }
+  });
+
+</script>
+
+
+
+
+
+  
+  
+<script type="text/javascript" id="bootstrap.scrollspy.custom">
+  /* ========================================================================
+  * Bootstrap: scrollspy.js v3.3.2
+  * http://getbootstrap.com/javascript/#scrollspy
+  * ========================================================================
+  * Copyright 2011-2015 Twitter, Inc.
+  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+  * ======================================================================== */
+
+  /**
+   * Custom by iissnan
+   *
+   * - Add a `clear.bs.scrollspy` event.
+   * - Esacpe targets selector.
+   */
+
+
+  +function ($) {
+    'use strict';
+
+    // SCROLLSPY CLASS DEFINITION
+    // ==========================
+
+    function ScrollSpy(element, options) {
+      this.$body          = $(document.body)
+      this.$scrollElement = $(element).is(document.body) ? $(window) : $(element)
+      this.options        = $.extend({}, ScrollSpy.DEFAULTS, options)
+      this.selector       = (this.options.target || '') + ' .nav li > a'
+      this.offsets        = []
+      this.targets        = []
+      this.activeTarget   = null
+      this.scrollHeight   = 0
+
+      this.$scrollElement.on('scroll.bs.scrollspy', $.proxy(this.process, this))
+      this.refresh()
+      this.process()
+    }
+
+    ScrollSpy.VERSION  = '3.3.2'
+
+    ScrollSpy.DEFAULTS = {
+      offset: 10
+    }
+
+    ScrollSpy.prototype.getScrollHeight = function () {
+      return this.$scrollElement[0].scrollHeight || Math.max(this.$body[0].scrollHeight, document.documentElement.scrollHeight)
+    }
+
+    ScrollSpy.prototype.refresh = function () {
+      var that          = this
+      var offsetMethod  = 'offset'
+      var offsetBase    = 0
+
+      this.offsets      = []
+      this.targets      = []
+      this.scrollHeight = this.getScrollHeight()
+
+      if (!$.isWindow(this.$scrollElement[0])) {
+        offsetMethod = 'position'
+        offsetBase   = this.$scrollElement.scrollTop()
+      }
+
+      this.$body
+        .find(this.selector)
+        .map(function () {
+          var $el   = $(this)
+          var href  = $el.data('target') || $el.attr('href')
+          var $href = /^#./.test(href) && $(escapeSelector(href)) // Need to escape selector.
+
+          return ($href
+            && $href.length
+            && $href.is(':visible')
+            && [[$href[offsetMethod]().top + offsetBase, href]]) || null
+        })
+        .sort(function (a, b) { return a[0] - b[0] })
+        .each(function () {
+          that.offsets.push(this[0])
+          that.targets.push(this[1])
+        })
+
+
+    }
+
+    ScrollSpy.prototype.process = function () {
+      var scrollTop    = this.$scrollElement.scrollTop() + this.options.offset
+      var scrollHeight = this.getScrollHeight()
+      var maxScroll    = this.options.offset + scrollHeight - this.$scrollElement.height()
+      var offsets      = this.offsets
+      var targets      = this.targets
+      var activeTarget = this.activeTarget
+      var i
+
+      if (this.scrollHeight != scrollHeight) {
+        this.refresh()
+      }
+
+      if (scrollTop >= maxScroll) {
+        return activeTarget != (i = targets[targets.length - 1]) && this.activate(i)
+      }
+
+      if (activeTarget && scrollTop < offsets[0]) {
+        $(this.selector).trigger('clear.bs.scrollspy')  // Add a custom event.
+        this.activeTarget = null
+        return this.clear()
+      }
+
+      for (i = offsets.length; i--;) {
+        activeTarget != targets[i]
+          && scrollTop >= offsets[i]
+          && (!offsets[i + 1] || scrollTop <= offsets[i + 1])
+          && this.activate(targets[i])
+      }
+    }
+
+    ScrollSpy.prototype.activate = function (target) {
+      this.activeTarget = target
+
+      this.clear()
+
+      var selector = this.selector +
+        '[data-target="' + target + '"],' +
+        this.selector + '[href="' + target + '"]'
+
+      var active = $(selector)
+        .parents('li')
+        .addClass('active')
+
+      if (active.parent('.dropdown-menu').length) {
+        active = active
+          .closest('li.dropdown')
+          .addClass('active')
+      }
+
+      active.trigger('activate.bs.scrollspy')
+    }
+
+    ScrollSpy.prototype.clear = function () {
+      $(this.selector)
+        .parentsUntil(this.options.target, '.active')
+        .removeClass('active')
+    }
+
+
+    // SCROLLSPY PLUGIN DEFINITION
+    // ===========================
+
+    function Plugin(option) {
+      return this.each(function () {
+        var $this   = $(this)
+        var data    = $this.data('bs.scrollspy')
+        var options = typeof option == 'object' && option
+
+        if (!data) $this.data('bs.scrollspy', (data = new ScrollSpy(this, options)))
+        if (typeof option == 'string') data[option]()
+      })
+    }
+
+    var old = $.fn.scrollspy
+
+    $.fn.scrollspy             = Plugin
+    $.fn.scrollspy.Constructor = ScrollSpy
+
+
+    // SCROLLSPY NO CONFLICT
+    // =====================
+
+    $.fn.scrollspy.noConflict = function () {
+      $.fn.scrollspy = old
+      return this
+    }
+
+
+    // SCROLLSPY DATA-API
+    // ==================
+
+    $(window).on('load.bs.scrollspy.data-api', function () {
+      $('[data-spy="scroll"]').each(function () {
+        var $spy = $(this)
+        Plugin.call($spy, $spy.data())
+      })
+    })
+
+  }(jQuery);
+</script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var $sidebarInner = $('.sidebar-inner');
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.didShow', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+          var self = this;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      $(indicator).velocity('stop').velocity({
+        opacity: action === 'show' ? 0.4 : 0
+      }, { duration: 100 });
+    }
+
+  });
+</script>
+
+
+  <script type="text/javascript" id="sidebar.nav">
+    $(document).ready(function () {
+      var html = $('html');
+
+      $('.sidebar-nav li').on('click', function () {
+        var item = $(this);
+        var activeTabClassName = 'sidebar-nav-active';
+        var activePanelClassName = 'sidebar-panel-active';
+        if (item.hasClass(activeTabClassName)) {
+          return;
+        }
+
+        var currentTarget = $('.' + activePanelClassName);
+        var target = $('.' + item.data('target'));
+
+        currentTarget.velocity('transition.slideUpOut', 200, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', 200)
+            .addClass(activePanelClassName);
+        });
+
+        item.siblings().removeClass(activeTabClassName);
+        item.addClass(activeTabClassName);
+      });
+
+      $('.post-toc a').on('click', function (e) {
+        e.preventDefault();
+        var offset = $(escapeSelector(this.getAttribute('href'))).offset().top;
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        });
+      });
+
+      // Expand sidebar on post detail page by default, when post has a toc.
+      var $tocContent = $('.post-toc-content');
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0 && isDesktop()) {
+        setTimeout(function () {
+          $('.sidebar-toggle').trigger('click');
+        }, 800);
+      }
+    });
+  </script>
+
+
+
+
+  
+
+  
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ahbing"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+
+
+  
+  
+</body>
+</html>
