@@ -22,7 +22,7 @@
 
 
 
-  <meta name="keywords" content="js," />
+  <meta name="keywords" content="linux," />
 
 
 
@@ -33,7 +33,7 @@
 
 
 
-  <title> JavaScript中的原型 // 九月烟树 </title>
+  <title> linux小知识 // 九月烟树 </title>
 </head>
 
 <body>
@@ -105,7 +105,7 @@
           
           
             
-              JavaScript中的原型
+              linux小知识
             
           
         </h1>
@@ -113,28 +113,17 @@
 
       <div class="post-meta">
         <span class="post-time">
-          发表于 2015-06-12
+          发表于 2015-12-17
         </span>
 
-        
-          <span class="post-category">
-            &nbsp; | &nbsp; 分类于
-            
-              <a href="/categories/js/">js</a>
-
-              
-              
-
-            
-          </span>
         
 
         
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/06/12/JavaScript中的原型/#comments" >
-              <span class="post-comments-count ds-thread-count" data-thread-key="2015/06/12/JavaScript中的原型/"></span>
+            <a href="/2015/12/17/linux小知识/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/17/linux小知识/"></span>
             </a>
           </span>
           
@@ -148,65 +137,82 @@
       
 
       
-        <p>当你在JavaScript中定义一个函数，他会有一些预定义的属性，其中之一就是令人迷惑的原型。这在篇文章中，我会详细的解释原型是什么，并且解释为什么你应该在你的项目中使用原型。<br><a id="more"></a></p>
-<h2 id="什么是原型">什么是原型</h2><p>对象的初始化原型是一个空对象。你可以将其他人和对象添加到原型上。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var myObject = function(name)&#123;&#10;&#9;this.name = name;&#10;&#9;return this;&#10;&#125;;&#10;&#10;console.log(typeof myObject.prototype);  //object&#10;&#10;myObject.prototype.getName = function()&#123;&#10;&#9;return this.name;&#10;&#125;</span><br></pre></td></tr></table></figure>
-<p>上面的代码片段，我们创建了一个函数，但当我们调用<code>myObject()</code>，他将简单的返回<code>window</code>对象。因为他是在全局作用域中定义的。当这个函数还没有被实例化，<code>this</code>因此将会返回全局对象。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.log(myObject() === window);  //true</span><br></pre></td></tr></table></figure>
-<h2 id="‘隐秘’的属性">‘隐秘’的属性</h2><blockquote>
-<p>JavaScript中的每一个对象都有一个‘隐秘’的属性。</p>
-</blockquote>
-<p>在我们继续之前，我想讨论一下关于原型的‘隐秘’的属性。</p>
-<p>每一个JavaScript的对象在定义或者实例之后，会添加一个叫<code>__proto__</code>‘隐秘’的属性.他也是原型链访问的核心。然而，在你的应用中访问<code>__proto__</code>并不是一个好主意。因为他并不被所有浏览器支持。</p>
-<p>不应该将<code>__proto__</code>和对象的原型混为一谈。因为他们是两个不同的属性，但他们又紧密相连。区分他们很重要，在刚开始理解 的时候可能有点小复杂。那么<code>__proto__</code>到底意味着什么吗?让我来解释一下，当我们创建了<code>myObject</code>函数，我们定义了一个<code>Function</code>类型的对象。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.log(typeof myObject);  //function</span><br></pre></td></tr></table></figure>
-<p><code>Function</code>是一个JavaScript的预定义对象，他有自己的属性(比如<code>length</code>和<code>arguments</code>)和方法(比如<code>call</code>和<code>apply</code>)。是的，他还有自己的原型对象，也有一个‘隐秘’的<code>__proto__</code>属性，这就意味着，在JavaScript引擎的某个地方，可能有和下面类似的一些代码。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Function.prototype = &#123;&#10;&#9;arguments:null,&#10;&#9;length:0,&#10;&#9;call:function()&#123;&#10;&#9;&#9;//&#38544;&#31192;&#30340;&#20195;&#30721;&#10;&#9;&#125;,&#10;&#9;apply:function()&#123;&#10;&#9;&#9;//&#38544;&#31192;&#30340;&#20195;&#30721;&#10;&#9;&#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
-<p>事实上，<code>Function</code>的定义并没有这么简单，这仅仅是举个例子来说明，原型链是怎么工作的。</p>
-<p>所以虽然我们已经定义了一个<code>myObject</code>函数，并传了一个<code>name</code>参数进来，但我们并没有设置任何属性和方法，比如<code>length</code>和<code>call</code>。那接下来这段代码是怎么运行的呢？</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.log(myObject.length);  //1 (&#21487;&#35775;&#38382;&#21442;&#25968;&#30340;&#25968;&#37327;)</span><br></pre></td></tr></table></figure>
-<p>那是因为，当我们定义了<code>myObject</code>对象时，其内置的<code>__protto__</code>属性的值是<code>Function.prototype</code>，所以，当我们访问<code>myObject.length</code>的时候，    他就开始在<code>myObject</code>上找有没有叫<code>length</code>的属性，并没有找到，然后他就沿着原型链继续往上找，通过<code>__proto__</code>链，找到了<code>length</code>属性，并将其返回。</p>
-<p>你也许想知道，为什么<code>length</code>是被设置成1而不是0或者其他数字，那是因为<code>myObject</code>事实上是一个<code>Function</code>的实例。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.log(myObject instanceof Function); //true&#10;&#10;console.log(myObject === Function);  //false</span><br></pre></td></tr></table></figure>
-<p>当一个对象的实例被创建，<code>__proto__</code>属性会重新指向给构造函数的原型，这个例子中，也就是<code>Function</code>的原型。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.log(myObject.__proto__ === Function.prototype); //true</span><br></pre></td></tr></table></figure>
-<p>还有，当你新建一个<code>Function</code>对象，<code>Function</code>构造函数将会获取行参的数量并更新<code>this.length</code>,因此，在上例中，<code>myObject.length</code>是1。</p>
-<p>当然，如果我们使用<code>new</code>关键字，新创建一个<code>myObject</code>的实例，<code>__proto__</code>将会指向<code>myObject.prototype</code>,因为<code>myObject</code>是新实例的构造函数。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var myInstance = new myObject(&#39;foo&#39;);&#10;console.log(myInstance.__proto__ === myObject.prototype);  //true</span><br></pre></td></tr></table></figure>
-<p>此外，我们访问<code>Function.prototype</code>上的原生方法，比如<code>call</code>和<code>apply</code>，我现在也可以访问<code>myObject</code>的方法，比如<code>getName</code>。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.log(myInstance.getName()); //foo&#10;&#10;var mySecondInstance = new myObject(&#39;bar&#39;);&#10;&#10;console.log(mySecondInstance.getName());  //bar&#10;&#10;console.log(myInstance.getName());  //foo</span><br></pre></td></tr></table></figure>
-<p>译者注：一个对象实际上包含<code>__proto__</code>和<code>prototype</code>属性，<code>__proto__</code>指向创建该对象的构造函数原型，原型链查找是通过<code>__proto__</code>实现的，<code>prototype</code>指向对象自身的原型。</p>
-<p>正如你所想的，这确实很方便，因为这可以用来设计一个对象结构，可以创建很多个被需要的实例，让我们来讨论下一个话题吧。</p>
-<h2 id="为什么使用原型会更好呢？">为什么使用原型会更好呢？</h2><p>例如，我们正在开发一个canvas游戏，有可能一次就需要几个(有可能几百个)canvas对象在屏幕上，而且每个对象都有自己的属性，比如<code>x</code>和<code>y</code>坐标，<code>width</code>和<code>height</code>还有很多其他的属性。</p>
-<p>我们有可能向下面这样做</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var GameObject1 = &#123;&#10;    x: Math.floor((Math.random() * myCanvasWidth) + 1),&#10;    y: Math.floor((Math.random() * myCanvasHeight) + 1),&#10;    width: 10,&#10;    height: 10,&#10;    draw: function()&#123;&#10;        myCanvasContext.fillRect(this.x, this.y, this.width, this.height);&#10;    &#125;&#10;   ...&#10;&#125;;&#10; &#10;var GameObject2 = &#123;&#10;    x: Math.floor((Math.random() * myCanvasWidth) + 1),&#10;    y: Math.floor((Math.random() * myCanvasHeight) + 1),&#10;    width: 10,&#10;    height: 10,&#10;    draw: function()&#123;&#10;        myCanvasContext.fillRect(this.x, this.y, this.width, this.height);&#10;    &#125;&#10;    ...&#10;&#125;;</span><br></pre></td></tr></table></figure>
-<p>。。。像这样在做98次。。。</p>
-<p>所有的对象创建都储存在内存中，所有的方法定义都是独立的，比如<code>draw</code>或者其他被调用的方法。这明显是十分不合理的，比如这个游戏代码会占用浏览器分配给JavaScript的内存。使其运行缓慢，甚至停止响应。</p>
-<p>当然这在只有100个对象的时候很难发生，但这对性能是一个相当大的影响。因为需要查询100个不同的对象，而不是一个简单的<code>prototype</code>对象。</p>
-<h2 id="如何使用原型">如何使用原型</h2><p>为了让应用跑得更快(遵循最佳实践),我们可以（重新）定义一个<code>GameObject</code>原型。每一个<code>GameObject</code>的实例将会使<code>GameObject.prototype</code>上的方法，就好像这么方法是自己的一样。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;// define the GameObject constructor function&#10;var GameObject = function(width, height) &#123;&#10;    this.x = Math.floor((Math.random() * myCanvasWidth) + 1);&#10;    this.y = Math.floor((Math.random() * myCanvasHeight) + 1);&#10;    this.width = width;&#10;    this.height = height;&#10;    return this;&#10;&#125;;&#10; &#10;// (re)define the GameObject prototype object&#10;GameObject.prototype = &#123;&#10;    x: 0,&#10;    y: 0,&#10;    width: 5,&#10;    width: 5,&#10;    draw: function() &#123;&#10;        myCanvasContext.fillRect(this.x, this.y, this.width, this.height);&#10;    &#125;&#10;&#125;;</span><br></pre></td></tr></table></figure>
-<p>然后，我们可以实例化游戏对象100次。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var x = 100,&#10;arrayOfGameObjects = [];&#10; &#10;do &#123;&#10;    arrayOfGameObjects.push(new GameObject(10, 10));&#10;&#125; while(x--);</span><br></pre></td></tr></table></figure>
-<p>现在我们拥有100个GameObject实例的数组，他们都共享同一个原型和定义的<code>draw</code>方法。这大大的节省了应用程序中的内存。</p>
-<p>当我们调用<code>draw</code>方法，其实就是调用原型上相同的方法。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var GameLoop = function() &#123;&#10;    for(gameObject in arrayOfGameObjects) &#123;&#10;        gameObject.draw();&#10;    &#125;&#10;&#125;;&#10;var GameLoop = function() &#123;&#10;    for(gameObject in arrayOfGameObjects) &#123;&#10;        gameObject.draw();&#10;    &#125;&#10;&#125;;</span><br></pre></td></tr></table></figure>
-<h2 id="原型是动态的对象">原型是动态的对象</h2><p>对象的原型是动态的，换句话说。这意味这在我们创建所有的<code>GameObject</code>实例之后，我们决定是想要画一个圆而不是一个正方形，我们可以相应的更新我们的<code>GameObject.prototype.draw</code>方法。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GameObject.prototype.draw = function() &#123;&#10;    myCanvasContext.arc(this.x, this.y, this.width, 0, Math.PI*2, true);&#10;&#125;</span><br></pre></td></tr></table></figure>
-<p>现在，之前所有<code>GameObject</code>的实例和以后的实例都将绘制圆。</p>
-<h2 id="修改原生的原型">修改原生的原型</h2><p>是的，你可以做到的，以有可能对JavaScript的一些库比较熟悉，比例<a href="http://www.prototypejs.org/" target="_blank" rel="external">Prototype</a>，他就是利用这种方法。</p>
-<p>让我们看一个简单的例子：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String.prototype.trim = function()&#123;&#10;&#9;return this.replace(/^\s+|\s+$/g,&#39;&#39;);&#10;&#125;;</span><br></pre></td></tr></table></figure>
-<p>我们现在可以在任意一个字符串上调用这个方法。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#34;foo bar     &#34;.trim();   // &#34;foo bar&#34;</span><br></pre></td></tr></table></figure>
-<p>然而，这有一个小缺点。比如，你可能在你的应用里使用他，但是一两年之后，浏览器可能更新的JavaScript版本在<code>String</code>的原型上实现了一个原生的<code>trim</code>方法，这就意味着你定义的<code>trim</code>方法将会覆盖原生的方法。哎呀！为了解决这个问题，我们可以在定义方法之前，添加一个简单的检查。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if(!String.prototype.trim)&#123;&#10;&#9;String.prototypr.trim = function()&#123;&#10;&#9;&#9;return this.replace(/^\s+|\s+$/g,&#39;&#39;);&#10;&#9;&#125;;&#10;&#125;</span><br></pre></td></tr></table></figure>
-<p>现在，如果<code>trim</code>方法存在，我们就使用原生的<code>trim</code>方法。</p>
-<blockquote>
-<p>作为第一个经验法则，避免扩展原生的对象，一般被认为是最佳的实践。但是无论怎样，不过有必要，一些法则都可以打破。</p>
-</blockquote>
-<h2 id="结个尾">结个尾</h2><p>但愿阿，这篇文章已经为你解释清楚了JavaScript的核心–原型。你现在应该用你的方式去创造更有影响力的应用。</p>
-<p>如果你有任何有关原型问题的话，请让我在评论里看见，我会尽全力回答你。</p>
-<p>原文<a href="http://code.tutsplus.com/tutorials/prototypes-in-javascript--net-24949" target="_blank" rel="external">Prototypes in JavaScript</a></p>
+        <p>本文是我开发环境上经常使用的一些*unix命令的整理，适合没有接触过*unix的童鞋，mac系统，ubuntu系统等等这些系统都是*unix，对命令行的支持十分强大。</p>
+<a id="more"></a>
+<h2 id="路径">路径</h2><p>查看当前路径可以通过<code>pwd</code>(print working directory)命令来实现。</p>
+<p>路径分为相对路径和绝对路径，比如在前端资源引用的时候，也常常也会到绝对路径和相对路径的概念，新手也常常因为路径问题，则到资源的404反馈。其实用法上是一致的。</p>
+<h3 id="绝对路径">绝对路径</h3><p>绝对路径从根目录开始，紧接着一个个的目录树的分支，<code>pwd</code>命令打印出的路径就是绝对路径。</p>
+<h3 id="相对路径">相对路径</h3><p>相对路径的表示由<code>.</code>或者<code>..</code>表示。<br><code>.</code>表示当前工作目录，<code>..</code>则表示当前工作目录的父级目录，依次类推，<code>../..</code>则表示当前工作目录的组父级目录。</p>
+<h2 id="文件">文件</h2><p>在文件操作方面，最最常用到的就是两个命令<code>cd</code>和<code>ls</code>, cd用来切换文件目录，ls则显示当前目录下的所有文件。通过<code>ls -a</code>可以查看隐藏文件,隐藏文件命名通过<code>.</code>开始,文件夹内不可见,常见的隐藏文件例如<code>.gitignore</code>，<code>.git</code>等等。还可以通过<code>ls -l</code>来获取文件的长信息，这在我们查看文件的权限的时候常常会使用。</p>
+<p>如图，得到一堆信息。</p>
+<p><img src="/images/ls-l.png" alt="ls -l"></p>
+<h3 id="文件详细信息">文件详细信息</h3><p>其中最开始的<code>-</code>表示该文件是普通文件，而<code>d</code>开始则表示该文件是一个目录。接下来的三个字符，表示文件文件所有者的权限，r表示读权限，w表示写权限，而x表示执行权限。没有该权限就用-便表示，再其后的三个字符是文件所属组中成员的访问权限，最后三个字符是其他所 有人的访问权限。<br>图中的ahbing是文件属主的用户名，staff是文件所属用户组的名字，接下来的数字表示文件大小，接下来的两个字段分别表示上次修改文件的时间和日期和文件名。</p>
+<h3 id="文件操作">文件操作</h3><p>操作文件，无非是复制，移动，创建，删除等等操作，这是平时最长需要用的操作。<br>而命令行几乎就是操作的英文缩写:</p>
+<ul>
+<li>cp — 复制文件和目录</li>
+<li>mv — 移动/重命名文件和目录</li>
+<li>mkdir — 创建目录</li>
+<li>rm — 删除文件和目录</li>
+<li>touch - 创建文件</li>
+</ul>
+<p>具体操作有很多场景，可以参考<a href="http://billie66.github.io/TLCL/book/chap05.html" target="_blank" rel="external">操作文件和目录</a></p>
+<h3 id="管道">管道</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls /bin /usr/bin | sort</span><br></pre></td></tr></table></figure>
+<p>上面的命令的意思是指，将<code>/bin</code>和<code>/usr/bin</code>目录下的文件显示出来，并排序。<br>而中间的<code>|</code>符号，称作管道符，理解上可以将上面命令的执行理解为流水线操作，先是<code>ls</code>生产车间进行<code>ls</code>操作，当<code>ls</code>操作完成，要执行<code>sort</code>了， 通过<code>|</code>，将<code>ls</code>生成的成品传输到<code>sort</code>生产车间。这个思想在很多地方都有体现，比如gulp的任务中<code>pipe</code>的概念。node中的<code>stream</code>操作。</p>
+<p>其中常用到的管道服操作如下。</p>
+<p> sort | uniq | grep /<em>匹配条件</em>/ |… </p>
+<h2 id="权限">权限</h2><p>*unix 系统常常用在服务器上，与个人pc不同，登录服务器的人可以是多个的，那么控制不同的人的权限是十分必要的一件事情，而事实上，我们在个人的windows系统上没有碰到关于很多权限的话题，是因为我们登录系统的帐号默认就是管理员权限了。</p>
+<p>上面提到，通过<code>ls -l</code>可以查看权限</p>
+<table>
+<thead>
+<tr>
+<th>权限</th>
+<th style="text-align:center">文件</th>
+<th style="text-align:right">目录</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>r：可读权限</td>
+<td style="text-align:center">读取文件内容（cat,less)</td>
+<td style="text-align:right">读包含在目录中的文件名称(ls)</td>
+</tr>
+<tr>
+<td>w：可写权限</td>
+<td style="text-align:center">对文件内容进行编辑</td>
+<td style="text-align:right">可以写信息到目录中，即可以创建、删除文件、移动文件等操作</td>
+</tr>
+<tr>
+<td>x：可执行权限</td>
+<td style="text-align:center">作为执行文件执行</td>
+<td style="text-align:right">可以进入目录(cd)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="使用数字修改权限">使用数字修改权限</h3><p>在开发中，我们常常会遇到目录无法访问，文件无法读取。这是因为我们对请求的目录和文件没有相应的权限。</p>
+<p>我们会尝试执行如下命令。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod 777 -R dirname</span><br></pre></td></tr></table></figure>
+<p>但上面的命令是什么意思呢。</p>
+<p>首先sudo的意思是？</p>
+<p>sudo可以让当前用户以另一个用户身份（通常是超级用户）执行命令，当执行sudo命令的时候，系统会验证之前用户的密码。<br>简单说来，使用sudo命令，可以暂时性的让当前用户拥有超级用户的权限。</p>
+<p>当我们拿到超级用户的权限之后，我们就可以通过chmod命令来就该权限了。不然我们是没有权限修改权限的，好吧，有点绕。</p>
+<p>那777又是什么意思呢？</p>
+<p><img src="/images/competence.png" alt="权限"></p>
+<p>根据上图我们看到，指向权限对应1，写权限对应2，读权限对应4。这样你应该好理解了吧，第一个7的意思就是指文件所有者的权限是rwx,第二个7就是用户组的权限是rwx，其它用户的权限是rwx。</p>
+<p>简单说来777 === rwxrwxrwx</p>
+<p><code>-R</code>就好理解了，是指递归目录下的文件，获得777的权限。</p>
+<p>具体可以参考<a href="https://zh.wikipedia.org/wiki/Chmod" target="_blank" rel="external">维基百科-chmod</a>。</p>
+<h2 id="压缩和解压">压缩和解压</h2><h3 id="tar">tar</h3><ul>
+<li>c：将文件打包（但不压缩）create</li>
+<li>x：将打包文件解压   excha</li>
+<li>z：将打包文件压缩。</li>
+<li>v：把过程显示出来。</li>
+<li>f：我的理解是用当前的名字。如xxx目录，那么打包之后就是xxx.tar。压缩之后就是xxx.tar.gz</li>
+</ul>
+<h4 id="压缩">压缩</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// &#25171;&#21253; &#20294;&#19981;&#21387;&#32553;&#10; tar -cvf dirname.tar dirname</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// &#25171;&#21253; &#19988; &#21387;&#32553;&#10;tar -zcvf dirname.tar.gz dirname</span><br></pre></td></tr></table></figure>
+<h4 id="解压">解压</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//&#35299;&#21253; filename.tar&#10;tar -xvf dirname.tar</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//&#35299;&#21253;&#19988;&#35299;&#21387; filename.tar.gz&#10;tar -xvf dirname.tar.gz</span><br></pre></td></tr></table></figure>
+<h2 id="小结">小结</h2><p>本文介绍了一些笔者在开发中常会用到的*unix命令，很多方面没有深入探究过，但对新手和普通的开发环境应该是有帮助的。<br>更多参考可以访问<a href="http://billie66.github.io/TLCL/book/" target="_blank" rel="external">TLCL</a></p>
 
       
     </div>
@@ -215,7 +221,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/js/"> #js </a>
+            <a href="/tags/linux/"> #linux </a>
           
         </div>
       
@@ -224,13 +230,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/06/13/css居中之绝对定位/">css居中之绝对定位</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/06/11/JavaScript闭包和作用域的说明/">JavaScript闭包和作用域的说明</a>
+              <a href="/2015/12/15/前端工作流/">我的前端工作流和工具</a>
             
           </div>
         </div>
@@ -246,8 +250,8 @@
     
       <div class="comments" id="comments">
         
-          <div class="ds-thread" data-thread-key="2015/06/12/JavaScript中的原型/"
-               data-title="JavaScript中的原型" data-url="http://huangbingbing.com/2015/06/12/JavaScript中的原型/">
+          <div class="ds-thread" data-thread-key="2015/12/17/linux小知识/"
+               data-title="linux小知识" data-url="http://huangbingbing.com/2015/12/17/linux小知识/">
           </div>
         
       </div>
@@ -352,7 +356,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是原型"><span class="nav-number">1.</span> <span class="nav-text">什么是原型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#‘隐秘’的属性"><span class="nav-number">2.</span> <span class="nav-text">‘隐秘’的属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么使用原型会更好呢？"><span class="nav-number">3.</span> <span class="nav-text">为什么使用原型会更好呢？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何使用原型"><span class="nav-number">4.</span> <span class="nav-text">如何使用原型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原型是动态的对象"><span class="nav-number">5.</span> <span class="nav-text">原型是动态的对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改原生的原型"><span class="nav-number">6.</span> <span class="nav-text">修改原生的原型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结个尾"><span class="nav-number">7.</span> <span class="nav-text">结个尾</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#路径"><span class="nav-number">1.</span> <span class="nav-text">路径</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#绝对路径"><span class="nav-number">1.1.</span> <span class="nav-text">绝对路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#相对路径"><span class="nav-number">1.2.</span> <span class="nav-text">相对路径</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件"><span class="nav-number">2.</span> <span class="nav-text">文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#文件详细信息"><span class="nav-number">2.1.</span> <span class="nav-text">文件详细信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件操作"><span class="nav-number">2.2.</span> <span class="nav-text">文件操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#管道"><span class="nav-number">2.3.</span> <span class="nav-text">管道</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#权限"><span class="nav-number">3.</span> <span class="nav-text">权限</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用数字修改权限"><span class="nav-number">3.1.</span> <span class="nav-text">使用数字修改权限</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#压缩和解压"><span class="nav-number">4.</span> <span class="nav-text">压缩和解压</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#tar"><span class="nav-number">4.1.</span> <span class="nav-text">tar</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#压缩"><span class="nav-number">4.1.1.</span> <span class="nav-text">压缩</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#解压"><span class="nav-number">4.1.2.</span> <span class="nav-text">解压</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
