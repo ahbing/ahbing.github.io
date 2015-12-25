@@ -22,7 +22,7 @@
 
 
 
-  <meta name="keywords" content="json," />
+  <meta name="keywords" content="js," />
 
 
 
@@ -33,7 +33,7 @@
 
 
 
-  <title> JSON基礎筆記 // 九月烟树 </title>
+  <title> 数组操作方法 // 九月烟树 </title>
 </head>
 
 <body>
@@ -105,7 +105,7 @@
           
           
             
-              JSON基礎筆記
+              数组操作方法
             
           
         </h1>
@@ -113,28 +113,17 @@
 
       <div class="post-meta">
         <span class="post-time">
-          发表于 2015-05-15
+          发表于 2015-12-25
         </span>
 
-        
-          <span class="post-category">
-            &nbsp; | &nbsp; 分类于
-            
-              <a href="/categories/json/">json</a>
-
-              
-              
-
-            
-          </span>
         
 
         
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/05/15/JSON基礎筆記/#comments" >
-              <span class="post-comments-count ds-thread-count" data-thread-key="2015/05/15/JSON基礎筆記/"></span>
+            <a href="/2015/12/25/数组操作方法/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/25/数组操作方法/"></span>
             </a>
           </span>
           
@@ -148,44 +137,30 @@
       
 
       
-        <h2 id="認識JSON">認識JSON</h2><p>JSON全稱JavaScipt Object Notation(JavaScript對象表示法)。JSON 不屬於JavaScript，他只是一種數據格式，其他很多語言也能序列化和解析JSON</p>
+        <p>js数组操作在面试笔试中常常遇到，昨天去又拍面试，也碰到一样的问题，在这里总结一下。</p>
 <a id="more"></a>
-<h3 id="JSON_語法">JSON 語法</h3><h4 id="簡單值">簡單值</h4><p>簡單值的語法和JS的語法相同，除了undefined。</p>
-<p>如  ‘hello world’   123 等等 都是JSON</p>
-<p>但我們一般使用的JSON是一下兩種形式的。</p>
-<h4 id="對象">對象</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;&#123;&#10;&#9;&#34;name&#34;:&#34;ahbing&#34;,&#10;&#9;&#34;age&#34;:&#34;forever18&#34;,&#10;&#9;&#34;school&#34;:&#123;&#10;&#9;&#9;&#34;name&#34;:&#34;Hangzhou Dianzi University&#34;,&#10;&#9;&#9;&#34;location&#34;:&#34;Hangzhou Xiasha&#34;&#10;&#9;&#125;&#10;&#9;&#10;&#125;</span><br></pre></td></tr></table></figure>
-<p>注意點：</p>
-<ul>
-<li><p>JSON中的對象要求屬性名都要加上<strong>雙引號</strong>。</p>
-</li>
-<li><p>JSON對象屬性的值可以是簡單值，也可以是複雜值（嵌套）。</p>
-</li>
-<li><p>JSON對象最後一個屬性值後面沒有<strong>逗號</strong>，包括內嵌對象。</p>
-</li>
-</ul>
-<h4 id="數組">數組</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#10;&#9;&#123;&#10;&#9;&#9;&#34;name&#34;:&#34;ahbing&#34;,&#10;&#9;&#9;&#34;age&#34;:&#34;forever18&#34;,&#10;&#9;&#9;&#34;school&#34;:&#123;&#10;&#9;&#9;&#9;&#34;name&#34;:&#34;Hangzhou Dianzi University&#34;,&#10;&#9;&#9;&#9;&#34;location&#34;:&#34;Hangzhou Xiasha&#34;&#10;&#9;&#9;&#125;&#10;&#9;&#125;,&#10;&#9;&#123;&#10;&#9;&#9;&#34;name&#34;:&#34;liyi&#34;,&#10;&#9;&#9;&#34;age&#34;:24,&#10;&#9;&#9;&#34;school&#34;:&#123;&#10;&#9;&#9;&#9;&#34;name&#34;:&#34;Hangzhou Dianzi University&#34;,&#10;&#9;&#9;&#9;&#34;location&#34;:&#34;Hangzhou Xiasha&#34;&#10;&#9;&#9;&#125;&#9;&#9;&#10;&#9;&#125;,&#10;&#9;&#123;&#10;&#9;&#9;&#34;name&#34;:&#34;hupengfei&#34;,&#10;&#9;&#9;&#34;age&#34;:&#34;23&#34;,&#10;&#9;&#9;&#34;school&#34;:&#123;&#10;&#9;&#9;&#9;&#34;name&#34;:&#34;Hangzhou Dianzi University&#34;,&#10;&#9;&#9;&#9;&#34;location&#34;:&#34;Hangzhou Xiasha&#34;&#10;&#9;&#9;&#125;&#9;&#10;&#9;&#125;&#10;]</span><br></pre></td></tr></table></figure>
-<p>我添加了三個JSON對象到一個數組，就組成了一個JSON數組<br>當然裡面還可以一層一層的嵌套，包括嵌套JSON數組。<br>注意點同上。</p>
-<h2 id="JSON_序列化">JSON 序列化</h2><h3 id="eval">eval</h3><p>eval()可以解析JSON，但eval可能會執行JSON里的一些惡意代碼。會有安全問題。所以基本不用他</p>
-<h3 id="stringify">stringify</h3><p>stringify 字面上的意思，是字符串化，他可以將JSON序列化為一個JSON字符串</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var student = &#123;&#10;&#9;&#34;name&#34;:&#34;ahbing&#34;,&#10;&#9;&#34;school&#34;:&#123;&#10;&#9;&#9;&#34;name&#34;:&#34;Hangzhou Dianzi University&#34;,&#10;&#9;&#9;&#34;location&#34;:&#34;Hangzhou Xiasha&#34;&#10;&#9;&#125;&#10;&#125;;&#10;&#10;var jsonText = JSON.stringify(student);&#10;&#10;console.log(jsonText);</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//&#25171;&#21360;&#32080;&#26524;&#10;&#123;&#34;name&#34;:&#34;ahbing&#34;,&#34;school&#34;:&#123;&#34;name&#34;:&#34;Hangzhou Dianzi University&#34;,&#34;location&#34;:&#34;Hangzhou Xiasha&#34;&#125;&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="序列化過濾">序列化過濾</h3><p>接上面的json</p>
-<h4 id="數組過濾">數組過濾</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;var jsonText = JSON.stringify(student,[&#34;name&#34;]);&#10;&#10;console.log(jsonText);&#10;&#10;//&#25171;&#21360;&#32080;&#26524;&#10;&#123;&#34;name&#34;:&#34;ahbing&#34;&#125;</span><br></pre></td></tr></table></figure>
-<p>stringify的第二個參數是一個數組，返回的結果字符串中，只會包含過濾數組中的相應的字符串</p>
-<h4 id="函數過濾">函數過濾</h4><p>如果第二個參數為函數，參數分別是一個屬性名和一個屬性值。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var jsonText = JSON.stringify(student,function(key,value)&#123;&#10;&#9;switch(key)&#123;&#10;&#9;&#9;case &#34;name&#34;:&#10;&#9;&#9;return value.join(&#39;,&#39;);&#10;&#9;&#9;break;&#10;&#9;&#9;// &#36820;&#22238;undefined &#30456;&#25033;&#30340;&#23660;&#24615;&#34987;&#24573;&#30053;&#10;&#9;&#9;case &#34;school&#34;:&#10;&#9;&#9;return undefined;&#10;&#9;&#9;break;&#10;&#9;&#9;default:&#10;&#9;&#9;return value;&#10;&#9;&#125;&#10;&#125;);&#10;&#10;console.log(jsonText);&#10;&#10;// &#36664;&#20986;&#32080;&#26524;&#10;&#123;&#34;name&#34;:&#34;ahbing&#34;&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="toJSON()">toJSON()</h4><p>toJSON()方法 会在序列化之前先执行。<br>toJSON()方法可以作为函数过滤器的补充，将一个对象传入JSON.stringify()后 的序列化顺序：</p>
-<p>①若存在 而且 能通过toJSON()获取有效值，将先调用该方法。否则返回对象本身；</p>
-<p>②若存在 第2参数，将①返回的值传入 过滤器；</p>
-<p>③对②返回的每个值 进行相应的序列化；</p>
-<p>④若存在 第3参数，对序列化后的数据 进行相应格式化。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var student = &#123;&#10;&#9;&#34;name&#34;:&#34;ahbing&#34;,&#10;&#9;&#34;school&#34;:&#123;&#10;&#9;&#9;&#34;name&#34;:&#34;Hangzhou Dianzi University&#34;,&#10;&#9;&#9;&#34;location&#34;:&#34;Hangzhou Xiasha&#34;&#10;&#9;&#125;,&#10;&#9;toJSON:function()&#123;&#10;&#9;&#9;return this.name;&#10;&#9;&#125;&#10;&#125;;&#10;&#10;var jsonText = JSON.stringify(student);&#10;&#10;console.log(jsonText);&#10;&#10;//&#36664;&#20986;&#10;&#10;&#34;ahbing&#34;</span><br></pre></td></tr></table></figure>
-<h2 id="JSON_解析">JSON 解析</h2><h3 id="parse">parse</h3><p>簡單點說,parse就是stringify的逆方向。他的作用是將，JSON字符串解析成為JSON</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var jsonText = &#39;&#123;&#34;name&#34;:&#34;ahbing&#34;,&#34;school&#34;:&#123;&#34;name&#34;:&#34;Hangzhou Dianzi University&#34;,&#34;location&#34;:&#34;Hangzhou Xiasha&#34;&#125;&#125;&#39;;&#10;&#10;var personCopy = JSON.parse(jsonText);&#10;&#10;// &#25171;&#21360;&#35299;&#26512;&#24460;&#30340;JSON&#23565;&#35937;&#10;console.log(personCopy);</span><br></pre></td></tr></table></figure>
-<p>但這樣的還原是有一定問題的，如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var student = &#123;&#10;&#9;&#34;name&#34;:&#34;ahbing&#34;,&#10;&#9;&#34;school&#34;:&#123;&#10;&#9;&#9;&#34;name&#34;:&#34;Hangzhou Dianzi University&#34;,&#10;&#9;&#9;&#34;location&#34;:&#34;Hangzhou Xiasha&#34;&#10;&#9;&#125;,&#10;&#9;//&#36889;&#35041;&#23384;&#25918;&#33258;&#24118;&#26041;&#27861;&#30340;&#19968;&#20491;&#23565;&#35937;&#65288;&#22914; getFullYear()&#65289;&#10;&#9;releaseDate:new Data(2015,05,16)&#10;&#125;;&#10;&#10;//&#24207;&#21015;&#21270;&#10;&#10;var jsonText = JSON.stringify(student);&#10;&#10;// &#35299;&#26512;  &#36996;&#21407;&#10;&#10;var studentCopy = JSON.parse(jsonText);&#10;&#10;//&#22312;&#21407;&#23565;&#35937;&#19978;&#35519;&#29992;&#26041;&#27861;&#10;//2015&#10;console.log(student.releaseDate.getFullYear());&#10;&#10;//&#22312;&#25335;&#35997;&#30340;&#23565;&#35937;&#19978;&#35519;&#29992;&#26041;&#27861;&#10;//&#22577;&#37679; &#22240;&#28858;&#37325;&#26032;&#35299;&#26512;&#30340;releaseDate &#26159;&#19968;&#20491;&#23383;&#31526;&#20018; &#32780;&#19981;&#26159;&#19968;&#20491;&#23565;&#35937;&#10;console.log(studentCopy.releaseDate.getFullYear())</span><br></pre></td></tr></table></figure>
-<h4 id="parse解析選項">parse解析選項</h4><p>解決上面的問題，就在還原的時候將releaseDate還原成對象</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var studentCopy = JSON.parse(jsonText,function(key,value)&#123;&#10;&#9;if(key == &#39;releaseDate&#39;)&#123;&#10;&#9;&#9;//2015-06-15T16:00:00.000Z  &#26159;&#19968;&#20491;&#23383;&#31526;&#20018; &#27794;&#26377;getFullYear&#31561;&#26041;&#27861;&#10;&#9;&#9;console.log(value);&#10;&#9;&#9;// &#23559;value&#35299;&#26512;&#36996;&#21407;&#25104;&#23565;&#35937;&#10;&#9;&#9;return new Date(value);&#10;&#9;&#125;else&#123;&#10;&#9;&#9;return value;&#10;&#9;&#125;&#10;&#125;);&#10;//2015  &#10;console.log(student.releaseDate.getFullYear());&#10;&#10;//2015  &#27491;&#30906;&#35299;&#26512;&#20102;&#10;console.log(studentCopy.releaseDate.getFullYear());</span><br></pre></td></tr></table></figure>
+<h2 id="数组判断">数组判断</h2><p>如何判断一个数组？我总结了三个方法。</p>
+<p>第一 es5的原生方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var arr = [];&#10;Array.isArray(arr)</span><br></pre></td></tr></table></figure>
+<p>第二 判断是不是Array构造函数的实例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arr instanceof Array</span><br></pre></td></tr></table></figure>
+<p>第三 Object.prototype.toString方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Object.prototype.toString.call(arr) === &#39;[object Array]&#39;</span><br></pre></td></tr></table></figure>
+<p>其中第三个方法，还可以判断其他数据类型，比如字符串</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var str = &#39;hello world&#39;&#10;str instanceof String&#10;&#10;Object.prototype.toString.call(str) === &#39;[object String]&#39;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="http://www.cnblogs.com/ziyunfei/archive/2012/11/05/2754156.html" target="_blank" rel="external">Object.prototype.toString方法判断数据类型原理</a></p>
+<p>这篇文章还介绍了一种<a href="http://www.xiabingbao.com/javascript/2015/07/04/javascript-type/" target="_blank" rel="external">使用constructor检测方法</a></p>
+</blockquote>
+<h2 id="数组去重">数组去重</h2><p>首先定义一个测试数组,他是一个稀疏数组，而且含有字符串数字。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var arr = [1,2,3,4,&#39;3&#39;,4,&#39;3&#39;,&#39;2&#39;,1,2,3,,,3,4,,2]&#10;&#10;var arr2 = [1,1,1,1,2,3,4,2,3,4]</span><br></pre></td></tr></table></figure>
+<h3 id="方法1">方法1</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Array.prototype.unique1 = function()&#123;&#10;  var newArr = [];&#10;  for(var i = 0, len = this.length; i &#60; len; i++)&#123;&#10;  &#10;  &#9;//&#21028;&#26029;&#26032;&#29983;&#25104;&#30340;&#25968;&#32452;&#20013;&#26159;&#21542;&#21547;&#26377;&#35813;&#35813;&#20540;&#65292;&#27809;&#26377;&#21017;&#28155;&#21152;&#36827;&#26469;&#10;    if(newArr.indexOf(this[i])===-1)&#123;&#10;      newArr.push(this[i])&#10;    &#125;&#10;  &#125;&#10;  return newArr;&#10;&#125;&#10;&#10;console.log(arr.unique1())&#10;// [ 1, 2, 3, 4, &#39;3&#39;, &#39;2&#39;, undefined ]</span><br></pre></td></tr></table></figure>
+<p>这是最简单的去重方法，当数组是非稀松数组，而且 数组值 不含字符串值 表现比较好</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.log(arr2.unique1()) // [ 1, 2, 3, 4 ]</span><br></pre></td></tr></table></figure>
+<h3 id="方法2">方法2</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Array.prototype.unique2 = function()&#123;&#10;  var newArr = [];&#10;  for(var i = 0, len = this.length; i &#60; len; i++)&#123;&#10;  &#9;// &#21028;&#26029;&#26159;&#19981;&#26159;&#31532;&#19968;&#27425;&#36941;&#21382;&#21040;&#25913;&#20540;  &#22914;&#26524;&#26159; &#21017;&#28155;&#21152;&#21040;&#26032;&#25968;&#32452;&#10;    if(this.indexOf(this[i]) == i)&#123;&#10;      newArr.push(this[i])&#10;    &#125;&#10;  &#125;&#10;  return newArr;&#10;&#125;&#10;&#10;console.log(arr.unique2())  //[ 1, 2, 3, 4, &#39;3&#39;, &#39;2&#39; ]&#10;console.log(arr2.unique2())  //[ 1, 2, 3, 4 ]</span><br></pre></td></tr></table></figure>
+<p>使用第二种方法，很巧妙的避开了稀松数组去重变成undefined的问题。</p>
+<h3 id="方法3">方法3</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Array.prototype.unique3 = function()&#123;&#10;  var arrayMap = &#123;&#125;, newArr = [];&#10;  for(var i = 0, len = this.length; i &#60; len; i++)&#123;&#10;    // &#21028;&#26029;&#24403;&#21069;&#20540;&#32034;&#24341;&#26159;&#21542;&#23384;&#22312;&#10;    if(!arrayMap[this[i]])&#123;&#10;    &#9;// &#19981;&#23384;&#22312;&#23601;&#23558;&#32034;&#24341;&#20540;&#35774;&#20026;true &#24182;&#23558;&#26032;&#20540;&#23384;&#20837;&#10;      hash[this[i]] = true;&#10;      newArr.push(this[i]);&#10;    &#125;&#10;  &#125;&#10;  return newArr&#10;&#125;&#10;console.log(arr.unique3())  //[ 1, 2, 3, 4, undefined ]&#10;console.log(arr2.unique3())  //[ 1, 2, 3, 4 ]</span><br></pre></td></tr></table></figure>
+<p>方法3 解决了数组内容为字符和数值相同去重 但对于稀松数组 仍然会将控制存成undefined</p>
 
       
     </div>
@@ -194,7 +169,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/json/"> #json </a>
+            <a href="/tags/js/"> #js </a>
           
         </div>
       
@@ -203,13 +178,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/05/16/web文件操作的总结/">web文件操作的总结</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/05/15/ajax的使用總結/">ajax的使用總結</a>
+              <a href="/2015/12/17/linux小知识/">linux小知识</a>
             
           </div>
         </div>
@@ -225,8 +198,8 @@
     
       <div class="comments" id="comments">
         
-          <div class="ds-thread" data-thread-key="2015/05/15/JSON基礎筆記/"
-               data-title="JSON基礎筆記" data-url="http://huangbingbing.com/2015/05/15/JSON基礎筆記/">
+          <div class="ds-thread" data-thread-key="2015/12/25/数组操作方法/"
+               data-title="数组操作方法" data-url="http://huangbingbing.com/2015/12/25/数组操作方法/">
           </div>
         
       </div>
@@ -331,7 +304,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#認識JSON"><span class="nav-number">1.</span> <span class="nav-text">認識JSON</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JSON_語法"><span class="nav-number">1.1.</span> <span class="nav-text">JSON 語法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#簡單值"><span class="nav-number">1.1.1.</span> <span class="nav-text">簡單值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#對象"><span class="nav-number">1.1.2.</span> <span class="nav-text">對象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#數組"><span class="nav-number">1.1.3.</span> <span class="nav-text">數組</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSON_序列化"><span class="nav-number">2.</span> <span class="nav-text">JSON 序列化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#eval"><span class="nav-number">2.1.</span> <span class="nav-text">eval</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stringify"><span class="nav-number">2.2.</span> <span class="nav-text">stringify</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#序列化過濾"><span class="nav-number">2.3.</span> <span class="nav-text">序列化過濾</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#數組過濾"><span class="nav-number">2.3.1.</span> <span class="nav-text">數組過濾</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#函數過濾"><span class="nav-number">2.3.2.</span> <span class="nav-text">函數過濾</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#toJSON()"><span class="nav-number">2.3.3.</span> <span class="nav-text">toJSON()</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSON_解析"><span class="nav-number">3.</span> <span class="nav-text">JSON 解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#parse"><span class="nav-number">3.1.</span> <span class="nav-text">parse</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#parse解析選項"><span class="nav-number">3.1.1.</span> <span class="nav-text">parse解析選項</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数组判断"><span class="nav-number">1.</span> <span class="nav-text">数组判断</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数组去重"><span class="nav-number">2.</span> <span class="nav-text">数组去重</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#方法1"><span class="nav-number">2.1.</span> <span class="nav-text">方法1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法2"><span class="nav-number">2.2.</span> <span class="nav-text">方法2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法3"><span class="nav-number">2.3.</span> <span class="nav-text">方法3</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
