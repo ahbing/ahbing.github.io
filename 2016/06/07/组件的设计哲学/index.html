@@ -22,7 +22,7 @@
 
 
 
-  <meta name="keywords" content="js," />
+  <meta name="keywords" content="react," />
 
 
 
@@ -33,7 +33,7 @@
 
 
 
-  <title> js事件设计1 // 九月烟树 </title>
+  <title> 组件的设计哲学 // 九月烟树 </title>
 </head>
 
 <body>
@@ -105,7 +105,7 @@
           
           
             
-              js事件设计1
+              组件的设计哲学
             
           
         </h1>
@@ -113,14 +113,14 @@
 
       <div class="post-meta">
         <span class="post-time">
-          发表于 2015-05-19
+          发表于 2016-06-07
         </span>
 
         
           <span class="post-category">
             &nbsp; | &nbsp; 分类于
             
-              <a href="/categories/js/">js</a>
+              <a href="/categories/react/">react</a>
 
               
               
@@ -133,8 +133,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/05/19/js事件设计1/#comments" >
-              <span class="post-comments-count ds-thread-count" data-thread-key="2015/05/19/js事件设计1/"></span>
+            <a href="/2016/06/07/组件的设计哲学/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/07/组件的设计哲学/"></span>
             </a>
           </span>
           
@@ -148,13 +148,58 @@
       
 
       
-        <p>关于事件的总结文章很多，我觉得这篇文章已经讲的很全面了，想要再全面就只能看书了。<a href="http://yujiangshui.com/javascript-event/" target="_blank" rel="external">于江水 JavaScript 和事件</a> 在学习js的过程中，自己写一些事件程序，一个个的事件绑定多起来，发现整个代码就好像一坨shi，看都不想看一眼，更别说以后的维护了。<br><a id="more"></a></p>
-<h2 id="事件兼容">事件兼容</h2><p>根据《javascript高级程序设计》，封装了常用到的几个事件方法。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var EventUtil = &#123;&#10;&#9;//&#27880;&#20876;&#20107;&#20214;&#10;&#9;addHandler : function(element,type,handler)&#123;&#10;&#9;&#9;if(element.addEventListener)&#123;&#10;&#9;&#9;&#9;element.addEventListener(type,handler,false);&#10;&#9;&#9;&#125;else if(element.attachEvent)&#123;&#10;&#9;&#9;&#9;//ie&#10;&#9;&#9;&#9;element.attachEvent(&#39;on&#39;+type,handler);&#10;&#9;&#9;&#125;else&#123;&#10;&#9;&#9;&#9;//dom 0&#10;&#9;&#9;&#9;element[&#39;on&#39;+type] = handler;&#10;&#9;&#9;&#125;&#10;&#9;&#125;,&#10;&#9;//&#21024;&#38500;&#20107;&#20214;&#10;&#9;removeHandler : function(element,type,handler)&#123;&#10;&#9;&#9;if(element.removeEventListener)&#123;&#10;&#9;&#9;&#9;element.removeEventListener(type,handler,false);&#10;&#9;&#9;&#125;else if(element.detachEvent)&#123;&#10;&#9;&#9;&#9;element.detachEvent(&#39;on&#39;+type,handler);&#10;&#9;&#9;&#125;else&#123;&#10;&#9;&#9;&#9;element[&#39;on&#39;+type] = null;&#10;&#9;&#9;&#125;&#10;&#9;&#125;,&#10;&#9;//&#33719;&#21462;&#20107;&#20214;&#23545;&#35937;&#10;&#9;getEvent : function(event)&#123;&#10;&#9;&#9;return event ? event : window.event;&#10;&#9;&#125;,&#10;&#9;//&#33719;&#21462;&#20107;&#20214;&#30446;&#26631;&#10;&#9;getTarget : function(event)&#123;&#10;&#9;&#9;return event.target || event.srcElement;&#10;&#9;&#125;,&#10;&#9;//&#38459;&#27490;&#40664;&#35748;&#20107;&#20214;&#10;&#9;preventDefault : function(event)&#123;&#10;&#9;&#9;if(event.preventDefault)&#123;&#10;&#9;&#9;&#9;event.preventDefault();&#10;&#9;&#9;&#125;else&#123;&#10;&#9;&#9;&#9;//ie&#10;&#9;&#9;&#9;event.returnValue = false;&#10;&#9;&#9;&#125;&#10;&#9;&#125;,&#10;&#9;stopPropagation : function(event)&#123;&#10;&#9;&#9;if(event.stopPropagation)&#123;&#10;&#9;&#9;&#9;event.stopPropagation();&#10;&#9;&#9;&#125;else&#123;&#10;&#9;&#9;&#9;//ie&#10;&#9;&#9;&#9;event.cancelBubble = true;&#10;&#9;&#9;&#125;&#10;&#9;&#125;&#10;&#125;;</span><br></pre></td></tr></table></figure>
-<h2 id="事件委托">事件委托</h2><p>以前开发是哪个节点需要添加事件，就在哪个节点上直接添加，这就导致后来乱七八糟，哪里都是事件。<br>事件委托可以有效的解决这个问题。<br>事件委托，顾名思义，就是把原本因该添加到我身上的事件，委托添加给别人。<br>他是基于事件冒泡阶段。</p>
-<p><img src="/images/event1.jpg" alt=""></p>
-<p>实例demo</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//html&#10;&#60;ul id=&#34;ul1&#34;&#62;&#10;&#9;&#60;li&#62;111&#60;/li&#62;&#10;&#9;&#60;li&#62;222&#60;/li&#62;&#10;&#9;&#60;li&#62;333&#60;/li&#62;&#10;&#9;&#60;li&#62;444&#60;/li&#62;&#10;&#60;/ul&#62;&#10;&#10;//js&#10;window.onload = function()&#123;&#10;&#9;var oUl = document.getElementById(&#39;ul1&#39;);&#10;&#9;oUl.addEventListener(&#39;click&#39;,handleClick,false);&#10;&#125;&#10;&#10;function handleClick(e)&#123;&#10;&#9;console.log(e.target);&#10;&#9;if(e.target.tagName == &#39;LI&#39;)&#123;&#10;&#9;&#9;//doSomething&#10;&#9;&#9;console.log(e.target.firstChild.nodeValue);&#10;&#9;&#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
+        <p>组件化开发有一个重要的目的就是实现组件的复用，但组件是不完全独立的，比如组件的数据， UI 样式的表现，在不同的场景下，可能是不同的。所以如何保持组件在复杂场景下的可复用性，是需要经过一番设计的。</p>
+<a id="more"></a>
+<p>在 react 官方文档中也明确提到，<a href="https://facebook.github.io/react/docs/interactivity-and-dynamic-uis.html#what-components-should-have-state" target="_blank" rel="external">组件应尽可能的保持无状态化</a>，组件所需要用到的数据从父组件通过 <code>props</code> 传进来，父组件传什么数据，子组件就渲染什么数据。这就在一定程度上保证了组件的可复用性。</p>
+<p>组件的 UI 相关的 state 的管理， react 官方也给出了一个方案，首先<a href="https://facebook.github.io/react/docs/thinking-in-react.html#step-3-identify-the-minimal-but-complete-representation-of-ui-state" target="_blank" rel="external">列出组件所有的用到的管理 UI 的 state</a>，然后将 <a href="https://facebook.github.io/react/docs/thinking-in-react.html#step-4-identify-where-your-state-should-live" target="_blank" rel="external">所有的 state 的交给共同的祖先组件管理</a>，如果没有共同的祖先组件，创建一个组件来包含所有的子组件，这种组件类似一个容器，姑且把它叫做容器组件吧。</p>
+<p>在简单的应用里，按照上面的思路，可以合理的编写可复用的组件，这里说的简单是指组件嵌套不是很深的情况，比如官方提供的     <code>todo</code> ，组件嵌套两三层，只需一个容器组件。</p>
+<h2 id="拆分容器组件">拆分容器组件</h2><p>上文提到， 之所以创建容器组件的原因是，我们需要一个组件，来专门管理其下所有子组件的状态。本来创建的 容器组件是为了统一 state 入口，方便 state 的管理。 但是，在一个庞大的应用中，组件的嵌套很深，容器组件管理的 state 很多很多。已经无法满足当初设立的目的了。</p>
+<p>怎么办？</p>
+<pre><code>一级容器组件 (维护一级组件的 <span class="keyword">state</span>)
+    某个视图组件（渲染一级组件的 <span class="keyword">state</span>）
+
+        二级容器组件 (维护二级组件的 <span class="keyword">state</span>)
+            某个视图组件 （渲染二级组件的 <span class="keyword">state</span>）
+
+                三级容器组件 （维护三级组件的 <span class="keyword">state</span>）
+                    某个视图组件 （渲染三级组件 <span class="keyword">state</span>）
+
+                三级容器组件
+                    某个视图组件
+
+                三级容器组件
+                    某个视图组件    
+                    某个视图组件
+
+        二级容器组件
+            ...
+</code></pre><p>如上， 当细分容器之后，每个容器组件只负责维护一部分的 state。</p>
+<h2 id="组件职责">组件职责</h2><p>Redux 作者 Dan Abramov 写过一篇文章 <a href="https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0#.o8m3kproe" target="_blank" rel="external">Presentational and Container Components</a> 把这两种组件的职责总结的很完善。</p>
+<p>以下基于自己的理解和思考总结的。</p>
+<h3 id="视图组件">视图组件</h3><ul>
+<li>关心组件样式。</li>
+<li>视图组件可以包含容器组件和视图组件，但是有自己的 DOM 结构和 样式。</li>
+<li>通常通过 <code>this.props.children</code> 来嵌套容器组件。</li>
+<li>不依赖应用的部分，比如 <code>Flux</code> 中的     <code>actions</code> 和 <code>stores</code></li>
+<li>不去请求数据， 也不去修改 state</li>
+<li>通过 <code>props</code> 来接收数据和函数</li>
+<li>尽可能自身不维护 state （如果一定要有，也只能是 UI state，决不能是数据）</li>
+<li>如果组件不需要 state ，生命周期的钩子的化，应尽量写成 <a href="https://facebook.github.io/react/blog/2015/10/07/react-v0.14.html#stateless-functional-components" target="_blank" rel="external">函数式组件</a></li>
+</ul>
+<h3 id="容器组件">容器组件</h3><ul>
+<li>关心组件需要哪些内容，如何工作。</li>
+<li>可以包含容器组件和视图，但除了一些包装的 divs 不应该任何的 DOM 标签，和任何样式</li>
+<li>给子组件提供数据和函数，比如 从服务器获取的数据， 或者 <code>Flux</code>的 actions 的回调。</li>
+<li>通常用高阶函数生成，比如 <code>React Redux</code> 的     <code>connect()</code>。</li>
+</ul>
+<h2 id="小结">小结</h2><ul>
+<li>把组件分成容器组件和视图组件，组件的职责更加清晰，应用的结构也更加明朗。</li>
+<li>解耦数据和结构，使得视图组件的复用性更好。</li>
+</ul>
+<h2 id="资源链接">资源链接</h2><p><a href="https://facebook.github.io/react/docs/thinking-in-react.html" target="_blank" rel="external">Thinking in React</a></p>
+<p><a href="https://facebook.github.io/react/docs/interactivity-and-dynamic-uis.html" target="_blank" rel="external">Interactivity and Dynamic UIs</a></p>
+<p><a href="https://medium.com/@learnreact/container-components-c0e67432e005#.g88ltv22d" target="_blank" rel="external">Container Components</a></p>
+<p><a href="https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0#.o8m3kproe" target="_blank" rel="external">Presentational and Container Components</a></p>
 
       
     </div>
@@ -163,7 +208,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/js/"> #js </a>
+            <a href="/tags/react/"> #react </a>
           
         </div>
       
@@ -172,13 +217,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/06/01/js常用数组方法/">js常用数组方法</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/05/18/DOM-编程艺术1/">DOM 编程艺术1</a>
+              <a href="/2016/06/03/redux-的工作原理/">redux 的工作原理</a>
             
           </div>
         </div>
@@ -194,8 +237,8 @@
     
       <div class="comments" id="comments">
         
-          <div class="ds-thread" data-thread-key="2015/05/19/js事件设计1/"
-               data-title="js事件设计1" data-url="http://huangbingbing.com/2015/05/19/js事件设计1/">
+          <div class="ds-thread" data-thread-key="2016/06/07/组件的设计哲学/"
+               data-title="组件的设计哲学" data-url="http://huangbingbing.com/2016/06/07/组件的设计哲学/">
           </div>
         
       </div>
@@ -300,7 +343,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#事件兼容"><span class="nav-number">1.</span> <span class="nav-text">事件兼容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事件委托"><span class="nav-number">2.</span> <span class="nav-text">事件委托</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#拆分容器组件"><span class="nav-number">1.</span> <span class="nav-text">拆分容器组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组件职责"><span class="nav-number">2.</span> <span class="nav-text">组件职责</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#视图组件"><span class="nav-number">2.1.</span> <span class="nav-text">视图组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#容器组件"><span class="nav-number">2.2.</span> <span class="nav-text">容器组件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">3.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#资源链接"><span class="nav-number">4.</span> <span class="nav-text">资源链接</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
