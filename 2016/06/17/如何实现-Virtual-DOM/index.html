@@ -1,0 +1,988 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.2"/>
+
+
+    <meta name="description" content="诗意的栖居在这个星球上" />
+
+
+
+  <meta name="keywords" content="react," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.2" />
+
+
+
+
+  <title> 如何实现 Virtual DOM // 九月烟树 </title>
+</head>
+
+<body>
+<!--[if lte IE 8]> <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'> <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode"><img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari." style='margin-left:auto;margin-right:auto;display: block;'/></a></div> <![endif]-->
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <div id="header" class="header">
+      <div class="header-inner">
+        <h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand">
+      <span class="logo">
+        <i class="icon-logo"></i>
+      </span>
+      <span class="site-title">九月烟树</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+
+  <ul id="menu" class="menu">
+     
+    
+      
+      <li class="menu-item menu-item-home">
+        <a href="/">
+          <i class="menu-item-icon icon-home"></i> <br />
+          首页
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-archives">
+        <a href="/archives">
+          <i class="menu-item-icon icon-archives"></i> <br />
+          归档
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-about">
+        <a href="/about">
+          <i class="menu-item-icon icon-about"></i> <br />
+          关于
+        </a>
+      </li>
+    
+  </ul>
+
+
+      </div>
+    </div>
+
+    <div id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
+              如何实现 Virtual DOM
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于 2016-06-17
+        </span>
+
+        
+          <span class="post-category">
+            &nbsp; | &nbsp; 分类于
+            
+              <a href="/categories/react/">react</a>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2016/06/17/如何实现-Virtual-DOM/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/17/如何实现-Virtual-DOM/"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </div>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <p>原文：<a href="https://medium.com/@deathmood/how-to-write-your-own-virtual-dom-ee74acc13060#.xenchiwek" target="_blank" rel="external">How to write your own Virtual DOM</a></p>
+<p>实现一个简单的 Virtual DOM, 你不需要去深入 React 的源码，或者去研究其他实现 Virtual DOM 的源码，他们的代码很多且复杂，但实际上实现 Virtual DOM 的核心代码仅仅只要50行，甚至更少。</p>
+<a id="more"></a>
+<p>首先理解两个概念：</p>
+<ul>
+<li>Virtual DOM 描述的是真实的 DOM。</li>
+<li>当 Virtual DOM 树有所变化之后，将会得到一个新的 Virtual DOM 树，算法将比较新旧的两棵 Virtual DOM 树，找到不同之处，仅将变化的部分反映在真实的 DOM 上。</li>
+</ul>
+<p>理解上述概念之后，现在来深入的了解每一个概念。</p>
+<h2 id="抽象_DOM_树">抽象 DOM 树</h2><p>首先，我们要以某种方式在内存中存储我们的 DOM 树。这很简单，通过JS 的对象就可以实现。假设我们的 DOM 树结构如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">ul</span> <span class="attribute">class</span>=<span class="value">"list"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">li</span>&gt;</span>item 1<span class="tag">&lt;/<span class="title">li</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="title">li</span>&gt;</span>item 2<span class="tag">&lt;/<span class="title">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">ul</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>看起来很简单的 DOM 结构，如何用 JS 的对象表示呢？</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123; type: ‘ul’, props: &#123; ‘class’: ‘list’ &#125;, children: [</span><br><span class="line">  &#123; type: ‘li’, props: &#123;&#125;, children: [‘item 1’] &#125;,</span><br><span class="line">  &#123; type: ‘li’, props: &#123;&#125;, children: [‘item 2’] &#125;</span><br><span class="line">] &#125;</span><br></pre></td></tr></table></figure>
+<p>不过你注意到了吗？</p>
+<ul>
+<li>表示 DOM 元素的对象结构是这样的</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; type: ‘…’, props: &#123; … &#125;, children: [ … ] &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>我们用字符串来表示 DOM 的文本节点</li>
+</ul>
+<p>但是用这样的方式编写一个复杂的 DOM 树是相当麻烦的，所以我们先来编写一个辅助函数，这也将让我们更容易理解上述的对象结构。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">h</span>(<span class="params">type, props, ...children</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123; type, props, children &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在，我们就可以这样描述 DOM 树了：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">h1(<span class="string">'ul'</span>, &#123; <span class="string">'class'</span>: <span class="string">'list'</span> &#125;,</span><br><span class="line"> h(<span class="string">'li'</span>, &#123;&#125;, <span class="string">'item 1'</span>),</span><br><span class="line"> h(<span class="string">'li'</span>, &#123;&#125;, <span class="string">'item 2'</span>), </span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>这样看上去更加简洁了吧，但是不是还可以优化， 你应该听说过 <code>JSX</code> 吧, 他的原理是怎样的呢。</p>
+<p>如果你读过 Babel JSX 的官方<a href="">文档</a>, 你知道 Babel 会把如下的代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">ul</span> <span class="attribute">className</span>=<span class="value">”list”</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">li</span>&gt;</span>item 1<span class="tag">&lt;/<span class="title">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">li</span>&gt;</span>item 2<span class="tag">&lt;/<span class="title">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">ul</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>转译成</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">React.createElement(‘ul’, &#123; className: ‘list’ &#125;,</span><br><span class="line">  React.createElement(‘li’, &#123;&#125;, ‘item <span class="number">1</span>’),</span><br><span class="line">  React.createElement(‘li’, &#123;&#125;, ‘item <span class="number">2</span>’),</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>有没有发现相似之处？ 如果将上面的 <code>React.createElement(…)</code> 的调用替换成 <code>h(…)</code>就可以了。事实上，我们通过 <code>jsx pragma</code> 来实现。只需要在源码的顶部添加一行注释。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/** @jsx h */</span><br><span class="line"><span class="tag">&lt;<span class="title">ul</span> <span class="attribute">className</span>=<span class="value">”list”</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">li</span>&gt;</span>item 1<span class="tag">&lt;/<span class="title">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">li</span>&gt;</span>item 2<span class="tag">&lt;/<span class="title">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">ul</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这样就好比告诉<code>Babel</code>, “喂， 转译这个jsx文件，但是用<code>h</code>代替<code>React.createElement</code>”。</p>
+<p>通过上述的内容，我可以通过如下的方式来编写 DOM</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/** @jsx h */</span><br><span class="line">const a = (</span><br><span class="line">  <span class="tag">&lt;<span class="title">ul</span> <span class="attribute">className</span>=<span class="value">”list”</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">li</span>&gt;</span>item 1<span class="tag">&lt;/<span class="title">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">li</span>&gt;</span>item 2<span class="tag">&lt;/<span class="title">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">ul</span>&gt;</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>Babel 会将其转化成如下的代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> a = (</span><br><span class="line">  h(‘ul’, &#123; className: ‘list’ &#125;,</span><br><span class="line">    h(‘li’, &#123;&#125;, ‘item <span class="number">1</span>’),</span><br><span class="line">    h(‘li’, &#123;&#125;, ‘item <span class="number">2</span>’),</span><br><span class="line">  );</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>当函数<code>h</code>执行的时候，他将返回一个纯<code>JS</code>的对象，也就是 Virtual DOM 表达式。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> a = (</span><br><span class="line">  &#123; type: ‘ul’, props: &#123; className: ‘list’ &#125;, children: [</span><br><span class="line">    &#123; type: ‘li’, props: &#123;&#125;, children: [‘item <span class="number">1</span>’] &#125;,</span><br><span class="line">    &#123; type: ‘li’, props: &#123;&#125;, children: [‘item <span class="number">2</span>’] &#125;</span><br><span class="line">  ] &#125;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>试试在 <a href="https://jsfiddle.net/deathmood/5qyLubt4/" target="_blank" rel="external">JSFiddle</a> 的例子吧。</p>
+<h2 id="应用_DOM_表达式">应用 DOM 表达式</h2><p>好了，现在我们已经有了<code>JS</code>对象作为 DOM 树的表达式。但我们该以怎样的方式来创建真实的 DOM 呢，因为我们不能直接把 DOM 表达式直接添加到 DOM 结构里去。</p>
+<p>首先，我们来做一下相关的约定。</p>
+<ul>
+<li>书写真实的 DOM 节点（元素，文本节点）时，面前都加上 <code>$</code>符号。比如: <code>$parent</code> 就是一个真实的 DOM 元素。</li>
+<li>Virtual DOM 的表达式存储在以<strong>节点名称</strong>命名的变量里。</li>
+<li>类似<code>React</code>， 只能有<strong>一个根节点</strong>，其他的所有节点都在其内部。</li>
+</ul>
+<p>有了上述的约定，可以开始写 <code>createElement(…)</code> 函数了， 它接受一个 Virtual DOM 节点，然后返回一个真实的 DOM 节点，暂时先不管 <code>props</code> 和 <code>children</code>， 如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createElement</span>(<span class="params">node</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> node === <span class="string">'string'</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">document</span>.createTextNode(node);</span><br><span class="line">  &#125;</span><br><span class="line">  reutrn <span class="built_in">document</span>.createElement(node.type);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因为节点有两种类型：<strong>文本节点</strong>——字符串 和 <strong>元素</strong>——对象的 <code>type</code> 字段，就像下面的这样：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; type: ‘…’, props: &#123; … &#125;, children: [ … ] &#125;</span><br></pre></td></tr></table></figure>
+<p>从而，我们现在可以传虚拟的文本节点或者虚拟的元素节点来创建真实的节点。</p>
+<p>现在，我们来实现<code>children</code>部分，同样的，他们也有可能是文本节点或者元素。所以他们也可以在 <code>createElement</code> 函数中创建。察觉到了吗？ 这里我们要使用到递归。 这样我们就可以在任何的元素子节点上调用 <code>createElement(...)</code>，然后调用 <code>appendChild()</code>，将结果添加到元素节点上。就像这样：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createElement</span>(<span class="params">node</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> node === <span class="string">'string'</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">document</span>.createTextNode(node)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> $el = <span class="built_in">document</span>.createElement(node.type);</span><br><span class="line">  node.children</span><br><span class="line">    .map(createElement)</span><br><span class="line">    .forEach($el.appendChild.bind($el));</span><br><span class="line">  <span class="keyword">return</span> $el;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>真不错。我们这里先把 <code>props</code> 的放一放。因为添加了 <code>props</code>，无助于我们来理解 Virtual DOM 相关的概念，反而理解起来会变的复杂。稍后我也会提到它。</p>
+<p>现在，先去 <a href="https://jsfiddle.net/deathmood/cL0Lc7au/" target="_blank" rel="external">JSFiddle</a> 试试吧。</p>
+<h2 id="处理节点变化">处理节点变化</h2><p>现在我们已经能把虚拟节点转化成真实的节点了。可以来思考一下怎么来进行虚拟树的版本比较了。最基本的就是我们需要写一个算法，来比较新旧两棵虚拟树，然后仅仅将变化的部分在真实的 DOM 上改变。</p>
+<p>如何去比较两个虚拟树呢？ 我们来列举一下可能的情况：</p>
+<ul>
+<li>旧节点中不存在——所以需要用到 <code>appendChild(...)</code> 来添加节点。</li>
+</ul>
+<p><img src="/images/vritualDom1.png" alt=""></p>
+<ul>
+<li>新节点中不存在——因此需要用到 <code>removeChild(...)</code> 来删除节点。</li>
+</ul>
+<p><img src="/images/vritualDom2.png" alt=""></p>
+<ul>
+<li>同一处的节点不同——因此要用到 <code>repalceChild(...)</code> 来改变节点</li>
+</ul>
+<p><img src="/images/vritualDom3.png" alt=""></p>
+<ul>
+<li>子节点相同但跟深的节点不同——我们需要去比较更深层的节点。</li>
+</ul>
+<p><img src="/images/vritualDom4.png" alt=""></p>
+<p>现在编写一个叫 <code>updateElement</code> 的函数，它接受三个参数——<code>$parent</code>, <code>newNode</code> 和 <code>oldNode</code>, 其中 <code>$parent</code> 是我们的虚拟节点对映的真实节点的父节点。现在来具体实现上述的所有的情况。</p>
+<h3 id="旧节点中不存在">旧节点中不存在</h3><p>这种情况下十分简单,直接将新节点添加到父节点上。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">updateElement</span>(<span class="params">$parent, newNode, oldNode</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!oldNode) &#123;</span><br><span class="line">    $parnet.appendChild(</span><br><span class="line">      createElement(newNode)</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="新节点中不存在">新节点中不存在</h3><p>如果在新的虚拟树里不存在了某个节点，我们应该将这个节点从真实的DOM结构中删除，那么问题来了？我们要怎么删除这个节点呢？在函数调用的时候，我们传入了父节点作为参数，因此只要我们调用<code>$parent.removeChild(...)</code> 方法，传入要删除的节点，就可以了该节点了。 但是这样还不够，如果我们知道需要删除的节点在父节点的位置，即<code>index</code>，我们可以通过<code>$parent.childNodes[index]</code>获取到该节点。然后将其删除。</p>
+<p>现在，我们假设将会有<code>index</code>作为参数传入我们的函数, 那么代码就会变成如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">updateElement</span>(<span class="params">$parent, newNode, oldNode, index = 0</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!oldNode) &#123;</span><br><span class="line">    $parent.appendChild(</span><br><span class="line">      createElement(newNode)</span><br><span class="line">    );</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!newNode) &#123;</span><br><span class="line">    $parent.removeChild(</span><br><span class="line">      $parnet.childNodes[index]</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="节点改变">节点改变</h3><p>现在，我们要写一个函数来比较新旧 Virtual DOM 树的节点，然后判断节点是否变化了。这里我们要考虑到节点可能是元素和文本节点。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">changed</span>(<span class="params">node1, node2</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">typeof</span> node1 !== <span class="keyword">typeof</span> node2 ||</span><br><span class="line">    typeodf node1 === <span class="string">'string'</span> &amp;&amp; node1 !== node2 ||</span><br><span class="line">    node1.type !== node2.type</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在我们有当前节点在父节点中的索引(index),我们很容易将它替换成新的节点：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">updateElement</span>(<span class="params">$arent, newNode, oldNode, index = 0</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!oldNode) &#123;</span><br><span class="line">    $parent.appendChild(</span><br><span class="line">      createElement(newNode)</span><br><span class="line">    );</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!newNode) &#123;</span><br><span class="line">    $parent.removeChild(</span><br><span class="line">      $parnet.childNodes[index]</span><br><span class="line">    );</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (changed(newNode, oldNode)) &#123;</span><br><span class="line">    $parent.replaceChild(</span><br><span class="line">      createElement(newNode),</span><br><span class="line">      $parnet.childNodes[index]</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="子节点的比较">子节点的比较</h3><p>最后，也是最重要的，我们应该遍历节点的所有子节点来比较他们的不同，然后再在每个子节点上调用<code>updateElement(...)</code>，这里再一次需要用到递归。</p>
+<p>在写代码之前，先来整理一下思路：</p>
+<ul>
+<li>只有元素节点的子元素需要遍历比较(文本节点的子节点不需要遍历)</li>
+<li>把<code>当前节点</code>作为父节点传入</li>
+<li>所有的子节点需要遍历比较，即使有些时候可能是<code>undefined</code>，我们的函数可以处理这种情况。</li>
+<li><code>索引（index）</code>也就是<code>children</code>数组的索引</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">updateElement</span>(<span class="params">$parent, newNode, oldNode, index = 0</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!oldNode) &#123;</span><br><span class="line">    $parent.appendChild(</span><br><span class="line">    	createElement(newNode)</span><br><span class="line">    );</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!newNode) &#123;</span><br><span class="line">    $parent.removeChild(</span><br><span class="line">      $parent.childNodes[index]</span><br><span class="line">    );</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (changed(newNode, oldNode)) &#123;</span><br><span class="line">    $parent.replaceChild(</span><br><span class="line">      createElement(newNode),</span><br><span class="line">      $parent.childNods[index]</span><br><span class="line">    );</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (newNode.type) &#123;</span><br><span class="line">    <span class="keyword">const</span> newLength = newNode.children.length;</span><br><span class="line">    <span class="keyword">const</span> oldLength = oldNode.children.length;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; newLength || i &lt; oldLength; i++) &#123;</span><br><span class="line">      updateElement(</span><br><span class="line">        $parent.childNodes[index],</span><br><span class="line">        newNode.children[i],</span><br><span class="line">        oldNode.children[i],</span><br><span class="line">      );</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="整合">整合</h2><p>你可以在 <a href="https://jsfiddle.net/deathmood/0htedLra/" target="_blank" rel="external">JSFiddle</a> 上去试试， 真的只有 50 行代码。</p>
+<p>打开开发者工具，当你按下<code>Reload</code>之后，可以看到应用的相关变化。</p>
+<p><img src="/images/vritualDom5.gif" alt=""></p>
+<h2 id="总结">总结</h2><p>好了，我们已经编写了一个自己的 Virtual DOM 的实现。我希望你在阅读这篇文章之后了解了 Virtual DOM 的基本概念，React 是如何基于此工作的。</p>
+<p>然而，还有一些高级的内容没有提及到（我将在未来的文章里进行阐述）</p>
+<ul>
+<li>设置元素的属性（props），然后实现比较和更新。</li>
+<li>处理事件，给元素添加事件监听</li>
+<li>让我们的 Virtual DOM 和组件开发结合起来，比如 React</li>
+<li>渲染真实的 DOM 节点</li>
+<li>将 Virtual DOM 和直接操作的 DOM 的类库结合使用，比如 jQuery 和他的一些插件</li>
+</ul>
+<blockquote>
+<p>更新：第二篇关于在 Virtual DOM 设置属性和事件的文章<a href="https://medium.com/@deathmood/write-your-virtual-dom-2-props-events-a957608f5c76#.32b1ozo6u" target="_blank" rel="external">在此</a></p>
+</blockquote>
+
+      
+    </div>
+
+    <div class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/react/"> #react </a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/06/07/组件的设计哲学/">组件的设计哲学</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </div>
+  </div>
+
+
+
+    
+      <div class="comments" id="comments">
+        
+          <div class="ds-thread" data-thread-key="2016/06/17/如何实现-Virtual-DOM/"
+               data-title="如何实现 Virtual DOM" data-url="http://huangbingbing.com/2016/06/17/如何实现-Virtual-DOM/">
+          </div>
+        
+      </div>
+    
+  </div>
+
+
+        </div>
+
+        
+      </div>
+
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview">
+        <div class="site-author motion-element">
+          <img class="site-author-image" src="http://tp2.sinaimg.cn/5622195893/180/40087750383/1" alt="阿炳" />
+          <p class="site-author-name">阿炳</p>
+        </div>
+        <p class="site-description motion-element">诗意的栖居在这个星球上</p>
+        <div class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">14</span>
+              <span class="site-state-item-name">分类</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            
+              <span class="site-state-item-count">17</span>
+              <span class="site-state-item-name">标签</span>
+              
+          </div>
+
+        </div>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+              <a href="https://github.com/ahbing/" target="_blank">GitHub</a>
+            </span>
+            
+              <span class="links-of-author-item">
+              <a href="https://twitter.com/aahbing" target="_blank">Twitter</a>
+            </span>
+            
+              <span class="links-of-author-item">
+              <a href="http://weibo.com/u/5622195893" target="_blank">Weibo</a>
+            </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+      </div>
+
+      
+        <div class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#抽象_DOM_树"><span class="nav-number">1.</span> <span class="nav-text">抽象 DOM 树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#应用_DOM_表达式"><span class="nav-number">2.</span> <span class="nav-text">应用 DOM 表达式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#处理节点变化"><span class="nav-number">3.</span> <span class="nav-text">处理节点变化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#旧节点中不存在"><span class="nav-number">3.1.</span> <span class="nav-text">旧节点中不存在</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新节点中不存在"><span class="nav-number">3.2.</span> <span class="nav-text">新节点中不存在</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#节点改变"><span class="nav-number">3.3.</span> <span class="nav-text">节点改变</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#子节点的比较"><span class="nav-number">3.4.</span> <span class="nav-text">子节点的比较</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#整合"><span class="nav-number">4.</span> <span class="nav-text">整合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </div>
+      
+
+    </div>
+  </div>
+
+
+    </div>
+
+    <div id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; &nbsp; 
+  2016
+  <span class="with-love">
+    <i class="icon-heart"></i>
+  </span>
+  <span class="author">阿炳</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </div>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('.content img').each(function () {
+        var $image = $(this);
+        var $imageWrapLink = $image.parent('a');
+
+        if ($imageWrapLink.size() < 1) {
+          $imageWrapLink = $image.wrap('<a href="' + this.getAttribute('src') + '"></a>').parent('a');
+        }
+        $imageWrapLink.addClass('fancybox');
+      });
+    });
+    $('.fancybox').fancybox({
+      helpers: {
+        overlay: {
+          locked: false
+        }
+      }
+    });
+  </script>
+
+
+  <script type="text/javascript">
+  function hasMobileUA () {
+    var nav = window.navigator;
+    var ua = nav.userAgent;
+    var pa = /iPad|iPhone|Android|Opera Mini|BlackBerry|webOS|UCWEB|Blazer|PSP|IEMobile|Symbian/g;
+
+    return pa.test(ua);
+  }
+
+  function isDesktop () {
+    return screen.width > 991 && !hasMobileUA();
+  }
+
+  function isTablet () {
+    return screen.width < 992 && screen.width > 767 && hasMobileUA();
+  }
+
+  function isMobile () {
+    return screen.width < 767 && hasMobileUA();
+  }
+
+  function escapeSelector (selector) {
+    return selector.replace(/[!"$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\$&")
+  }
+</script>
+
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" id="motion.global">
+  $(document).ready(function () {
+    var body = $('body');
+    var isSidebarVisible = false;
+    var sidebarToggle = $('.sidebar-toggle');
+    var sidebarToggleLine1st = $('.sidebar-toggle-line-first')
+    var sidebarToggleLine2nd = $('.sidebar-toggle-line-middle');
+    var sidebarToggleLine3rd = $('.sidebar-toggle-line-last');
+    var sidebar = $('.sidebar');
+
+    var SIDEBAR_WIDTH = '320px';
+    var SIDEBAR_DISPLAY_DURATION = 300;
+
+    var sidebarToogleLineStatusInit = {width: '100%', opacity: 1, left: 0, rotateZ: 0, top: 0};
+
+    var sidebarToggleLine1stStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine1stStatusArrow = {width: '50%', rotateZ: '-45deg', top: '2px'};
+    var sidebarToogleLine1stStatusClose = {width: '100%', rotateZ: '-45deg', top: '5px'};
+
+    var sidebarToggleLine2ndStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine2ndStatusArrow = {width: '90%'};
+    var sidebarToogleLine2ndStatusClose = {opacity: 0};
+
+    var sidebarToggleLine3rdStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine3rdStatusArrow = {width: '50%', rotateZ: '45deg', top: '-2px'};
+    var sidebarToogleLine3rdStatusClose = {width: '100%', rotateZ: '45deg', top: '-5px'};
+
+    LogoAndMenuMotion();
+    sidebatToggleMotion();
+    postsListMotion();
+    backToTopMotion();
+
+
+    $(document)
+      .on('sidebar.isShowing', function () {
+        isDesktop() && body.velocity(
+          {paddingRight: SIDEBAR_WIDTH},
+          SIDEBAR_DISPLAY_DURATION
+        );
+        sidebarContentMotion();
+      })
+      .on('sidebar.isHiding', function () {});
+
+    function LogoAndMenuMotion() {
+      $.Velocity.RunSequence([
+        { e: $('.brand'), p: { opacity: 1 }, o: { duration: 100 } },
+        { e: $('.logo'), p: { opacity: 1, top: 0 }, o: { duration: 50} },
+        
+        { e: $('.logo-line-before i'), p: { translateX: "100%" }, o: { duration: 500, sequenceQueue: false } },
+        { e: $('.logo-line-after i'), p: { translateX: "-100%" }, o: { duration: 500, sequenceQueue: false } },
+        
+        { e: $('.site-title'), p: { opacity: 1, top: 0 }, o: { duration: 200 } }
+      ]);
+      $('.menu-item').velocity('transition.slideDownIn', {display: null});
+    }
+
+
+    function backToTopMotion () {
+      var b2top = $('.back-to-top');
+      b2top.on('click', function () {
+        body.velocity('scroll');
+      });
+    }
+
+    function sidebarShowMotion () {
+
+      sidebarToggleLine1st.velocity(sidebarToogleLine1stStatusClose);
+      sidebarToggleLine2nd.velocity(sidebarToogleLine2ndStatusClose);
+      sidebarToggleLine3rd.velocity(sidebarToogleLine3rdStatusClose);
+
+      sidebar.velocity({width: SIDEBAR_WIDTH}, {
+        display: 'block',
+        duration: SIDEBAR_DISPLAY_DURATION,
+        complete: function () {
+          sidebar.addClass('sidebar-active');
+          sidebar.trigger('sidebar.didShow');
+        }
+      });
+      sidebar.trigger('sidebar.isShowing');
+    }
+
+    function sidebarHideMotion () {
+      isDesktop() && body.velocity({paddingRight: 0});
+      sidebar.velocity('reverse');
+
+      sidebarToggleLine1st.velocity(sidebarToggleLine1stStatusInit);
+      sidebarToggleLine2nd.velocity(sidebarToggleLine2ndStatusInit);
+      sidebarToggleLine3rd.velocity(sidebarToggleLine3rdStatusInit);
+
+      sidebar.removeClass('sidebar-active');
+      sidebar.trigger('sidebar.isHiding');
+    };
+
+    function sidebarContentMotion () {
+      $('.sidebar .motion-element').velocity(
+        'transition.slideRightIn',
+        {stagger: 50, drag: true}
+      );
+    }
+
+    function postsListMotion () {
+      var postMotionOptions = window.postMotionOptions || {stagger: 300, drag: true};
+      $('.post').velocity('transition.slideDownIn', postMotionOptions);
+    }
+
+    function sidebatToggleMotion () {
+      sidebarToggle.on('click', function () {
+        isSidebarVisible ? sidebarHideMotion() : sidebarShowMotion();
+        isSidebarVisible = !isSidebarVisible;
+      });
+
+      sidebarToggle.hover(function () {
+        if (isSidebarVisible) {return}
+        sidebarToggleLine1st.velocity('stop').velocity(sidebarToggleLine1stStatusArrow);
+        sidebarToggleLine2nd.velocity('stop').velocity(sidebarToggleLine2ndStatusArrow);
+        sidebarToggleLine3rd.velocity('stop').velocity(sidebarToggleLine3rdStatusArrow);
+      }, function () {
+        if (isSidebarVisible) {return}
+        sidebarToggleLine1st.velocity('stop').velocity(sidebarToggleLine1stStatusInit);
+        sidebarToggleLine2nd.velocity('stop').velocity(sidebarToggleLine2ndStatusInit);
+        sidebarToggleLine3rd.velocity('stop').velocity(sidebarToggleLine3rdStatusInit);
+      });
+    }
+  });
+
+</script>
+
+
+
+
+
+  
+  
+<script type="text/javascript" id="bootstrap.scrollspy.custom">
+  /* ========================================================================
+  * Bootstrap: scrollspy.js v3.3.2
+  * http://getbootstrap.com/javascript/#scrollspy
+  * ========================================================================
+  * Copyright 2011-2015 Twitter, Inc.
+  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+  * ======================================================================== */
+
+  /**
+   * Custom by iissnan
+   *
+   * - Add a `clear.bs.scrollspy` event.
+   * - Esacpe targets selector.
+   */
+
+
+  +function ($) {
+    'use strict';
+
+    // SCROLLSPY CLASS DEFINITION
+    // ==========================
+
+    function ScrollSpy(element, options) {
+      this.$body          = $(document.body)
+      this.$scrollElement = $(element).is(document.body) ? $(window) : $(element)
+      this.options        = $.extend({}, ScrollSpy.DEFAULTS, options)
+      this.selector       = (this.options.target || '') + ' .nav li > a'
+      this.offsets        = []
+      this.targets        = []
+      this.activeTarget   = null
+      this.scrollHeight   = 0
+
+      this.$scrollElement.on('scroll.bs.scrollspy', $.proxy(this.process, this))
+      this.refresh()
+      this.process()
+    }
+
+    ScrollSpy.VERSION  = '3.3.2'
+
+    ScrollSpy.DEFAULTS = {
+      offset: 10
+    }
+
+    ScrollSpy.prototype.getScrollHeight = function () {
+      return this.$scrollElement[0].scrollHeight || Math.max(this.$body[0].scrollHeight, document.documentElement.scrollHeight)
+    }
+
+    ScrollSpy.prototype.refresh = function () {
+      var that          = this
+      var offsetMethod  = 'offset'
+      var offsetBase    = 0
+
+      this.offsets      = []
+      this.targets      = []
+      this.scrollHeight = this.getScrollHeight()
+
+      if (!$.isWindow(this.$scrollElement[0])) {
+        offsetMethod = 'position'
+        offsetBase   = this.$scrollElement.scrollTop()
+      }
+
+      this.$body
+        .find(this.selector)
+        .map(function () {
+          var $el   = $(this)
+          var href  = $el.data('target') || $el.attr('href')
+          var $href = /^#./.test(href) && $(escapeSelector(href)) // Need to escape selector.
+
+          return ($href
+            && $href.length
+            && $href.is(':visible')
+            && [[$href[offsetMethod]().top + offsetBase, href]]) || null
+        })
+        .sort(function (a, b) { return a[0] - b[0] })
+        .each(function () {
+          that.offsets.push(this[0])
+          that.targets.push(this[1])
+        })
+
+
+    }
+
+    ScrollSpy.prototype.process = function () {
+      var scrollTop    = this.$scrollElement.scrollTop() + this.options.offset
+      var scrollHeight = this.getScrollHeight()
+      var maxScroll    = this.options.offset + scrollHeight - this.$scrollElement.height()
+      var offsets      = this.offsets
+      var targets      = this.targets
+      var activeTarget = this.activeTarget
+      var i
+
+      if (this.scrollHeight != scrollHeight) {
+        this.refresh()
+      }
+
+      if (scrollTop >= maxScroll) {
+        return activeTarget != (i = targets[targets.length - 1]) && this.activate(i)
+      }
+
+      if (activeTarget && scrollTop < offsets[0]) {
+        $(this.selector).trigger('clear.bs.scrollspy')  // Add a custom event.
+        this.activeTarget = null
+        return this.clear()
+      }
+
+      for (i = offsets.length; i--;) {
+        activeTarget != targets[i]
+          && scrollTop >= offsets[i]
+          && (!offsets[i + 1] || scrollTop <= offsets[i + 1])
+          && this.activate(targets[i])
+      }
+    }
+
+    ScrollSpy.prototype.activate = function (target) {
+      this.activeTarget = target
+
+      this.clear()
+
+      var selector = this.selector +
+        '[data-target="' + target + '"],' +
+        this.selector + '[href="' + target + '"]'
+
+      var active = $(selector)
+        .parents('li')
+        .addClass('active')
+
+      if (active.parent('.dropdown-menu').length) {
+        active = active
+          .closest('li.dropdown')
+          .addClass('active')
+      }
+
+      active.trigger('activate.bs.scrollspy')
+    }
+
+    ScrollSpy.prototype.clear = function () {
+      $(this.selector)
+        .parentsUntil(this.options.target, '.active')
+        .removeClass('active')
+    }
+
+
+    // SCROLLSPY PLUGIN DEFINITION
+    // ===========================
+
+    function Plugin(option) {
+      return this.each(function () {
+        var $this   = $(this)
+        var data    = $this.data('bs.scrollspy')
+        var options = typeof option == 'object' && option
+
+        if (!data) $this.data('bs.scrollspy', (data = new ScrollSpy(this, options)))
+        if (typeof option == 'string') data[option]()
+      })
+    }
+
+    var old = $.fn.scrollspy
+
+    $.fn.scrollspy             = Plugin
+    $.fn.scrollspy.Constructor = ScrollSpy
+
+
+    // SCROLLSPY NO CONFLICT
+    // =====================
+
+    $.fn.scrollspy.noConflict = function () {
+      $.fn.scrollspy = old
+      return this
+    }
+
+
+    // SCROLLSPY DATA-API
+    // ==================
+
+    $(window).on('load.bs.scrollspy.data-api', function () {
+      $('[data-spy="scroll"]').each(function () {
+        var $spy = $(this)
+        Plugin.call($spy, $spy.data())
+      })
+    })
+
+  }(jQuery);
+</script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var $sidebarInner = $('.sidebar-inner');
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.didShow', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+          var self = this;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      $(indicator).velocity('stop').velocity({
+        opacity: action === 'show' ? 0.4 : 0
+      }, { duration: 100 });
+    }
+
+  });
+</script>
+
+
+  <script type="text/javascript" id="sidebar.nav">
+    $(document).ready(function () {
+      var html = $('html');
+
+      $('.sidebar-nav li').on('click', function () {
+        var item = $(this);
+        var activeTabClassName = 'sidebar-nav-active';
+        var activePanelClassName = 'sidebar-panel-active';
+        if (item.hasClass(activeTabClassName)) {
+          return;
+        }
+
+        var currentTarget = $('.' + activePanelClassName);
+        var target = $('.' + item.data('target'));
+
+        currentTarget.velocity('transition.slideUpOut', 200, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', 200)
+            .addClass(activePanelClassName);
+        });
+
+        item.siblings().removeClass(activeTabClassName);
+        item.addClass(activeTabClassName);
+      });
+
+      $('.post-toc a').on('click', function (e) {
+        e.preventDefault();
+        var offset = $(escapeSelector(this.getAttribute('href'))).offset().top;
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        });
+      });
+
+      // Expand sidebar on post detail page by default, when post has a toc.
+      var $tocContent = $('.post-toc-content');
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0 && isDesktop()) {
+        setTimeout(function () {
+          $('.sidebar-toggle').trigger('click');
+        }, 800);
+      }
+    });
+  </script>
+
+
+
+
+  
+
+  
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ahbing"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+
+
+  
+  
+</body>
+</html>
