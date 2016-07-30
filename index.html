@@ -107,6 +107,94 @@
           
           
             
+              <a class="post-title-link" href="/2016/07/30/浅析-JavaScript-的函数节流和去抖/">
+                浅析 JavaScript 的函数节流和去抖
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于 2016-07-30
+        </span>
+
+        
+          <span class="post-category">
+            &nbsp; | &nbsp; 分类于
+            
+              <a href="/categories/js/">js</a>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2016/07/30/浅析-JavaScript-的函数节流和去抖/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/30/浅析-JavaScript-的函数节流和去抖/"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </div>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>现代网页的实现上，会有很多交互上的优化，比如常见的 <code>滚动加载</code> ，<code>输入联想</code> 等等。他们的实现思路很简单，以<code>滚动加载</code>而言，无非就是去是增加一个滚动的事件监听，每次滚动判断当前的元素是否已经滚动到了用户的可视区，然后根据判断结果来决定是否来加载相关数据。 <code>输入联想</code>也类似，无非就是修改一下监听的事件类型，和判断的相关逻辑。</p>
+<p>前端交互的优化上，我们总是需要需要事件监听来知道用户进行了什么操作，从而设定页面给出怎样的反应。但本文主要的内容不是讲如何具体的实现某个交互，而是对交互实现的依赖的事件监听那部分的优化。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/07/30/浅析-JavaScript-的函数节流和去抖/">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/js/"> #js </a>
+          
+        </div>
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </div>
+  </div>
+
+
+    
+      
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
               <a class="post-title-link" href="/2016/06/17/如何实现-Virtual-DOM/">
                 如何实现 Virtual DOM
               </a>
@@ -860,96 +948,6 @@
 
 
     
-      
-
-  <div class="post post-type-normal ">
-    <div class="post-header">
-
-      
-      
-        <h1 class="post-title">
-          
-          
-            
-              <a class="post-title-link" href="/2015/09/10/一次刪除微博的過程/">
-                一次刪除微博的過程
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于 2015-09-10
-        </span>
-
-        
-          <span class="post-category">
-            &nbsp; | &nbsp; 分类于
-            
-              <a href="/categories/js/">js</a>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2015/09/10/一次刪除微博的過程/#comments" >
-              <span class="post-comments-count ds-thread-count" data-thread-key="2015/09/10/一次刪除微博的過程/"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </div>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>用扇貝單詞背了一段時間單詞，在微博上分享了打卡記錄。因為在微博上會有一些資料有時候要查找，發現這些垃圾微博給查找浪費了不少時間，遂起意將其刪除。</p>
-<h3 id="分析">分析</h3><h4 id="思路分析">思路分析</h4><p>這類分享微博，內容都相似，例如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#&#25159;&#36125;&#25171;&#21345;# &#31532; 53 &#22825;: &#25105;&#20170;&#22825;&#23436;&#25104;&#20102; 20 &#21477;&#21548;&#21147;, &#38405;&#35835;&#20102; 1 &#31687;&#25991;&#31456;, &#23398;&#20064;&#20102; 10 &#20010;&#21477;&#23376;</span><br></pre></td></tr></table></figure>
-<p>所以我選擇了一個標記要刪除的微博關鍵詞 <code>#扇贝打卡#</code>,也就是將含有這個詞的微博刪除。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/09/10/一次刪除微博的過程/">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/js/"> #js </a>
-          
-        </div>
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </div>
-  </div>
-
-
-    
   </div>
 
   
@@ -988,7 +986,7 @@
         <div class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-count">33</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

@@ -22,7 +22,7 @@
 
 
 
-  <meta name="keywords" content="vuejs," />
+  <meta name="keywords" content="js," />
 
 
 
@@ -33,7 +33,7 @@
 
 
 
-  <title> 開始使用vue.js // 九月烟树 </title>
+  <title> 浅析 JavaScript 的函数节流和去抖 // 九月烟树 </title>
 </head>
 
 <body>
@@ -105,7 +105,7 @@
           
           
             
-              開始使用vue.js
+              浅析 JavaScript 的函数节流和去抖
             
           
         </h1>
@@ -113,7 +113,7 @@
 
       <div class="post-meta">
         <span class="post-time">
-          发表于 2015-08-19
+          发表于 2016-07-30
         </span>
 
         
@@ -133,8 +133,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/08/19/開始使用vue-js/#comments" >
-              <span class="post-comments-count ds-thread-count" data-thread-key="2015/08/19/開始使用vue-js/"></span>
+            <a href="/2016/07/30/浅析-JavaScript-的函数节流和去抖/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/30/浅析-JavaScript-的函数节流和去抖/"></span>
             </a>
           </span>
           
@@ -148,49 +148,41 @@
       
 
       
-        <p><a href="http://vuejs.org" target="_blank" rel="external">Vue.js</a>是一個JavaScript的庫，他可以幫助你構建遵循<a href="https://en.wikipedia.org/wiki/Model_View_ViewModel" target="_blank" rel="external">MVVM(Model-View-ViewModel)構建模式</a>的web應用。初看上去，他可能和<a href="https://angularjs.org/" target="_blank" rel="external">Angular.js</a>有幾分類似。但你一旦開始用他，你會馬上覺得Vue.js不僅學起來更簡單、容易，而且更加靈活。</p>
-<p>在這個介紹性的教程中，我會教你Vue.js基礎的用法，會基本覆蓋Vue.js重要的特性。<br><a id="more"></a></p>
-<h2 id="添加Vue-js">添加Vue.js</h2><p>即使你可以從<a href="https://github.com/yyx990803/vue" target="_blank" rel="external">github</a>上等到最新版本的Vue.js，但你會發現使用CDN會更加方便。下面的代碼就是從<a href="https://cdnjs.com/" target="_blank" rel="external">cdnjs</a>加載vue.js。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;script src=&#34;https://cdnjs.cloudflare.com/ajax/libs/vue/0.12.7/vue.min.js&#34;&#62;&#10;&#60;/script&#62;</span><br></pre></td></tr></table></figure>
-<h2 id="創建視圖模型">創建視圖模型</h2><p>在Vue.js中，使用Vue的類來創建視圖模型。如果你想知道視圖模型是什麼，你可以把他想像成一個對象，他可以讓你把模型中的數據顯示到視圖上(你可以把一個對象字面量當作模型，HTML UI元素當作視圖)。</p>
-<p>來看一下視圖模型是怎麼工作的。首先創建一個視圖，一個空的<code>div</code>。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;div id=&#34;my_view&#34;&#62;&#10;&#60;/div&#62;</span><br></pre></td></tr></table></figure>
-<p>然後創建一個用作模型的對象字面量。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var myModel = &#123;&#10;   name: &#34;Ashley&#34;,&#10;   age: 24&#10;&#125;;</span><br></pre></td></tr></table></figure>
-<p>現在我們已經有了視圖和模型。把他們綁定到一起就是視圖模型了，或者說是Vue。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;var myViewModel = new Vue(&#123;&#10;&#9;el:&#39;#my_view&#39;,&#10;&#9;data:myModel&#10;&#125;)</span><br></pre></td></tr></table></figure>
-<p>正如你所見，這裡的<code>el</code>屬性指向了視圖(你可以使用任意的css選擇器來選擇)，而<code>data</code>屬性則指向了模型。我們的視圖模型現在已經準備好了。</p>
-<p>想把模型中的數據展示到視圖中，你可以使用<code>mustache</code>風格的綁定模式。例如，想把模型中的<code>age</code>屬性顯示出來，你要在視圖裡面添加<code></code>的字符串。下面的代碼示例使用了模型中的兩個屬性</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;div id=&#34;my_view&#34;&#62;&#10;   &#123;&#123; name &#125;&#125; is &#123;&#123; age &#125;&#125; years old.&#10;   &#60;!-- &#29983;&#25104; &#34;Ashley is 24 years old&#34; --&#62;&#10;&#60;/div&#62;</span><br></pre></td></tr></table></figure>
-<p>你在模型中的任何改變都會立即在視圖中顯示。</p>
-<h2 id="創建雙向綁定">創建雙向綁定</h2><p>上面例子用到的<code>mustache</code>風格的綁定，是單向綁定。這就意味著我們只能顯示模型中的數據，而不能(在視圖中)編輯他們。如果你想在視圖中編輯模型，你應該使用<code>v-modal</code>創建雙向綁定。</p>
-<p>在視圖中創建一個<code>input</code>元素，他的<code>v-model</code>指向<code>name</code>屬性。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;div id=&#34;my_view&#34;&#62;&#10;  &#60;label for=&#34;name&#34;&#62;Enter name:&#60;/label&#62;&#10;  &#60;input type=&#34;text&#34; v-model=&#34;name&#34; id=&#34;name&#34; name=&#34;name&#34; /&#62;&#10;  &#60;p&#62;&#123;&#123; name &#125;&#125; is &#123;&#123; age &#125;&#125; years old.&#60;/p&#62;&#10;&#60;/div&#62;</span><br></pre></td></tr></table></figure>
-<p>在這裡，如果你編輯<code>input</code>字段里的值。你的模型將會立刻發生變化。</p>
-<p>這裡是<a href="http://codepen.io/SitePoint/pen/XbYZBJ" target="_blank" rel="external">雙向綁定</a>的demo。</p>
-<h2 id="使用過濾器">使用過濾器</h2><p>過濾器實質上就是一個函數，你可以在指令里使用，也可以使用使用<code>mustache</code>風格綁定。過濾器總是在管道符號(|)的前面。例如，如果你想讓<code>name</code>屬性顯示大寫。你的<code>mustache</code>風格綁定就是像這樣:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;name | uppercase&#125;&#125;</span><br></pre></td></tr></table></figure>
-<p>在這個例子中，是一個<a href="http://codepen.io/SitePoint/pen/MwXQBM" target="_blank" rel="external">過濾器demo</a>。</p>
-<p>還有一些過濾器也可以通過類似的方式使用，比如<code>lowercase</code>和<code>capitalize</code></p>
-<p>在下一節，我會做更多的關於過濾器的討論。</p>
-<h2 id="渲染數組">渲染數組</h2><p>如果你的model有一個數組，在<code>li</code>標籤上使用<code>v-repeat</code>指令，可以把數組內容顯示出來，為了演示，現在在模型里添加一個數組。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var myModel = &#123;&#10;   name: &#34;Ashley&#34;,&#10;   age: 24,&#9;&#10;   friends: [&#10;      &#123; name: &#34;Bob&#34;, age: 21 &#125;,&#10;      &#123; name: &#34;Jane&#34;, age: 20 &#125;,&#10;      &#123; name: &#34;Anna&#34;, age: 29 &#125;&#10;   ]&#10;&#125;;</span><br></pre></td></tr></table></figure>
-<p>接下來的代碼示範怎樣把<code>friends</code>數組里對象的<code>name</code>屬性一個個的顯示出來。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;div id=&#34;my_view&#34;&#62;&#10;   &#60;ul&#62;&#10;      &#60;li v-repeat=&#34;friends&#34;&#62; &#123;&#123; name &#125;&#125; &#60;/li&#62;&#10;   &#60;/ul&#62;&#10;&#60;/div&#62;</span><br></pre></td></tr></table></figure>
-<p>改變列表元素的順序，可以在<code>v-repeat</code>指令里使用<code>orderBy</code>過濾器。例如，如果你想根據<code>age</code>來給元素排序，你可以這樣寫代碼：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;div id=&#34;my_view&#34;&#62;&#10;   &#60;ul&#62;&#10;      &#60;li v-repeat=&#34;friends | orderBy &#39;age&#39;&#34;&#62; &#123;&#123; name &#125;&#125;&#60;/li&#62;&#10;   &#60;/ul&#62;&#10;&#60;/div&#62;</span><br></pre></td></tr></table></figure>
-<p>你也可以有選擇的渲染某一項。使用<code>filterBy</code>就可以打到這樣的目的。例如，下面的代碼示範怎樣渲染僅包含<code>a</code>這個字符的項。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;div id=&#34;my_view&#34;&#62;&#10;   &#60;ul&#62;&#10;      &#60;li v-repeat=&#34;friends | filterBy &#39;a&#39;&#34;&#62; &#123;&#123; name &#125;&#125; &#60;/li&#62;&#10;   &#60;/ul&#62;&#10;&#60;/div&#62;</span><br></pre></td></tr></table></figure>
-<p>這個<a href="http://codepen.io/SitePoint/pen/VLdQEW" target="_blank" rel="external">demo</a>使用雙向數據綁定和<code>filterBy</code>過濾器，模擬實現了搜索功能。</p>
-<h2 id="事件處理">事件處理</h2><p>在Vue.js裡面，你需要使用事件處理來與你的視圖相關連，你可以把事件處理程序添加到視圖模型的<code>methods</code>屬性中，所有Vue.js的事件都含有一個叫做<code>targetVM</code>的附加屬性，他常常被用作事件處理程序訪問關連視圖模型的入口。</p>
-<p>下面的視圖模型包含一個點擊事件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var myViewModel = new Vue(&#123;&#10;   el: &#39;#my_view&#39;,&#10;   data: myModel,&#10;&#10;   //&#22312;methods&#20013;&#30340;&#40670;&#25802;&#20107;&#20214;&#10;   methods: &#123;&#10;      myClickHandler: function(e) &#123;&#10;         // &#20351;&#29992;targetVM&#21435;&#35370;&#21839;name&#10;         alert(&#34;Hello &#34; + e.targetVM.name);&#10;      &#125;&#10;   &#125;&#10;&#125;);</span><br></pre></td></tr></table></figure>
-<p>想通過在視圖中的UI元素關連定義在視圖模型中的事件處理程序，你應該使用<code>v-on</code>指令。比如，下面的視圖有一個<code>button</code>元素使用了<code>v-on</code>指令去調用<code>myClickHandler</code>:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;div id=&#34;my_view&#34;&#62;&#10;   Name: &#60;input type=&#34;text&#34; v-model=&#34;name&#34;&#62; &#10;   &#60;button v-on=&#34;click: myClickHandler&#34;&#62;Say Hello&#60;/button&#62;&#10;&#60;/div&#62;</span><br></pre></td></tr></table></figure>
-<p>把上面的片段組在一起，結果在這個<a href="http://codepen.io/SitePoint/pen/eNKVQY" target="_blank" rel="external">點擊處理程序demo</a>中。</p>
-<h2 id="總結">總結</h2><p>在這個介紹性的Vue.js教程里，你學到了如何使用單向和雙向數據綁定，指令，過濾器和事件。所提及的內容，應該足夠讓你用這個簡單的框架開始創建一個交互式的web界面。如果你想瞭解更多的特性，比如Ajax支持或者路由操作，可以隨意的在你項目中增加一些<a href="https://github.com/vuejs" target="_blank" rel="external">Vue.js插件</a>。</p>
-<p>如果你想學習更多關於Vue.js的內容，我建議你去看一下<a href="http://vuejs.org/api/" target="_blank" rel="external">Vue.js API参考</a>和<a href="http://vuejs.org/guide/" target="_blank" rel="external">Vue.js官方指導</a></p>
-<p><strong><a href="http://www.sitepoint.com/getting-started-with-vue-js/" target="_blank" rel="external">原文地址</a></strong></p>
+        <p>现代网页的实现上，会有很多交互上的优化，比如常见的 <code>滚动加载</code> ，<code>输入联想</code> 等等。他们的实现思路很简单，以<code>滚动加载</code>而言，无非就是去是增加一个滚动的事件监听，每次滚动判断当前的元素是否已经滚动到了用户的可视区，然后根据判断结果来决定是否来加载相关数据。 <code>输入联想</code>也类似，无非就是修改一下监听的事件类型，和判断的相关逻辑。</p>
+<p>前端交互的优化上，我们总是需要需要事件监听来知道用户进行了什么操作，从而设定页面给出怎样的反应。但本文主要的内容不是讲如何具体的实现某个交互，而是对交互实现的依赖的事件监听那部分的优化。</p>
+<a id="more"></a>
+<h2 id="滚动加载图片的例子">滚动加载图片的例子</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> onScroll = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 这里判断当前的 img 元素是否已经滚动到了用户的可视区</span></span><br><span class="line">  <span class="comment">// 根据判断结果来决定是否来加载相关数据 </span></span><br><span class="line">  <span class="comment">// 注：img 元素当设置 src 属性值后会产生一个 http 的请求，加载图片</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">'scroll'</span>,onScroll ,<span class="literal">false</span>);</span><br></pre></td></tr></table></figure>
+<p>这样理论上就实现了图片的滚动加载或者说是按需加载，懒加载等等。</p>
+<p>这样的实现乍看没有任何问题，但在实际的场景中，问题还是很严重的。</p>
+<p>如下：</p>
+<p></p><p data-height="265" data-theme-id="0" data-slug-hash="PZOZgB" data-default-tab="result" data-user="dcorb" data-embed-version="2" class="codepen">See the Pen <a href="http://codepen.io/dcorb/pen/PZOZgB/" target="_blank" rel="external">Scroll events counter</a> by Corbacho (<a href="http://codepen.io/dcorb" target="_blank" rel="external">@dcorb</a>) on <a href="http://codepen.io" target="_blank" rel="external">CodePen</a>.</p><p></p>
+<script async src="//assets.codepen.io/assets/embed/ei.js"></script>
+
+<p>很明显，当你在 codepen 中滚动鼠标的时候，显示的数字蹭蹭蹭的加大， 这个数字就是过程中，浏览器触发 scroll 事件的数字， 可以看出，浏览器触发 scroll 事件是很频繁的。</p>
+<p>所以，回到上面提出的问题中，因为浏览器触发 scroll 会很平凡， 也就意味着事件的监听回调函数 onScroll 会被很频繁的执行。这就是问题之所在，且不说我们的 onScroll 里面的逻辑可能会是大量的计算。如此频繁的计算就算可以很轻松的被完成，结果也是没有意义的。所以我们要在这里来优化代码，倒不是优化 onScroll 本省，而是想办法让 onScroll 执行的次数可以减少。</p>
+<h2 id="函数节流">函数节流</h2><p>在原本的逻辑中，假设在滚动条连续的滚动中，浏览器每 10ms 触发一次scroll 事件，就意味着浏览器每 10ms 就要去执行一次 onScroll，如果想让 onScroll 不那么频繁的被执行，怎么办？</p>
+<p>很明显，想去改动 scroll 触发的频率在前端这一层面上肯定是不行，因为他们浏览器自身的设定。那么是否可以在触发 scroll 事件之后，不直接调用 onScroll 函数从而进行优化呢？比如，假设scroll 事件持续触发，我们让 onScroll 函数每 250ms 触发。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> throttle = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> previous = <span class="number">0</span>;  <span class="comment">// 初始设置上一次调用 onScroll 函数时间点为 0。</span></span><br><span class="line">  <span class="keyword">var</span> timeout; </span><br><span class="line">  <span class="keyword">var</span> wait = <span class="number">250</span>; <span class="comment">// 该变量表示执行 onScroll 函数的间隔时间。</span></span><br><span class="line">  <span class="comment">// 返回一个函数 ，该函数在每次触发 scroll 事件时，真正调用的函数。</span></span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> now = <span class="built_in">Date</span>.now(); <span class="comment">// 记录下当前触发 scroll 的时间</span></span><br><span class="line">    <span class="keyword">var</span> remaining = wait - (now - previous); <span class="comment">// 持续的滚动过程中，计算得到调用 onScroll 的甚于时间</span></span><br><span class="line">    <span class="keyword">if</span> (remaining &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (timeout) &#123;</span><br><span class="line">        clearTimeout(timeout)</span><br><span class="line">      &#125;</span><br><span class="line">      previous = now;</span><br><span class="line">      timeout = <span class="literal">null</span>;</span><br><span class="line">      onScroll();</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span>(!timeout) &#123; <span class="comment">// 初始或者非持续滚动(滚动动作的时间小于 250ms )，设定一个定时器。</span></span><br><span class="line">      timeout = setTimeout(onScroll, wait);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 注意这里的调用方式</span></span><br><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">'scroll'</span>,throttle() ,<span class="literal">false</span>);</span><br></pre></td></tr></table></figure>
+<p>这样调用是不会有结果的</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">'scroll'</span>,throttle ,<span class="literal">false</span>);</span><br></pre></td></tr></table></figure>
+<p>上述的代码旨在说明实现函数节流的思路，著名的 <code>underscore.js</code> 和 <code>lodash</code> 都有节流方法的实现。</p>
+<h3 id="输入联想的例子">输入联想的例子</h3><p>当你在使用 google 搜索内容的时候，有些关键词输入到一般，谷歌会展示一个可选列表，是根据你当前输入的内容作出的一个猜测联想，如果有中目标的联想，你就可以不需要输入接下来的内容，直接选择自动补全就好。</p>
+<p>这种场景下，我们一般是去监听用户的 <code>onKeyRress</code> 或者 <code>onKeyUp</code> 等等键盘事件。在当用户输入一些文字的时候，我们一监听到键盘事件就将用户当前输入的内容去发送一个 ajax 查询请求显然是不行的。那么在节流函数内部去调用 ajax 请求呢？</p>
+<p>在这种场景下，其实函数节流也是不合适，因为，函数节流只是减小了函数执行的在事件触发过程中频率，将原来可能调用1000次减少到调用100次。然而对输入联想的场景来说，只要用户还在触发键盘事件，那么发送请求就是没有意义的。</p>
+<p>所以，我们现在需要的一种实现是应该是在用户停止键盘事件一段时间后，去发送一个请求。</p>
+<p>比如应该这么设计这个过程，用户在输入，用户输入有所停顿（也就是不再触发键盘事件），当这个事件大于 250ms 之后，去触发一个查询请求。 如果用户输入停顿的时间小于 250ms，不去发送查询请求。</p>
+<h4 id="电梯模型">电梯模型</h4><p>输入联想的执行过程，应该和生活中的电梯执行过程是一样的。<br>比如，当你正在座电梯，当电梯门正要关闭的时候，这是有一个同学又冲过来，按了一下电梯的按钮，这个电梯门会打开然后等待一定的时间，如果在等待的过程中，又有另外一位同学过来按了按钮，之前等待的时间清零，继续等待一定的时间，直到在等待的时间中，不在有别的人去按按钮。门才会关闭，然后上下运行。</p>
+<h3 id="函数去抖">函数去抖</h3><p>了解这个过程之后，来简单的实现下这个过程。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 如下搜索控件</span><br><span class="line"><span class="tag">&lt;<span class="title">input</span> <span class="attribute">type</span>=<span class="value">"search"</span> <span class="attribute">name</span>=<span class="value">"search"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> sendAjax = <span class="function"><span class="keyword">function</span>(<span class="params">obj</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 发送请求</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> debounce = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> wait = <span class="number">2500</span>;</span><br><span class="line">  <span class="keyword">var</span> timeout;</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> now = <span class="built_in">Date</span>.now();</span><br><span class="line">    <span class="keyword">if</span> (timeout) clearTimeout(timeout);</span><br><span class="line">    timeout = setTimeout(sendAjax, wait);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> input = <span class="built_in">document</span>.querySelector(<span class="string">'input[name=search]'</span>);</span><br><span class="line"></span><br><span class="line">input.addEventLister(<span class="string">'keyup'</span>, debounce(), <span class="literal">false</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="总结">总结</h2><p>函数节流和函数去抖的使用场景略有不同。</p>
+<p>函数节流：在事件触发过程中，减小相关回调函数的执行频率。<br>函数去抖：在事件触发结束后一定时间后去执行事件回调函数，如果在这一定时间内又触发了相关事件，则不去触发事件回调函数，下一次执行事件回调函数时间仍是确定的一定时间。</p>
+<h3 id="相关文章和代码">相关文章和代码</h3><ul>
+<li><a href="https://css-tricks.com/debouncing-throttling-explained-examples/" target="_blank" rel="external">Debouncing and Throttling Explained Through Examples</a></li>
+<li><a href="https://github.com/jashkenas/underscore/blob/master/underscore.js#L806-L850" target="_blank" rel="external">underscore.throttle</a></li>
+<li><a href="https://github.com/jashkenas/underscore/blob/master/underscore.js#L852-L883" target="_blank" rel="external">underscore.debounce</a></li>
+<li><a href="https://github.com/lodash/lodash/blob/ee6ec2f6728eebf9f5beb2ecbca905fade1a32c1/debounce.js" target="_blank" rel="external">lodash.debounce</a></li>
+</ul>
 
       
     </div>
@@ -199,7 +191,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/vuejs/"> #vuejs </a>
+            <a href="/tags/js/"> #js </a>
           
         </div>
       
@@ -208,13 +200,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/09/10/一次刪除微博的過程/">一次刪除微博的過程</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/06/24/NPM-node-js的包管理/">NPM--node.js的包管理</a>
+              <a href="/2016/06/17/如何实现-Virtual-DOM/">如何实现 Virtual DOM</a>
             
           </div>
         </div>
@@ -230,8 +220,8 @@
     
       <div class="comments" id="comments">
         
-          <div class="ds-thread" data-thread-key="2015/08/19/開始使用vue-js/"
-               data-title="開始使用vue.js" data-url="http://huangbingbing.com/2015/08/19/開始使用vue-js/">
+          <div class="ds-thread" data-thread-key="2016/07/30/浅析-JavaScript-的函数节流和去抖/"
+               data-title="浅析 JavaScript 的函数节流和去抖" data-url="http://huangbingbing.com/2016/07/30/浅析-JavaScript-的函数节流和去抖/">
           </div>
         
       </div>
@@ -336,7 +326,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#添加Vue-js"><span class="nav-number">1.</span> <span class="nav-text">添加Vue.js</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#創建視圖模型"><span class="nav-number">2.</span> <span class="nav-text">創建視圖模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#創建雙向綁定"><span class="nav-number">3.</span> <span class="nav-text">創建雙向綁定</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用過濾器"><span class="nav-number">4.</span> <span class="nav-text">使用過濾器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#渲染數組"><span class="nav-number">5.</span> <span class="nav-text">渲染數組</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事件處理"><span class="nav-number">6.</span> <span class="nav-text">事件處理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#總結"><span class="nav-number">7.</span> <span class="nav-text">總結</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#滚动加载图片的例子"><span class="nav-number">1.</span> <span class="nav-text">滚动加载图片的例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数节流"><span class="nav-number">2.</span> <span class="nav-text">函数节流</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#输入联想的例子"><span class="nav-number">2.1.</span> <span class="nav-text">输入联想的例子</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#电梯模型"><span class="nav-number">2.1.1.</span> <span class="nav-text">电梯模型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函数去抖"><span class="nav-number">2.2.</span> <span class="nav-text">函数去抖</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#相关文章和代码"><span class="nav-number">3.1.</span> <span class="nav-text">相关文章和代码</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
